@@ -11,6 +11,9 @@ namespace TheBondOfStone {
     class Tile {
         public int DrawQueue { get; set; }
 
+        public bool IsEndTile { get; set; }
+        public bool IsStartTile { get; set; }
+
         private Texture2D texture;
         public Texture2D Texture {
             get { return texture; }
@@ -78,8 +81,11 @@ namespace TheBondOfStone {
                     2 * Convert.ToInt32(adjacents[1]) +
                     4 * Convert.ToInt32(adjacents[2]) +
                     8 * Convert.ToInt32(adjacents[3]);
-
-                Texture = Content.Load<Texture2D>("graphics\\tile\\tile_" + ID + "_" + bmv);
+                
+                if(ID == 4 || ID == 5) //Start and end tiles should be textured as Grass
+                    Texture = Content.Load<Texture2D>("graphics\\tile\\tile_1_" + bmv);
+                else //Other tiles are textured according to their IDs
+                    Texture = Content.Load<Texture2D>("graphics\\tile\\tile_" + ID + "_" + bmv);
             }
 
             stitched = true;

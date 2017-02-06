@@ -40,7 +40,7 @@ namespace TheBondOfStone {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Tile.Content = Content;
 
-            map.Generate(map.ReadImage(@"F:\Monogame\TheBondOfStone\TheBondOfStone\Content\map_1.png"), 32);
+            map.Generate(map.ReadImage(@"E:\Monogame\TheBondOfStone\TheBondOfStone\Content\map_1.png"), 32);
 
             // TODO: use this.Content to load your game content here
         }

@@ -107,7 +107,7 @@ namespace TheBondOfStone {
                         px.B.ToString("D3") + " " +
                         px.A.ToString("D3");
 
-                    atlas[x, y] = TileID(pxStr); //Convert the pixel color to an integer ID and populate the array
+                    atlas[x, y] = TileID(pxStr, x, atlas.GetLength(1)); //Convert the pixel color to an integer ID and populate the array
                 }
             }
 
@@ -115,7 +115,7 @@ namespace TheBondOfStone {
         }
 
         //Switch statement which converts pixel colors as strings into integer tile IDs
-        int TileID(string color) {
+        int TileID(string color, int x = -1, int width = -1) {
             int tileID = 0;
 
             switch (color) {
@@ -129,6 +129,16 @@ namespace TheBondOfStone {
 
                 case "255 174 012 255":
                     tileID = 3; //Gold tile
+                    break;
+
+                case "255 000 000 255":
+                    //use the chunk width to determine whether this red pixel is on the left side or the right side of the atlas
+                    if (x == 0) 
+                        tileID = 4; //Start tile (grass tile with bool isStartTile = true)
+                    else if (x == width) 
+                        tileID = 5; //End tile (grass tile with bool isEndTile = true)
+                    else
+                        tileID = 1; //Otherwise, the red tile is extraneous and is treated as a regular grass tile
                     break;
             }
             return tileID;
