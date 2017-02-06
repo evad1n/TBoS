@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace TheBondOfStone {
     /// <summary>
@@ -41,6 +42,7 @@ namespace TheBondOfStone {
             Tile.Content = Content;
 
             map.Generate(map.ReadImage(@"E:\Monogame\TheBondOfStone\TheBondOfStone\Content\map_1.png"), 32);
+            
 
             // TODO: use this.Content to load your game content here
         }
@@ -63,6 +65,7 @@ namespace TheBondOfStone {
                 Exit();
 
             // TODO: Add your update logic here
+            
 
             base.Update(gameTime);
         }

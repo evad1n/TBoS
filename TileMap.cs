@@ -52,22 +52,30 @@ namespace TheBondOfStone {
                     if (thisID != 0) {
                         //Construct the Adjacents array for this tile
                         //(i.e. add the cardinal tile IDs to this tile's Adjacents array in the order North West East South
-                        if (y - 1 >= 0 && (atlas[y - 1, x] == thisID || (!stitchOnlySameID && atlas[y - 1, x] != 0)))
+                        if (y - 1 >= 0 && (atlas[y - 1, x] == thisID || 
+                            (!stitchOnlySameID && atlas[y - 1, x] != 0) ||
+                            (thisID == 1 || thisID == 4 || thisID == 5) && (atlas[y - 1, x] == 4 || atlas[y - 1, x] == 5 || atlas[y - 1, x] == 1)))
                             Tiles[i].Adjacents[0] = true;
-                        else if (y - 1 >= 0 && atlas[y - 1, x] == 2) //If this cardinal has a border tile...
+                        else if (y - 1 >= 0 && atlas[y - 1, x] == 2) //If this cardinal has a background tile...
                             bkdCount++; //increment the count of adjacent background tiles
 
-                        if (x - 1 >= 0 && (atlas[y, x - 1] == thisID || (!stitchOnlySameID && atlas[y, x - 1] != 0)))
+                        if (x - 1 >= 0 && (atlas[y, x - 1] == thisID || 
+                            (!stitchOnlySameID && atlas[y, x - 1] != 0) ||
+                            (thisID == 1 || thisID == 4 || thisID == 5) && (atlas[y, x - 1] == 4 || atlas[y, x - 1] == 5 || atlas[y, x - 1] == 1)))
                             Tiles[i].Adjacents[1] = true;
                         else if (x - 1 >= 0 && (atlas[y, x - 1] == 2))
                             bkdCount++;
 
-                        if (x + 1 < atlas.GetLength(1) && (atlas[y, x + 1] == thisID || (!stitchOnlySameID && atlas[y, x + 1] != 0)))
+                        if (x + 1 < atlas.GetLength(1) && (atlas[y, x + 1] == thisID || 
+                            (!stitchOnlySameID && atlas[y, x + 1] != 0) ||
+                            (thisID == 1 || thisID == 4 || thisID == 5) && (atlas[y, x + 1] == 4 || atlas[y, x + 1] == 5 || atlas[y, x + 1] == 1)))
                             Tiles[i].Adjacents[2] = true;
                         else if (x + 1 < atlas.GetLength(1) && (atlas[y, x + 1] == 2))
                             bkdCount++;
 
-                        if (y + 1 < atlas.GetLength(0) && (atlas[y + 1, x] == thisID || (!stitchOnlySameID && atlas[y + 1, x] != 0)))
+                        if (y + 1 < atlas.GetLength(0) && (atlas[y + 1, x] == thisID || 
+                            (!stitchOnlySameID && atlas[y + 1, x] != 0) ||
+                            (thisID == 1 || thisID == 4 || thisID == 5) && (atlas[y + 1, x] == 4 || atlas[y + 1, x] == 5 || atlas[y + 1, x] == 1)))
                             Tiles[i].Adjacents[3] = true;
                         else if (y + 1 < atlas.GetLength(0) && (atlas[y + 1, x] == 2))
                             bkdCount++;
@@ -107,7 +115,7 @@ namespace TheBondOfStone {
                         px.B.ToString("D3") + " " +
                         px.A.ToString("D3");
 
-                    atlas[x, y] = TileID(pxStr, x, atlas.GetLength(1)); //Convert the pixel color to an integer ID and populate the array
+                    atlas[x, y] = TileID(pxStr, y, atlas.GetLength(0)); //Convert the pixel color to an integer ID and populate the array
                 }
             }
 
@@ -135,13 +143,32 @@ namespace TheBondOfStone {
                     //use the chunk width to determine whether this red pixel is on the left side or the right side of the atlas
                     if (x == 0) 
                         tileID = 4; //Start tile (grass tile with bool isStartTile = true)
-                    else if (x == width) 
+                    else if (x == width - 1) 
                         tileID = 5; //End tile (grass tile with bool isEndTile = true)
                     else
                         tileID = 1; //Otherwise, the red tile is extraneous and is treated as a regular grass tile
                     break;
             }
             return tileID;
+        }
+
+        public Tile GetEndTile() {
+            foreach (Tile tile in Tiles) {
+                if (tile.ID == 5)
+                    return tile;
+            }
+
+            return null;
+        }
+
+        public Tile GetStartTile() {
+            foreach (Tile tile in Tiles) {
+                if (tile.ID == 4)
+                    return tile;
+            }
+
+            return null;
+
         }
     }
 }

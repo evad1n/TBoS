@@ -47,14 +47,17 @@ namespace TheBondOfStone {
         }
 
         public Tile(int ID, Rectangle r) {
-            texture = Content.Load<Texture2D>("tile_" + ID);
+            
             this.ID = ID;
             Rect = r;
 
-            if (ID == 1)
+            if (ID == 1 || ID == 3 || ID == 4 || ID == 5) { //Draw queue means background tiles are rendered behind ground tiles
                 DrawQueue = 0;
-            else
+                texture = Content.Load<Texture2D>("tile_1");
+            } else {
                 DrawQueue = -1;
+                texture = Content.Load<Texture2D>("tile_" + ID);
+            }
         }
 
         public Tile(Texture2D texture, Rectangle rect) {
