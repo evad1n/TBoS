@@ -119,16 +119,17 @@ namespace TheBondOfStone {
 
                     if (Adjacents[3] == false)
                         if (r.Next(0, 10) <= 1) {
-                            if(ID == 1)
                                 Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 1));
-                            else if(ID == 2)
-                                Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 3));
                         }
                 break;
 
                 case 2:
                     if (r.Next(0, 10) == 0)
                         Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y, Rect.Width, Rect.Height), r, 2));
+
+                    if (Adjacents[3] == false)
+                        if (r.Next(0, 10) <= 1)
+                            Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 3));
                     break;
             }
         }

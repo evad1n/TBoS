@@ -93,5 +93,9 @@ namespace TheBondOfStone {
 
             base.Draw(gameTime);
         }
+
+        void GenerateNewChunk() {
+
+        }
     }
 }
