@@ -13,6 +13,9 @@ namespace TheBondOfStone {
         List<Tile> tiles = new List<Tile>(); //List holds tiles linearly (w/ property)
         Random rand;
 
+        public Tile StartTile { get; set; }
+        public Tile EndTile { get; set; }
+
         public List<Tile> Tiles {
             get { return tiles; }
         }
@@ -30,29 +33,37 @@ namespace TheBondOfStone {
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     //Add a new tile to the tiles list with an ID and rect from the Atlas.
-                    Tiles.Add(new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(x * size, y * size, size, size), rand));
+                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(x * size, y * size, size, size), rand);
+
+                    Tiles.Add(tileToAdd);
+
+                    if (tileToAdd.ID == 4)
+                        StartTile = tileToAdd;
+
+                    if (tileToAdd.ID == 5)
+                        StartTile = tileToAdd;
 
                     width = (x + 1) * size;
                     height = (y + 1) * size;
                 }
             }
 
-            //BELOW THIS LINE = TILE PRETTY-IFYING (stitching, decorating)
+            //BETWEEN THIS LINE AND END OF METHOD = TILE PRETTY-IFYING (stitching, decorating)
             //Set adjacent tiles for each tile
             int i = 0; //increment through the array of tile IDs
 
             for (int x = 0; x < atlas.GetLength(1); x++) { //Execute for each tile
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     int thisID = Tiles[i].ID; //Current tile ID
-                    bool stitchOnlySameID = true; //For stitching background tiles into foreground tiles
-
-                    if (thisID == 2) //If this is a background tile, need to stitch it into foreground, but not vice versa
-                        stitchOnlySameID = false;
-
-                    int bkdCount = 0; //For stitching background tiles into foreground tiles
-
                     //if this isn't an air tile (which we don't stitch)
                     if (thisID != 0) {
+                        bool stitchOnlySameID = true; //For stitching background tiles into foreground tiles
+
+                        if (thisID == 2) //If this is a background tile, need to stitch it into foreground, but not vice versa
+                            stitchOnlySameID = false;
+
+                        int bkdCount = 0; //For stitching background tiles into foreground tiles
+
                         //Construct the Adjacents array for this tile
                         //(i.e. add the cardinal tile IDs to this tile's Adjacents array in the order North West East South
                         if (y - 1 >= 0 && (atlas[y - 1, x] == thisID || 
@@ -82,11 +93,11 @@ namespace TheBondOfStone {
                             Tiles[i].Adjacents[3] = true;
                         else if (y + 1 < atlas.GetLength(0) && (atlas[y + 1, x] == 2))
                             bkdCount++;
-                    }
 
-                    //If more than 1 background tile borders this foreground tile...
-                    if (bkdCount > 1) 
-                        Tiles.Add(Tiles[i].AddBackgroundTile()); //...add another background tile behind it to fill gaps  
+                        //If more than 1 background tile borders this foreground tile...
+                        if (bkdCount > 1)
+                            Tiles.Add(Tiles[i].AddBackgroundTile()); //...add another background tile behind it to fill gaps  
+                    }
                     
                     i++; //Advance the tile list
                 }
@@ -135,7 +146,7 @@ namespace TheBondOfStone {
 
             switch (color) {
                 case "092 186 072 255":
-                    tileID = 1; //Grass tile
+                    tileID = 1; //Ground tile
                     break;
 
                 case "105 119 135 255":
@@ -148,7 +159,7 @@ namespace TheBondOfStone {
 
                 case "255 000 000 255":
                     //use the chunk width to determine whether this red pixel is on the left side or the right side of the atlas
-                    if (x == 0) 
+                    if (x == 0)
                         tileID = 4; //Start tile (grass tile with bool isStartTile = true)
                     else if (x == width - 1) 
                         tileID = 5; //End tile (grass tile with bool isEndTile = true)
@@ -157,25 +168,6 @@ namespace TheBondOfStone {
                     break;
             }
             return tileID;
-        }
-
-        public Tile GetEndTile() {
-            foreach (Tile tile in Tiles) {
-                if (tile.ID == 5)
-                    return tile;
-            }
-
-            return null;
-        }
-
-        public Tile GetStartTile() {
-            foreach (Tile tile in Tiles) {
-                if (tile.ID == 4)
-                    return tile;
-            }
-
-            return null;
-
         }
     }
 }

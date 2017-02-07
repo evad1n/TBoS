@@ -98,37 +98,37 @@ namespace TheBondOfStone {
                     8 * Convert.ToInt32(adjacents[3]);
                 
                 if(ID == 4 || ID == 5) //Start and end tiles should be textured as Grass
-                    Texture = Content.Load<Texture2D>("graphics\\tile\\tile_1_" + bmv);
+                    Texture = Content.Load<Texture2D>(@"graphics\tile\tile_1_" + bmv);
                 else //Other tiles are textured according to their IDs
-                    Texture = Content.Load<Texture2D>("graphics\\tile\\tile_" + ID + "_" + bmv);
+                    Texture = Content.Load<Texture2D>(@"graphics\tile\tile_" + ID + "_" + bmv);
             }
 
             stitched = true;
         }
 
         public Tile AddBackgroundTile() {
-            return new Tile(Content.Load<Texture2D>("graphics\\tile\\tile_2_15"), Rect);
+            return new Tile(Content.Load<Texture2D>(@"graphics\tile\tile_2_15"), Rect);
         }
 
         public void GenerateDecorations() {
             switch (ID) {
                 case 1:
-                    if (r.Next(0, 10) <= 3)
+                    if (r.Next(10) <= 3)
                         if(Adjacents[0] == false)
                             Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y - (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 0));
 
                     if (Adjacents[3] == false)
-                        if (r.Next(0, 10) <= 1) {
+                        if (r.Next(10) <= 1) {
                                 Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 1));
                         }
                 break;
 
                 case 2:
-                    if (r.Next(0, 10) == 0)
+                    if (r.Next(10) == 0)
                         Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y, Rect.Width, Rect.Height), r, 2));
 
                     if (Adjacents[3] == false)
-                        if (r.Next(0, 10) <= 1)
+                        if (r.Next(10) <= 1)
                             Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 3));
                     break;
             }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace TheBondOfStone {
@@ -12,8 +13,12 @@ namespace TheBondOfStone {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public static int PixelScaleFactor { get; set; }
+
         TileMap map;
         int mapCount;
+
+        List<ParallaxLayer> parallaxLayers;
 
         Random randomObject = new Random();
 
@@ -29,7 +34,7 @@ namespace TheBondOfStone {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-            // TODO: Add your initialization logic here
+            PixelScaleFactor = 16;
 
             map = new TileMap(randomObject);
 
@@ -43,6 +48,8 @@ namespace TheBondOfStone {
         protected override void LoadContent() {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            //Set the static Tile and TileDecoration classes to reference the Game's content loader, so they can load their own textures as needed.
             Tile.Content = Content;
             TileDecoration.Content = Content;
 
@@ -50,11 +57,16 @@ namespace TheBondOfStone {
             string path = Directory.GetCurrentDirectory();
             DirectoryInfo mapDir = new DirectoryInfo(Path.GetFullPath(Path.Combine(path, @"..\..\..\..\Content\maps"))); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE 
             mapCount = mapDir.GetFiles().Length;
-
-            map.Generate(map.ReadImage("map_1.png"), 32);
             
+            //TODO: Actual map generation script implementation goes here.
+            map.Generate(map.ReadImage("map_1.png"), PixelScaleFactor);
 
-            // TODO: use this.Content to load your game content here
+            //Initialize and load background parallaxing layers
+            parallaxLayers = new List<ParallaxLayer>();
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(-25, 1f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(-50, 2f)));
+
+
         }
 
         /// <summary>
@@ -74,8 +86,23 @@ namespace TheBondOfStone {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            
+            //DEBUG/TESTING MOVEMENT. UPDATE WITH CHARACTER/CAMERA UPDATE CALLS
+            KeyboardState kbState = Keyboard.GetState();
+
+            //Get directional vector based on keyboard input
+            Vector2 direction = Vector2.Zero;
+            if (kbState.IsKeyDown(Keys.Up))
+                direction = new Vector2(0, -1);
+            else if (kbState.IsKeyDown(Keys.Down))
+                direction = new Vector2(0, 1);
+            if (kbState.IsKeyDown(Keys.Left))
+                direction += new Vector2(-1, 0);
+            else if (kbState.IsKeyDown(Keys.Right))
+                direction += new Vector2(1, 0);
+
+            //Update backgrounds
+            foreach (ParallaxLayer p in parallaxLayers)
+                p.Update(gameTime, direction, GraphicsDevice.Viewport);
 
             base.Update(gameTime);
         }
@@ -87,6 +114,13 @@ namespace TheBondOfStone {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            //Draw background parallaxing layers with different spritebatch settings 
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
+            foreach (ParallaxLayer p in parallaxLayers)
+                p.Draw(spriteBatch);
+
+            spriteBatch.End();
+
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
             map.Draw(spriteBatch); //Draw the map (will be a list of maps in the future)
             spriteBatch.End();
@@ -94,6 +128,7 @@ namespace TheBondOfStone {
             base.Draw(gameTime);
         }
 
+        //Maybe use this to generate chunks eventually.
         void GenerateNewChunk() {
 
         }
