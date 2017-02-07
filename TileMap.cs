@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace TheBondOfStone {
     class TileMap { //This object class represents a chunk's tile data
 
         List<Tile> tiles = new List<Tile>(); //List holds tiles linearly (w/ property)
+        Random rand;
 
         public List<Tile> Tiles {
             get { return tiles; }
@@ -20,7 +22,7 @@ namespace TheBondOfStone {
         public int Width { get { return width; } }
         public int Height { get { return height; } }
 
-        public TileMap() { }
+        public TileMap(Random rand) { this.rand = rand; }
 
         //Generate this chunk in a drawable format. Takes a 2D array of tile IDs and a tile size.
         public void Generate(int[,] atlas, int size) {
@@ -28,13 +30,14 @@ namespace TheBondOfStone {
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     //Add a new tile to the tiles list with an ID and rect from the Atlas.
-                    Tiles.Add(new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(x * size, y * size, size, size)));
+                    Tiles.Add(new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(x * size, y * size, size, size), rand));
 
                     width = (x + 1) * size;
                     height = (y + 1) * size;
                 }
             }
 
+            //BELOW THIS LINE = TILE PRETTY-IFYING (stitching, decorating)
             //Set adjacent tiles for each tile
             int i = 0; //increment through the array of tile IDs
 
@@ -88,6 +91,10 @@ namespace TheBondOfStone {
                     i++; //Advance the tile list
                 }
             }
+
+            //Generate the decorations for each tile
+            foreach(Tile tile in Tiles)
+                tile.GenerateDecorations();
         }
 
         public void Draw(SpriteBatch sb) {
@@ -97,11 +104,11 @@ namespace TheBondOfStone {
                 tile.Draw(sb);
         }
 
-        //TODO: create dynamic chunk image storing/loading system
-
         //Reads in an image from a given path and returns that image converted to tile IDs in a 2D array
         public int[,] ReadImage(string imagePath) {
-            Bitmap img = new Bitmap(imagePath); //Convert it to a readable format
+            string path = Directory.GetCurrentDirectory();
+            string newPath = Path.GetFullPath(Path.Combine(path, @"..\..\..\..\Content\maps\" + imagePath)); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE
+            Bitmap img = new Bitmap(newPath); //Convert it to a readable format
 
             int[,] atlas = new int[img.Height, img.Width]; //Initialize dimensions of returned array
 

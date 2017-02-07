@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.IO;
 
 namespace TheBondOfStone {
     /// <summary>
@@ -12,6 +13,9 @@ namespace TheBondOfStone {
         SpriteBatch spriteBatch;
 
         TileMap map;
+        int mapCount;
+
+        Random randomObject = new Random();
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -27,7 +31,7 @@ namespace TheBondOfStone {
         protected override void Initialize() {
             // TODO: Add your initialization logic here
 
-            map = new TileMap();
+            map = new TileMap(randomObject);
 
             base.Initialize();
         }
@@ -40,8 +44,14 @@ namespace TheBondOfStone {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Tile.Content = Content;
+            TileDecoration.Content = Content;
 
-            map.Generate(map.ReadImage(@"E:\Monogame\TheBondOfStone\TheBondOfStone\Content\map_1.png"), 32);
+            //Get the count of maps in the maps folder
+            string path = Directory.GetCurrentDirectory();
+            DirectoryInfo mapDir = new DirectoryInfo(Path.GetFullPath(Path.Combine(path, @"..\..\..\..\Content\maps"))); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE 
+            mapCount = mapDir.GetFiles().Length;
+
+            map.Generate(map.ReadImage("map_1.png"), 32);
             
 
             // TODO: use this.Content to load your game content here

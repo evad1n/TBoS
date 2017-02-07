@@ -26,6 +26,12 @@ namespace TheBondOfStone {
             set { adjacents = value; }
         }
 
+        List<TileDecoration> decorations = new List<TileDecoration>();
+        public List<TileDecoration> Decorations {
+            get { return decorations; }
+        }
+
+
         private Rectangle rect;
         public Rectangle Rect {
             get { return rect; }
@@ -46,10 +52,13 @@ namespace TheBondOfStone {
             set { id = value; }
         }
 
-        public Tile(int ID, Rectangle r) {
+        Random r;
+
+        public Tile(int ID, Rectangle r, Random rand) {
             
             this.ID = ID;
             Rect = r;
+            this.r = rand;
 
             if (ID == 1 || ID == 3 || ID == 4 || ID == 5) { //Draw queue means background tiles are rendered behind ground tiles
                 DrawQueue = 0;
@@ -71,8 +80,11 @@ namespace TheBondOfStone {
         public void Draw(SpriteBatch sb) {
             if(!stitched)
                 StitchTile();
-                
+
             sb.Draw(texture, rect, Color.White);
+
+            foreach (TileDecoration d in Decorations)
+                d.Draw(sb);
         }
 
         //Use bitmasking to determine which texture this tile should have
@@ -96,6 +108,29 @@ namespace TheBondOfStone {
 
         public Tile AddBackgroundTile() {
             return new Tile(Content.Load<Texture2D>("graphics\\tile\\tile_2_15"), Rect);
+        }
+
+        public void GenerateDecorations() {
+            switch (ID) {
+                case 1:
+                    if (r.Next(0, 10) <= 3)
+                        if(Adjacents[0] == false)
+                            Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y - (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 0));
+
+                    if (Adjacents[3] == false)
+                        if (r.Next(0, 10) <= 1) {
+                            if(ID == 1)
+                                Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 1));
+                            else if(ID == 2)
+                                Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 3));
+                        }
+                break;
+
+                case 2:
+                    if (r.Next(0, 10) == 0)
+                        Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y, Rect.Width, Rect.Height), r, 2));
+                    break;
+            }
         }
     }
 }
