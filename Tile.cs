@@ -52,13 +52,10 @@ namespace TheBondOfStone {
             set { id = value; }
         }
 
-        Random r;
-
-        public Tile(int ID, Rectangle r, Random rand) {
+        public Tile(int ID, Rectangle r) {
             
             this.ID = ID;
             Rect = r;
-            this.r = rand;
 
             if (ID == 1 || ID == 3 || ID == 4 || ID == 5) { //Draw queue means background tiles are rendered behind ground tiles
                 DrawQueue = 0;
@@ -113,23 +110,23 @@ namespace TheBondOfStone {
         public void GenerateDecorations() {
             switch (ID) {
                 case 1:
-                    if (r.Next(10) <= 3)
+                    if (Game1.RandomObject.Next(10) <= 3)
                         if(Adjacents[0] == false)
-                            Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y - (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 0));
+                            Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y - (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), 0));
 
                     if (Adjacents[3] == false)
-                        if (r.Next(10) <= 1) {
-                                Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 1));
+                        if (Game1.RandomObject.Next(10) <= 1) {
+                                Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), 1));
                         }
                 break;
 
                 case 2:
-                    if (r.Next(10) == 0)
-                        Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y, Rect.Width, Rect.Height), r, 2));
+                    if (Game1.RandomObject.Next(10) == 0)
+                        Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y, Rect.Width, Rect.Height), 2));
 
                     if (Adjacents[3] == false)
-                        if (r.Next(10) <= 1)
-                            Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), r, 3));
+                        if (Game1.RandomObject.Next(10) <= 1)
+                            Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / 8), Rect.Width, Rect.Height), 3));
                     break;
             }
         }

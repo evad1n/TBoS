@@ -11,7 +11,6 @@ namespace TheBondOfStone {
     class TileMap { //This object class represents a chunk's tile data
 
         List<Tile> tiles = new List<Tile>(); //List holds tiles linearly (w/ property)
-        Random rand;
 
         public Tile StartTile { get; set; }
         public Tile EndTile { get; set; }
@@ -25,7 +24,7 @@ namespace TheBondOfStone {
         public int Width { get { return width; } }
         public int Height { get { return height; } }
 
-        public TileMap(Random rand) { this.rand = rand; }
+        public TileMap() { }
 
         //Generate this chunk in a drawable format. Takes a 2D array of tile IDs and a tile size.
         public void Generate(int[,] atlas, int size) {
@@ -33,7 +32,7 @@ namespace TheBondOfStone {
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     //Add a new tile to the tiles list with an ID and rect from the Atlas.
-                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(x * size, y * size, size, size), rand);
+                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(x * size, y * size, size, size));
 
                     Tiles.Add(tileToAdd);
 

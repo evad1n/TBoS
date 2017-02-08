@@ -15,12 +15,15 @@ namespace TheBondOfStone {
 
         public static int PixelScaleFactor { get; set; }
 
-        TileMap map;
+        List<TileMap> Chunks;
+        TileMap previousChunk;
+        TileMap currentChunk;
         int mapCount;
 
         List<ParallaxLayer> parallaxLayers;
+        Color backgroundColor;
 
-        Random randomObject = new Random();
+        public static Random RandomObject;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -35,8 +38,11 @@ namespace TheBondOfStone {
         /// </summary>
         protected override void Initialize() {
             PixelScaleFactor = 16;
+            RandomObject = new Random();
 
-            map = new TileMap(randomObject);
+            backgroundColor = new Color(86, 138, 205);
+
+            Chunks = new List<TileMap>();
 
             base.Initialize();
         }
@@ -57,14 +63,15 @@ namespace TheBondOfStone {
             string path = Directory.GetCurrentDirectory();
             DirectoryInfo mapDir = new DirectoryInfo(Path.GetFullPath(Path.Combine(path, @"..\..\..\..\Content\maps"))); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE 
             mapCount = mapDir.GetFiles().Length;
-            
+
             //TODO: Actual map generation script implementation goes here.
-            map.Generate(map.ReadImage("map_1.png"), PixelScaleFactor);
+            //map.Generate(map.ReadImage("map_1.png"), PixelScaleFactor);
+            
 
             //Initialize and load background parallaxing layers
             parallaxLayers = new List<ParallaxLayer>();
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(-25, 1f)));
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(-50, 2f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(-10, 2f), 0.0125f));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(-30, 3f), 0.03f));
 
 
         }
@@ -112,7 +119,7 @@ namespace TheBondOfStone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(backgroundColor);
 
             //Draw background parallaxing layers with different spritebatch settings 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
@@ -122,7 +129,8 @@ namespace TheBondOfStone {
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
-            map.Draw(spriteBatch); //Draw the map (will be a list of maps in the future)
+            foreach(TileMap map in Chunks)
+                map.Draw(spriteBatch); //Draw each active chunk
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -130,6 +138,10 @@ namespace TheBondOfStone {
 
         //Maybe use this to generate chunks eventually.
         void GenerateNewChunk() {
+            TileMap newChunk = new TileMap();
+
+            Chunks.Add(newChunk);
+            previousChunk = currentChunk;
 
         }
     }

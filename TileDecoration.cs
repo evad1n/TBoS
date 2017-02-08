@@ -27,10 +27,10 @@ namespace TheBondOfStone {
             set { content = value; }
         }
 
-        public TileDecoration(Rectangle r, Random rand, int id = 0) {
+        public TileDecoration(Rectangle r, int id = 0) {
             Rect = r;
             Content = content;
-            Texture = PickTexture(id, rand);
+            Texture = PickTexture(id, Game1.RandomObject);
         }
 
         Texture2D PickTexture(int ID, Random r) {
