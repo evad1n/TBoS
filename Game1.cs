@@ -18,7 +18,7 @@ namespace TheBondOfStone {
         List<TileMap> Chunks;
         TileMap previousChunk;
         TileMap currentChunk;
-        int mapCount;
+        FileInfo[] mapFiles;
 
         List<ParallaxLayer> parallaxLayers;
         Color backgroundColor;
@@ -39,6 +39,10 @@ namespace TheBondOfStone {
         protected override void Initialize() {
             PixelScaleFactor = 16;
             RandomObject = new Random();
+
+            graphics.PreferredBackBufferHeight = 512;
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.ApplyChanges();
 
             backgroundColor = new Color(86, 138, 205);
 
@@ -62,7 +66,7 @@ namespace TheBondOfStone {
             //Get the count of maps in the maps folder
             string path = Directory.GetCurrentDirectory();
             DirectoryInfo mapDir = new DirectoryInfo(Path.GetFullPath(Path.Combine(path, @"..\..\..\..\Content\maps"))); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE 
-            mapCount = mapDir.GetFiles().Length;
+            mapFiles = mapDir.GetFiles();
 
             //TODO: Actual map generation script implementation goes here.
             //map.Generate(map.ReadImage("map_1.png"), PixelScaleFactor);
@@ -70,7 +74,7 @@ namespace TheBondOfStone {
 
             //Initialize and load background parallaxing layers
             parallaxLayers = new List<ParallaxLayer>();
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(-10, 2f), 0.0125f));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(-10, 3f), 0.0125f));
             parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(-30, 3f), 0.03f));
 
 
@@ -111,6 +115,8 @@ namespace TheBondOfStone {
             foreach (ParallaxLayer p in parallaxLayers)
                 p.Update(gameTime, direction, GraphicsDevice.Viewport);
 
+            UpdateChunks();
+
             base.Update(gameTime);
         }
 
@@ -137,12 +143,33 @@ namespace TheBondOfStone {
         }
 
         //Maybe use this to generate chunks eventually.
-        void GenerateNewChunk() {
+        void GenerateNewChunk(Rectangle startTileRect, string mapName) {
             TileMap newChunk = new TileMap();
 
             Chunks.Add(newChunk);
             previousChunk = currentChunk;
+            currentChunk = newChunk;
 
+            //TODO: Generate the chunk at an origin position given by startTileRect as an "origin"
+        }
+
+        void UpdateChunks() {
+            if (Chunks.Count > 0) {
+                if (Chunks[0].EndTile.Rect.X <= -Chunks[0].EndTile.Rect.Width) {
+                    //last tile of first chunk is off screen, destroy that chunk (i.e. remove it from the list).
+                    Chunks.RemoveAt(0);
+                }
+
+                if (Chunks[Chunks.Count - 1].EndTile.Rect.X < GraphicsDevice.Viewport.Width) {
+                    //End tile of last chunk is on screen, generate new chunk
+                    GenerateNewChunk(Chunks[Chunks.Count - 1].EndTile.Rect, GetNewMapName());
+                }
+            }
+        }
+
+        //Gets a random map name from the directory of the maps
+        string GetNewMapName() {
+            return mapFiles[RandomObject.Next(mapFiles.Length)].Name;
         }
     }
 }
