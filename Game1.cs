@@ -106,18 +106,19 @@ namespace TheBondOfStone {
             //Get directional vector based on keyboard input
             Vector2 direction = Vector2.Zero;
             if (kbState.IsKeyDown(Keys.Up))
-                direction = new Vector2(0, -1);
-            else if (kbState.IsKeyDown(Keys.Down))
-                direction = new Vector2(0, 1);
+                direction += new Vector2(0, -1);
+            if (kbState.IsKeyDown(Keys.Down))
+                direction += new Vector2(0, 1);
             if (kbState.IsKeyDown(Keys.Left))
                 direction += new Vector2(-1, 0);
-            else if (kbState.IsKeyDown(Keys.Right))
+            if (kbState.IsKeyDown(Keys.Right))
                 direction += new Vector2(1, 0);
 
             //Update backgrounds
             foreach (ParallaxLayer p in parallaxLayers)
                 p.Update(gameTime, direction, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
 
+            
             UpdateChunkGeneration();
 
             base.Update(gameTime);
@@ -162,7 +163,7 @@ namespace TheBondOfStone {
 
 
             if (Chunks.Count > 0) {
-                if (Chunks[0].EndTile.Rect.X <= -Chunks[0].EndTile.Rect.Width) {
+                if (Chunks[0].EndTile.Rect.X <= GraphicsDevice.Viewport.X - Chunks[0].EndTile.Rect.Width) {
                     //last tile of first chunk is off screen, destroy that chunk (i.e. remove it from the list).
                     Chunks.RemoveAt(0);
                 }
