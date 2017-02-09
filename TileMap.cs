@@ -15,6 +15,8 @@ namespace TheBondOfStone {
         public Tile StartTile { get; set; }
         public Tile EndTile { get; set; }
 
+        public bool Generated { get; set; }
+
         public List<Tile> Tiles {
             get { return tiles; }
         }
@@ -24,7 +26,27 @@ namespace TheBondOfStone {
         public int Width { get { return width; } }
         public int Height { get { return height; } }
 
-        public TileMap() { }
+        Microsoft.Xna.Framework.Rectangle o;
+
+        public TileMap(Microsoft.Xna.Framework.Rectangle originTile) {
+            o = originTile;
+        }
+
+        //default constructor generates the "starter chunk"
+        public TileMap() {
+            int[,] atlas = new int[,] {
+                { 0, 0, 0, 0, 0 },
+                { 0, 2, 2, 0, 0 },
+                { 0, 2, 2, 2, 0 },
+                { 1, 1, 1, 1, 5 },
+                { 0, 1, 1, 0, 0 }
+            };
+
+            Generate(atlas, Game1.PixelScaleFactor);
+            EndTile = Tiles[23];
+
+            o = new Microsoft.Xna.Framework.Rectangle(10 * Game1.PixelScaleFactor, 20 * Game1.PixelScaleFactor, Game1.PixelScaleFactor, Game1.PixelScaleFactor);
+        }
 
         //Generate this chunk in a drawable format. Takes a 2D array of tile IDs and a tile size.
         public void Generate(int[,] atlas, int size) {
@@ -32,15 +54,9 @@ namespace TheBondOfStone {
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     //Add a new tile to the tiles list with an ID and rect from the Atlas.
-                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(x * size, y * size, size, size));
+                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(o.X + (x * size + size), o.Y + (y * size), size, size));
 
                     Tiles.Add(tileToAdd);
-
-                    if (tileToAdd.ID == 4)
-                        StartTile = tileToAdd;
-
-                    if (tileToAdd.ID == 5)
-                        StartTile = tileToAdd;
 
                     width = (x + 1) * size;
                     height = (y + 1) * size;
@@ -102,9 +118,16 @@ namespace TheBondOfStone {
                 }
             }
 
-            //Generate the decorations for each tile
-            foreach(Tile tile in Tiles)
+            //Generate the decorations and start/end tile information for each tile
+            foreach (Tile tile in Tiles) {
+                if (tile.ID == 4)
+                    StartTile = tile;
+                else if (tile.ID == 5)
+                    EndTile = tile;
                 tile.GenerateDecorations();
+            }
+
+            Generated = true;
         }
 
         public void Draw(SpriteBatch sb) {
@@ -124,15 +147,15 @@ namespace TheBondOfStone {
 
             for(int x = 0; x < atlas.GetLength(1); x++) { //Iterate through each atlas index
                 for(int y = 0; y < atlas.GetLength(0); y++) {
-                    Color px = img.GetPixel(y, x); //Get the pixel color at this index and convert it to a string
+                    Color px = img.GetPixel(x, y); //Get the pixel color at this index and convert it to a string
 
                     string pxStr = 
                         px.R.ToString("D3") + " " +
                         px.G.ToString("D3") + " " +
                         px.B.ToString("D3") + " " +
                         px.A.ToString("D3");
-
-                    atlas[x, y] = TileID(pxStr, y, atlas.GetLength(0)); //Convert the pixel color to an integer ID and populate the array
+                    
+                    atlas[y, x] = TileID(pxStr, x, img.Width); //Convert the pixel color to an integer ID and populate the array
                 }
             }
 

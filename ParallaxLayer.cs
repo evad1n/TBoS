@@ -17,17 +17,17 @@ namespace TheBondOfStone
 
         private Viewport viewport;
 
-        float baseSpeedX;
+        Vector2 baseSpeed;
 
         private Rectangle Rect {
             get { return new Rectangle((int)(offset.X), (int)(offset.Y), (viewport.Width / (Game1.PixelScaleFactor/8)), (viewport.Height / (Game1.PixelScaleFactor/8))); }
         }
 
-        public ParallaxLayer(Texture2D texture, Vector2 disp, float baseSpeed) {
+        public ParallaxLayer(Texture2D texture, Vector2 disp, Vector2 baseSpeed) {
             this.texture = texture;
             offset = Vector2.Zero;
             this.disp = disp;
-            baseSpeedX = baseSpeed;
+            this.baseSpeed = baseSpeed;
         }
 
         public void Update(GameTime gameTime, Vector2 dir, Viewport viewport) {
@@ -36,7 +36,7 @@ namespace TheBondOfStone
             this.viewport = viewport;
 
             Vector2 newDisp = dir * disp * e;
-            newDisp = new Vector2(newDisp.X + baseSpeedX, newDisp.Y);
+            newDisp = new Vector2(newDisp.X + baseSpeed.X, newDisp.Y + baseSpeed.Y);
 
             offset += newDisp;
         }

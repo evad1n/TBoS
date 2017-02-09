@@ -16,8 +16,6 @@ namespace TheBondOfStone {
         public static int PixelScaleFactor { get; set; }
 
         List<TileMap> Chunks;
-        TileMap previousChunk;
-        TileMap currentChunk;
         FileInfo[] mapFiles;
 
         List<ParallaxLayer> parallaxLayers;
@@ -69,14 +67,19 @@ namespace TheBondOfStone {
             mapFiles = mapDir.GetFiles();
 
             //TODO: Actual map generation script implementation goes here.
-            //map.Generate(map.ReadImage("map_1.png"), PixelScaleFactor);
+
+            //Starter generation: generate chunks out to the end of the screen to start off.
+            DoStarterGeneration();
             
 
             //Initialize and load background parallaxing layers
             parallaxLayers = new List<ParallaxLayer>();
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(-10, 3f), 0.0125f));
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(-30, 3f), 0.03f));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(-10, 3f), new Vector2(0.0125f, 0f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(-30, 4f), new Vector2(0.5f, -0.25f)));
 
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(-30, 4f), new Vector2(0.03f, 0f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(-10, 3f), new Vector2(0.1f, -0.5f)));
+            
 
         }
 
@@ -113,9 +116,9 @@ namespace TheBondOfStone {
 
             //Update backgrounds
             foreach (ParallaxLayer p in parallaxLayers)
-                p.Update(gameTime, direction, GraphicsDevice.Viewport);
+                p.Update(gameTime, direction, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
 
-            UpdateChunks();
+            UpdateChunkGeneration();
 
             base.Update(gameTime);
         }
@@ -130,7 +133,8 @@ namespace TheBondOfStone {
             //Draw background parallaxing layers with different spritebatch settings 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
             foreach (ParallaxLayer p in parallaxLayers)
-                p.Draw(spriteBatch);
+                if(p != parallaxLayers[3])
+                    p.Draw(spriteBatch);
 
             spriteBatch.End();
 
@@ -139,21 +143,24 @@ namespace TheBondOfStone {
                 map.Draw(spriteBatch); //Draw each active chunk
             spriteBatch.End();
 
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
+            parallaxLayers[3].Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
 
         //Maybe use this to generate chunks eventually.
         void GenerateNewChunk(Rectangle startTileRect, string mapName) {
-            TileMap newChunk = new TileMap();
-
-            Chunks.Add(newChunk);
-            previousChunk = currentChunk;
-            currentChunk = newChunk;
-
-            //TODO: Generate the chunk at an origin position given by startTileRect as an "origin"
+            Chunks.Add(new TileMap(startTileRect));
         }
 
-        void UpdateChunks() {
+        void UpdateChunkGeneration() {
+            foreach (TileMap chunk in Chunks) {
+                if (!chunk.Generated)
+                    chunk.Generate(chunk.ReadImage(GetNewMapName()), PixelScaleFactor);
+            }
+
+
             if (Chunks.Count > 0) {
                 if (Chunks[0].EndTile.Rect.X <= -Chunks[0].EndTile.Rect.Width) {
                     //last tile of first chunk is off screen, destroy that chunk (i.e. remove it from the list).
@@ -167,8 +174,13 @@ namespace TheBondOfStone {
             }
         }
 
+        void DoStarterGeneration() {
+            Chunks.Add(new TileMap());
+        }
+
         //Gets a random map name from the directory of the maps
         string GetNewMapName() {
+            //Return the name of a file from mapFiles (the directory of the maps) 
             return mapFiles[RandomObject.Next(mapFiles.Length)].Name;
         }
     }
