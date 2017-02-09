@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// CAN I PUSH>?????>?>??????!?!??!
 namespace TheBondOfStone
 {
     class ParallaxLayer
