@@ -128,7 +128,7 @@ namespace TheBondOfStone {
             camera.Position += cameraspeed;
             //Update backgrounds
             foreach (ParallaxLayer p in parallaxLayers)
-                p.Update(gameTime, direction, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
+                p.Update(gameTime, direction+cameraspeed, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
 
             UpdateChunkGeneration();
 
