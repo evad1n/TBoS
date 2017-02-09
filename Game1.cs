@@ -82,11 +82,11 @@ namespace TheBondOfStone {
 
             //Initialize and load background parallaxing layers
             parallaxLayers = new List<ParallaxLayer>();
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, -3f), new Vector2(-0.0125f, 0f)));
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, -4f), new Vector2(-0.5f, 0.25f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, 3f), new Vector2(-0.0125f, 0f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, 0.25f)));
 
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, -4f), new Vector2(-0.03f, 0f)));
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, -3f), new Vector2(-0.1f, 0.5f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, 4f), new Vector2(-0.03f, 0f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, 0.5f)));
             
 
         }
