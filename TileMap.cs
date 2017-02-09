@@ -50,11 +50,18 @@ namespace TheBondOfStone {
 
         //Generate this chunk in a drawable format. Takes a 2D array of tile IDs and a tile size.
         public void Generate(int[,] atlas, int size) {
+            //Generate the offset so the chunk is added at the correct height
+            int yoffset = 0;
+            for (int iter = 0; iter < atlas.GetLength(0); iter++) {
+                //If atlas value is equal to start tile
+                if (atlas[iter, 0] == 4) yoffset = iter;
+                //y offset equals the iterator
+            }
             //Iterate through each value of the Atlas
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     //Add a new tile to the tiles list with an ID and rect from the Atlas.
-                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(o.X + (x * size + size), o.Y + (y * size), size, size));
+                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(o.X + (x * size + size), o.Y + (y * size) - (yoffset*size), size, size));
 
                     Tiles.Add(tileToAdd);
 
