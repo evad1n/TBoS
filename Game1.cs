@@ -4,12 +4,17 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MonoGame.Extended;
 
 namespace TheBondOfStone {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class Game1 : Game {
+        //The game's camera
+        Camera2D camera;
+        //The speed of the camera
+        Vector2 cameraspeed;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -46,6 +51,9 @@ namespace TheBondOfStone {
 
             Chunks = new List<TileMap>();
 
+            camera = new Camera2D(GraphicsDevice);
+            cameraspeed = new Vector2(2, 0);
+
             base.Initialize();
         }
 
@@ -74,11 +82,11 @@ namespace TheBondOfStone {
 
             //Initialize and load background parallaxing layers
             parallaxLayers = new List<ParallaxLayer>();
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(-10, 3f), new Vector2(0.0125f, 0f)));
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(-30, 4f), new Vector2(0.5f, -0.25f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, -3f), new Vector2(-0.0125f, 0f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, -4f), new Vector2(-0.5f, 0.25f)));
 
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(-30, 4f), new Vector2(0.03f, 0f)));
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(-10, 3f), new Vector2(0.1f, -0.5f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, -4f), new Vector2(-0.03f, 0f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, -3f), new Vector2(-0.1f, 0.5f)));
             
 
         }
@@ -106,19 +114,22 @@ namespace TheBondOfStone {
             //Get directional vector based on keyboard input
             Vector2 direction = Vector2.Zero;
             if (kbState.IsKeyDown(Keys.Up))
-                direction += new Vector2(0, -1);
+                direction += new Vector2(0, -5);
             if (kbState.IsKeyDown(Keys.Down))
-                direction += new Vector2(0, 1);
+                direction += new Vector2(0, 5);
             if (kbState.IsKeyDown(Keys.Left))
-                direction += new Vector2(-1, 0);
+                direction += new Vector2(-5, 0);
             if (kbState.IsKeyDown(Keys.Right))
-                direction += new Vector2(1, 0);
+                direction += new Vector2(5, 0);
 
+            //Update camera
+
+            camera.Position += direction;
+            camera.Position += cameraspeed;
             //Update backgrounds
             foreach (ParallaxLayer p in parallaxLayers)
                 p.Update(gameTime, direction, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
 
-            
             UpdateChunkGeneration();
 
             base.Update(gameTime);
@@ -139,7 +150,7 @@ namespace TheBondOfStone {
 
             spriteBatch.End();
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, camera.GetViewMatrix());
             foreach(TileMap map in Chunks)
                 map.Draw(spriteBatch); //Draw each active chunk
             spriteBatch.End();
@@ -163,12 +174,12 @@ namespace TheBondOfStone {
 
 
             if (Chunks.Count > 0) {
-                if (Chunks[0].EndTile.Rect.X <= GraphicsDevice.Viewport.X - Chunks[0].EndTile.Rect.Width) {
+                if (Chunks[0].EndTile.Rect.X <= camera.Position.X - Chunks[0].EndTile.Rect.Width) {
                     //last tile of first chunk is off screen, destroy that chunk (i.e. remove it from the list).
                     Chunks.RemoveAt(0);
                 }
 
-                if (Chunks[Chunks.Count - 1].EndTile.Rect.X < GraphicsDevice.Viewport.Width) {
+                if (Chunks[Chunks.Count - 1].EndTile.Rect.X < GraphicsDevice.Viewport.Width + camera.Position.X) {
                     //End tile of last chunk is on screen, generate new chunk
                     GenerateNewChunk(Chunks[Chunks.Count - 1].EndTile.Rect, GetNewMapName());
                 }
