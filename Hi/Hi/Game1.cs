@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,6 +13,20 @@ namespace Hi
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        KeyboardState oldKeyboardState;
+
+        World world;
+        float worldStep;
+        Body playerBody;
+        Body floor;
+        Vector2 jumpForce;
+        float maxJump;
+        bool isJumping;
+        float jumpTime;
+
+        Texture2D playerTexture;
+        Texture2D floorTexture;
 
         public Game1()
         {
@@ -27,6 +43,12 @@ namespace Hi
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            world = new World(new Vector2(0,500f));
+            jumpForce = new Vector2(0, -100000000000);
+            maxJump = 0.5f;
+            isJumping = false;
+            jumpTime = 0;
+            worldStep = 0.0167777f;
 
             base.Initialize();
         }
@@ -41,6 +63,15 @@ namespace Hi
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            playerTexture = Content.Load<Texture2D>("tree");
+            floorTexture = Content.Load<Texture2D>("white");
+
+            playerBody = BodyFactory.CreateRectangle(world, playerTexture.Width, playerTexture.Height, 1);
+            playerBody.BodyType = BodyType.Dynamic;
+
+            floor = BodyFactory.CreateRectangle(world, floorTexture.Width, floorTexture.Height, 1);
+            floor.Position = new Vector2(100, 200);
+            floor.BodyType = BodyType.Static;
         }
 
         /// <summary>
@@ -63,6 +94,9 @@ namespace Hi
                 Exit();
 
             // TODO: Add your update logic here
+            world.Step(worldStep);
+
+            HandleKeyboard();
 
             base.Update(gameTime);
         }
@@ -76,8 +110,43 @@ namespace Hi
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            spriteBatch.Draw(playerTexture, playerBody.Position, Color.White);
+            spriteBatch.Draw(floorTexture, floor.Position, Color.Black);
+            spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private void HandleKeyboard()
+        {
+            KeyboardState state = Keyboard.GetState();
+
+            if(state.IsKeyDown(Keys.A))
+            {
+                playerBody.Position = new Vector2(playerBody.Position.X -5, playerBody.Position.Y);
+            }
+            if (state.IsKeyDown(Keys.D))
+            {
+                playerBody.Position = new Vector2(playerBody.Position.X + 5, playerBody.Position.Y);
+            }
+
+            if(state.IsKeyDown(Keys.Space))
+            {
+                isJumping = true;
+            }
+            else
+            {
+                isJumping = false;
+                jumpTime = 0;
+            }
+
+            if(isJumping && jumpTime < maxJump)
+            {
+                playerBody.ApplyForce(jumpForce, playerBody.WorldCenter);
+                jumpTime += worldStep;
+            }
+
+            oldKeyboardState = state;
         }
     }
 }
