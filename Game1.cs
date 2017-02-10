@@ -14,7 +14,7 @@ namespace TheBondOfStone {
         //The game's camera
         Camera2D camera;
         //The speed of the camera
-        Vector2 cameraspeed;
+        Vector2 cameravelocity;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -52,7 +52,7 @@ namespace TheBondOfStone {
             Chunks = new List<TileMap>();
 
             camera = new Camera2D(GraphicsDevice);
-            cameraspeed = new Vector2(2, 0);
+            cameravelocity = new Vector2(2, -GraphicsDevice.Viewport.Height/128);
 
             base.Initialize();
         }
@@ -123,14 +123,18 @@ namespace TheBondOfStone {
                 direction += new Vector2(5, 0);
 
             //Update camera
-
             camera.Position += direction;
-            camera.Position += cameraspeed;
+            camera.Position += cameravelocity;
+
             //Update backgrounds
             foreach (ParallaxLayer p in parallaxLayers)
-                p.Update(gameTime, direction+cameraspeed, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
+                p.Update(gameTime, direction+cameravelocity, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
 
-            UpdateChunkGeneration();
+            //Update chunks, camera velocity
+            if (UpdateChunkGeneration()) {
+                //camera velocity = (same X), delta-y/(distance/x velocity)
+                cameravelocity = new Vector2(cameravelocity.X, (Chunks[0].EndTile.Rect.Y - Chunks[0].StartTile.Rect.Y)/(Chunks[0].Width/cameravelocity.X));
+            }
 
             base.Update(gameTime);
         }
@@ -166,7 +170,8 @@ namespace TheBondOfStone {
             Chunks.Add(new TileMap(startTileRect));
         }
 
-        void UpdateChunkGeneration() {
+        bool UpdateChunkGeneration() {
+            bool needToUpdateTheCamera = false;
             foreach (TileMap chunk in Chunks) {
                 if (!chunk.Generated)
                     chunk.Generate(chunk.ReadImage(GetNewMapName()), PixelScaleFactor);
@@ -175,6 +180,7 @@ namespace TheBondOfStone {
 
             if (Chunks.Count > 0) {
                 if (Chunks[0].EndTile.Rect.X <= camera.Position.X - Chunks[0].EndTile.Rect.Width) {
+                    needToUpdateTheCamera = true;
                     //last tile of first chunk is off screen, destroy that chunk (i.e. remove it from the list).
                     Chunks.RemoveAt(0);
                 }
@@ -184,6 +190,7 @@ namespace TheBondOfStone {
                     GenerateNewChunk(Chunks[Chunks.Count - 1].EndTile.Rect, GetNewMapName());
                 }
             }
+            return needToUpdateTheCamera;
         }
 
         void DoStarterGeneration() {
