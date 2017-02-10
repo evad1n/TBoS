@@ -1,8 +1,11 @@
 ﻿using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
+using FarseerPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace Hi
 {
@@ -20,9 +23,15 @@ namespace Hi
         float worldStep;
         Body playerBody;
         Body floor;
+        Fixture playerFixture;
+        Fixture floorFixture;
+        Vertices playerVertices = new Vertices(4);
+        Vertices floorVertices = new Vertices(4);
+
         Vector2 jumpForce;
         float maxJump;
         bool isJumping;
+        bool isGrounded;
         float jumpTime;
 
         Texture2D playerTexture;
@@ -43,12 +52,13 @@ namespace Hi
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            world = new World(new Vector2(0,500f));
-            jumpForce = new Vector2(0, -100000000000);
-            maxJump = 0.5f;
+            world = new World(new Vector2(0,9.8f));
+            jumpForce = new Vector2(0, -1000000000000);
+            maxJump = 1f;
             isJumping = false;
+            isGrounded = false;
             jumpTime = 0;
-            worldStep = 0.0167777f;
+            worldStep = 0.1f;
 
             base.Initialize();
         }
@@ -69,9 +79,26 @@ namespace Hi
             playerBody = BodyFactory.CreateRectangle(world, playerTexture.Width, playerTexture.Height, 1);
             playerBody.BodyType = BodyType.Dynamic;
 
+            playerVertices.Add(new Vector2(0, 0));
+            playerVertices.Add(new Vector2(0, playerTexture.Height));
+            playerVertices.Add(new Vector2(playerTexture.Width, playerTexture.Height));
+            playerVertices.Add(new Vector2(playerTexture.Width, 0));
+
+
+            floorVertices.Add(new Vector2(0, 0));
+            floorVertices.Add(new Vector2(0, floorTexture.Height));   
+            floorVertices.Add(new Vector2(floorTexture.Width, floorTexture.Height));
+            floorVertices.Add(new Vector2(floorTexture.Width, 0));
+
             floor = BodyFactory.CreateRectangle(world, floorTexture.Width, floorTexture.Height, 1);
             floor.Position = new Vector2(100, 200);
             floor.BodyType = BodyType.Static;
+
+            playerFixture = playerBody.CreateFixture(new PolygonShape(playerVertices, 1));
+            floorFixture = floor.CreateFixture(new PolygonShape(floorVertices, 1));
+
+
+            playerBody.OnCollision += MyOnCollision;
         }
 
         /// <summary>
@@ -130,23 +157,36 @@ namespace Hi
                 playerBody.Position = new Vector2(playerBody.Position.X + 5, playerBody.Position.Y);
             }
 
-            if(state.IsKeyDown(Keys.Space))
+            if(state.IsKeyDown(Keys.Space) && isGrounded)
             {
                 isJumping = true;
+                isGrounded = false;
+            }
+
+            if(isJumping && state.IsKeyDown(Keys.Space))
+            {
+                if(jumpTime < maxJump)
+                {
+                    playerBody.ApplyForce(jumpForce, playerBody.WorldCenter);
+                    jumpTime += worldStep;
+                }
+                else
+                {
+                    isJumping = false;
+                }
             }
             else
             {
-                isJumping = false;
                 jumpTime = 0;
             }
 
-            if(isJumping && jumpTime < maxJump)
-            {
-                playerBody.ApplyForce(jumpForce, playerBody.WorldCenter);
-                jumpTime += worldStep;
-            }
-
             oldKeyboardState = state;
+        }
+
+        public bool MyOnCollision(Fixture b1, Fixture b2, Contact contact)
+        {
+            isGrounded = true;
+            return true;
         }
     }
 }
