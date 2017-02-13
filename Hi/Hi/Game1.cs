@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.DebugView;
+using FarseerPhysics;
 
 namespace Hi
 {
@@ -37,6 +39,9 @@ namespace Hi
         Texture2D playerTexture;
         Texture2D floorTexture;
 
+        DebugViewXNA debug;
+
+        //Convert pixels to meters float width = ConvertUnits.ToSimUnits(512f) 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -53,12 +58,14 @@ namespace Hi
         {
             // TODO: Add your initialization logic here
             world = new World(new Vector2(0,9.8f));
-            jumpForce = new Vector2(0, -1000000000000);
+            jumpForce = new Vector2(0, -10000000000000);
             maxJump = 1f;
             isJumping = false;
             isGrounded = false;
             jumpTime = 0;
             worldStep = 0.1f;
+
+            debug = new DebugViewXNA(world);
 
             base.Initialize();
         }
@@ -91,12 +98,12 @@ namespace Hi
             floorVertices.Add(new Vector2(floorTexture.Width, 0));
 
             floor = BodyFactory.CreateRectangle(world, floorTexture.Width, floorTexture.Height, 1);
-            floor.Position = new Vector2(100, 200);
             floor.BodyType = BodyType.Static;
 
             playerFixture = playerBody.CreateFixture(new PolygonShape(playerVertices, 1));
             floorFixture = floor.CreateFixture(new PolygonShape(floorVertices, 1));
 
+            floor.Position = new Vector2(100, 200);
 
             playerBody.OnCollision += MyOnCollision;
         }
@@ -138,8 +145,19 @@ namespace Hi
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+
+
             spriteBatch.Draw(playerTexture, playerBody.Position, Color.White);
             spriteBatch.Draw(floorTexture, floor.Position, Color.Black);
+
+            //Draws debugging view
+            var projection = Matrix.CreateOrthographicOffCenter(
+            0f,
+            ConvertUnits.ToSimUnits(graphics.GraphicsDevice.Viewport.Width),
+            ConvertUnits.ToSimUnits(graphics.GraphicsDevice.Viewport.Height), 0f, 0f,
+            1f);
+            debug.RenderDebugData(ref projection);
+
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -157,10 +175,17 @@ namespace Hi
                 playerBody.Position = new Vector2(playerBody.Position.X + 5, playerBody.Position.Y);
             }
 
-            if(state.IsKeyDown(Keys.Space) && isGrounded)
+            if(state.IsKeyDown(Keys.Space))
             {
-                isJumping = true;
-                isGrounded = false;
+                if(isGrounded)
+                {
+                    isJumping = true;
+                    isGrounded = false;
+                }
+            }
+            else
+            {
+                isJumping = false;
             }
 
             if(isJumping && state.IsKeyDown(Keys.Space))
@@ -168,7 +193,7 @@ namespace Hi
                 if(jumpTime < maxJump)
                 {
                     playerBody.ApplyForce(jumpForce, playerBody.WorldCenter);
-                    jumpTime += worldStep;
+                    jumpTime += worldStep/2;
                 }
                 else
                 {
