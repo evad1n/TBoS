@@ -15,6 +15,9 @@ namespace TheBondOfStone {
         Camera2D camera;
         //The speed of the camera
         Vector2 cameravelocity;
+
+        Vector2 playerposition;
+        bool playerfacing; //true if facing left, false if facing right.
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -52,7 +55,7 @@ namespace TheBondOfStone {
             Chunks = new List<TileMap>();
 
             camera = new Camera2D(GraphicsDevice);
-            cameravelocity = new Vector2(2, -GraphicsDevice.Viewport.Height/128);
+            cameravelocity = new Vector2(2, 0); //Use -GraphicsDevice.Viewport.Height/128 to get height up to half screenish if paired with chunk-updating y velocity, else, just, peg to player
 
             base.Initialize();
         }
@@ -82,11 +85,14 @@ namespace TheBondOfStone {
 
             //Initialize and load background parallaxing layers
             parallaxLayers = new List<ParallaxLayer>();
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, 3f), new Vector2(-0.0125f, 0f)));
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, 0.25f)));
-
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, 4f), new Vector2(-0.03f, 0f)));
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, 0.5f)));
+            //Front Cloud
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, .5f), new Vector2(-0.0125f, 0f)));
+            //Foreground Leaves
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, -0.25f)));
+            //Back Cloud
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, .6f), new Vector2(-0.03f, 0f)));
+            //Background Leaves
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, -0.5f)));
             
 
         }
@@ -113,15 +119,18 @@ namespace TheBondOfStone {
 
             //Get directional vector based on keyboard input
             Vector2 direction = Vector2.Zero;
-            if (kbState.IsKeyDown(Keys.Up))
+            if (kbState.IsKeyDown(Keys.Up)) {
                 direction += new Vector2(0, -5);
-            if (kbState.IsKeyDown(Keys.Down))
+            }
+            if (kbState.IsKeyDown(Keys.Down)) {
                 direction += new Vector2(0, 5);
-            if (kbState.IsKeyDown(Keys.Left))
+            }
+            if (kbState.IsKeyDown(Keys.Left)) {
                 direction += new Vector2(-5, 0);
-            if (kbState.IsKeyDown(Keys.Right))
+            }
+            if (kbState.IsKeyDown(Keys.Right)) {
                 direction += new Vector2(5, 0);
-
+            }
             //Update camera
             camera.Position += direction;
             camera.Position += cameravelocity;
@@ -133,7 +142,8 @@ namespace TheBondOfStone {
             //Update chunks, camera velocity
             if (UpdateChunkGeneration()) {
                 //camera velocity = (same X), delta-y/(distance/x velocity)
-                cameravelocity = new Vector2(cameravelocity.X, (Chunks[0].EndTile.Rect.Y - Chunks[0].StartTile.Rect.Y)/(Chunks[0].Width/cameravelocity.X));
+                //cameravelocity = new Vector2(cameravelocity.X, (Chunks[0].EndTile.Rect.Y - Chunks[0].StartTile.Rect.Y)/(Chunks[0].Width/cameravelocity.X));
+
             }
 
             base.Update(gameTime);
