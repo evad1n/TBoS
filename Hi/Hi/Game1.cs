@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.DebugView;
 using FarseerPhysics;
 
 namespace Hi
@@ -39,8 +38,6 @@ namespace Hi
         Texture2D playerTexture;
         Texture2D floorTexture;
 
-        DebugViewXNA debug;
-
         //Convert pixels to meters float width = ConvertUnits.ToSimUnits(512f) 
         public Game1()
         {
@@ -64,8 +61,6 @@ namespace Hi
             isGrounded = false;
             jumpTime = 0;
             worldStep = 0.1f;
-
-            debug = new DebugViewXNA(world);
 
             base.Initialize();
         }
@@ -154,9 +149,7 @@ namespace Hi
             var projection = Matrix.CreateOrthographicOffCenter(
             0f,
             ConvertUnits.ToSimUnits(graphics.GraphicsDevice.Viewport.Width),
-            ConvertUnits.ToSimUnits(graphics.GraphicsDevice.Viewport.Height), 0f, 0f,
-            1f);
-            debug.RenderDebugData(ref projection);
+            ConvertUnits.ToSimUnits(graphics.GraphicsDevice.Viewport.Height), 0f, 0f, 1f);
 
             spriteBatch.End();
             base.Draw(gameTime);
