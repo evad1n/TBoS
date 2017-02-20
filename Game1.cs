@@ -74,7 +74,7 @@ namespace TheBondOfStone {
 
             //Get the count of maps in the maps folder
             string path = Directory.GetCurrentDirectory();
-            DirectoryInfo mapDir = new DirectoryInfo(Path.GetFullPath(Path.Combine(path, @"..\..\..\..\Content\maps"))); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE 
+            DirectoryInfo mapDir = new DirectoryInfo(Path.GetFullPath(Path.Combine(path, @".\Content\maps"))); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE - Amended 2/20/17 - Why are we using fancy concatenation here anyway?
             mapFiles = mapDir.GetFiles();
 
             //TODO: Actual map generation script implementation goes here.
