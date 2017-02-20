@@ -53,8 +53,12 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Collectible.cs" />
+    <Compile Include="Enemy.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="ParallaxLayer.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tile.cs" />
