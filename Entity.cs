@@ -36,12 +36,13 @@ namespace TheBondOfStone
         }
 
 
-        public Entity(World world, Shape shape, Vector2 position, Texture2D texture)
+        public Entity(World world, Shape shape, Vector2 position, Texture2D texture, string tag = null)
         {
             this.texture = texture;
             body = new Body(world);
             fixture = body.CreateFixture(shape);
             fixture.Body.Position = position;
+            fixture.UserData = tag;
         }
     }
 }

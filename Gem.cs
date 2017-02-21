@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace TheBondOfStone
 {
-    class Collectible : Entity
+    class Gem : Collectible
     {
-        public Collectible(World world, Shape shape, Vector2 position, Texture2D texture)
-            :base (world, shape, position, texture, null)
+
+        public Gem(World world, Shape shape, Vector2 position, Texture2D texture)
+            :base (world, shape, position, texture, "gem")
         {
 
         }

@@ -13,6 +13,14 @@ namespace TheBondOfStone
     class Enemy : Entity
     {
         private Fixture headFixture;
+        private Body headBody;
+        private bool armored;
+
+        public bool Armored
+        {
+            get { return armored; }
+            set { armored = value; }
+        }
 
         public Fixture HeadFixture
         {
@@ -20,10 +28,11 @@ namespace TheBondOfStone
             set { headFixture = value; }
         }
 
-        public Enemy(World world, Shape shape, Vector2 position, Texture2D texture)
-            :base (world, shape, position, texture)
+        public Enemy(World world, Shape shape, Vector2 position, Texture2D texture, Shape headShape)
+            :base (world, shape, position, texture, "enemy")
         {
-
+            headBody = new Body(world);
+            headBody.CreateFixture(headShape, "enemyHead");
         }
     }
 }
