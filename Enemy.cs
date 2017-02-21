@@ -15,6 +15,14 @@ namespace TheBondOfStone
         private Fixture headFixture;
         private Body headBody;
         private bool armored;
+        private int direction;
+
+        public int Direction
+        {
+            get { return direction; }
+            set { direction = value; }
+        }
+
 
         public bool Armored
         {
@@ -33,6 +41,7 @@ namespace TheBondOfStone
         {
             headBody = new Body(world);
             headBody.CreateFixture(headShape, "enemyHead");
+            direction = 1;
         }
     }
 }
