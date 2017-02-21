@@ -12,7 +12,7 @@ namespace TheBondOfStone
 {
     class Collectible : Entity
     {
-        public Collectible(World world, Shape shape, Vector2 position, Texture2D texture)
+        public Collectible(World world, Shape shape, Vector2 position, Texture2D texture, String tag = null)
             :base (world, shape, position, texture, null)
         {
 
