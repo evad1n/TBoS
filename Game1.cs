@@ -11,13 +11,21 @@ namespace TheBondOfStone {
     /// This is the main type for your game.
     /// </summary>
     public class Game1 : Game {
+
+        /// <summary>
+        /// The enumeration measuring the state of the game.
+        /// </summary>
+        enum GameState { StartMenu, Running, GameOver };
+        /// <summary>
+        /// The state the game is in.
+        /// </summary>
+        GameState state;
+
         //The game's camera
         Camera2D camera;
         //The speed of the camera
         Vector2 cameravelocity;
-
-        Vector2 playerposition;
-        bool playerfacing; //true if facing left, false if facing right.
+        
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -56,6 +64,8 @@ namespace TheBondOfStone {
 
             camera = new Camera2D(GraphicsDevice);
             cameravelocity = new Vector2(2, 0); //Use -GraphicsDevice.Viewport.Height/128 to get height up to half screenish if paired with chunk-updating y velocity, else, just, peg to player
+
+            state = GameState.StartMenu;
 
             base.Initialize();
         }
