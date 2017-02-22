@@ -18,25 +18,8 @@ namespace Hi
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        KeyboardState oldKeyboardState;
-
+        static Texture2D enemyTexture;
         World world;
-        float worldStep;
-        Body playerBody;
-        Body floor;
-        Fixture playerFixture;
-        Fixture floorFixture;
-        Vertices playerVertices;
-        Vertices floorVertices;
-
-        Vector2 jumpForce;
-        float maxJump;
-        bool isJumping;
-        bool isGrounded;
-        float jumpTime;
-
-        Texture2D playerTexture;
-        Texture2D floorTexture;
 
 
         //Convert pixels to meters float width = ConvertUnits.ToSimUnits(512f) 
@@ -55,13 +38,7 @@ namespace Hi
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            world = new World(new Vector2(0,1010100101010f));
-            jumpForce = new Vector2(0, -10000000000000);
-            maxJump = 1f;
-            isJumping = false;
-            isGrounded = false;
-            jumpTime = 0;
-            worldStep = 0.1f;
+            world = new World(new Vector2(0, 9.8f));
 
             base.Initialize();
         }
@@ -76,25 +53,7 @@ namespace Hi
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            playerTexture = Content.Load<Texture2D>("tree");
-            floorTexture = Content.Load<Texture2D>("MONKEY");
-
-            playerBody = BodyFactory.CreateRectangle(world, playerTexture.Width, playerTexture.Height, 1);
-            playerBody.BodyType = BodyType.Dynamic;
-
-            floorVertices = PolygonTools.CreateRectangle(1, 1);
-            playerVertices = PolygonTools.CreateRectangle(playerTexture.Width, playerTexture.Height);
-
-            floor = BodyFactory.CreateRectangle(world, 1, 1, 1);
-            floor.BodyType = BodyType.Static;
-
-            playerFixture = playerBody.CreateFixture(new PolygonShape(playerVertices, 1));
-            floorFixture = floor.CreateFixture(new PolygonShape(floorVertices, 1));
-
-            floor.Position = new Vector2(100, 200);
-            playerBody.Position = new Vector2(100, 0);
-
-            playerBody.OnCollision += MyOnCollision;
+            enemyTexture = Content.Load<Texture2D>("MONKEY");
         }
 
         /// <summary>
@@ -117,9 +76,6 @@ namespace Hi
                 Exit();
 
             // TODO: Add your update logic here
-            world.Step(worldStep);
-
-            HandleKeyboard();
 
             base.Update(gameTime);
         }
@@ -136,64 +92,9 @@ namespace Hi
             spriteBatch.Begin();
 
 
-            spriteBatch.Draw(playerTexture, playerBody.Position, Color.White);
-            spriteBatch.Draw(floorTexture, floor.Position, Color.White);
-
 
             spriteBatch.End();
             base.Draw(gameTime);
-        }
-
-        private void HandleKeyboard()
-        {
-            KeyboardState state = Keyboard.GetState();
-
-            if(state.IsKeyDown(Keys.A))
-            {
-                playerBody.Position = new Vector2(playerBody.Position.X -5, playerBody.Position.Y);
-            }
-            if (state.IsKeyDown(Keys.D))
-            {
-                playerBody.Position = new Vector2(playerBody.Position.X + 5, playerBody.Position.Y);
-            }
-
-            //if(state.IsKeyDown(Keys.Space))
-            //{
-            //    if(isGrounded)
-            //    {
-            //        isJumping = true;
-            //        isGrounded = false;
-            //    }
-            //}
-            //else
-            //{
-            //    isJumping = false;
-            //}
-
-            //if(isJumping && state.IsKeyDown(Keys.Space))
-            //{
-            //    if(jumpTime < maxJump)
-            //    {
-            //        playerBody.ApplyForce(jumpForce, playerBody.WorldCenter);
-            //        jumpTime += worldStep/2;
-            //    }
-            //    else
-            //    {
-            //        isJumping = false;
-            //    }
-            //}
-            //else
-            //{
-            //    jumpTime = 0;
-            //}
-
-            //oldKeyboardState = state;
-        }
-
-        public bool MyOnCollision(Fixture b1, Fixture b2, Contact contact)
-        {
-            isGrounded = true;
-            return true;
         }
     }
 }
