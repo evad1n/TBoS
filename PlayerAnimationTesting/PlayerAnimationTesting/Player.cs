@@ -11,7 +11,7 @@ namespace PlayerAnimationTesting {
 	enum PlayerStates { Stand, Walk, Roll, Jump, Midair };
 	class Player {
 
-		// Rectangle?
+		// animation is (width per frame (in pixels), height per frame(in pixels), number of frames, 
 		Point[] animations;
 
 		public Player(Texture2D spritesheet) {
