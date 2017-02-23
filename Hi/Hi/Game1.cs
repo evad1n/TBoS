@@ -18,9 +18,16 @@ namespace Hi
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        static Texture2D enemyTexture;
+        Texture2D enemyTexture;
+        Texture2D playerTexture;
+        Texture2D floorTexture;
         World world;
 
+        Body floor1;
+        Body floor2;
+
+        Enemy enemy;
+        Player player;
 
         //Convert pixels to meters float width = ConvertUnits.ToSimUnits(512f) 
         public Game1()
@@ -53,7 +60,21 @@ namespace Hi
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            enemyTexture = Content.Load<Texture2D>("MONKEY");
+            floorTexture = Content.Load<Texture2D>("white");
+            enemyTexture = Content.Load<Texture2D>("enemy");
+            playerTexture = Content.Load<Texture2D>("player");
+
+
+            floor1 = BodyFactory.CreateRectangle(world, floorTexture.Width, floorTexture.Height, 1, "ground");
+            floor1.BodyType = BodyType.Static;
+            floor2 = BodyFactory.CreateRectangle(world, floorTexture.Width, floorTexture.Height, 1, "ground");
+            floor2.BodyType = BodyType.Static;
+
+            player = new Player(world, new Vector2(500, 0), playerTexture);
+            enemy = new Enemy(world, new Vector2(500, 100), new Vector2(50, 300), new Vector2(650, 300), enemyTexture);
+
+            floor1.Position = new Vector2(0, 300);
+            floor2.Position = new Vector2(400, 300);
         }
 
         /// <summary>
@@ -76,6 +97,10 @@ namespace Hi
                 Exit();
 
             // TODO: Add your update logic here
+            world.Step(0.5f);
+
+            player.Update(gameTime);
+            enemy.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -91,7 +116,10 @@ namespace Hi
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-
+            spriteBatch.Draw(floorTexture, floor1.Position, Color.Black);
+            spriteBatch.Draw(floorTexture, floor2.Position, Color.Black);
+            enemy.Draw(spriteBatch, enemyTexture, floorTexture);
+            player.Draw(spriteBatch, playerTexture);
 
             spriteBatch.End();
             base.Draw(gameTime);

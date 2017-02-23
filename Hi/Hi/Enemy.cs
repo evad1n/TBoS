@@ -12,27 +12,38 @@ namespace Hi
 {
     class Enemy
     {
-        Fixture leftFixture;
-        Fixture rightFixture;
-        Fixture center;
+        Body left;
+        Body right;
+        Body center;
 
-        private int speed = 5;
+        private int speed = 10;
         private int direction = -1;
 
-        public Enemy(World w, Vector2 position, Vector2 leftPosition, Vector2 rightPosition)
+        public Enemy(World w, Vector2 position, Vector2 leftPosition, Vector2 rightPosition, Texture2D tex)
         {
-            leftFixture.UserData = "bound";
-            rightFixture.UserData = "bound";
+            center = BodyFactory.CreateRoundedRectangle(w, tex.Width/5, tex.Height/5, 10, 20, 1, 1, "enemy");
+            left = BodyFactory.CreateEdge(w, new Vector2(leftPosition.X - 1, leftPosition.Y - 200), new Vector2 (leftPosition.X + 1, leftPosition.Y + 200), "bound");
+            right = BodyFactory.CreateEdge(w, new Vector2(rightPosition.X - 1, rightPosition.Y - 200), new Vector2(rightPosition.X + 1, rightPosition.Y + 200), "bound");
+
+            center.BodyType = BodyType.Dynamic;
+            left.BodyType = BodyType.Static;
+            right.BodyType = BodyType.Static;
+
+            center.Position = position;
+            left.Position = leftPosition;
+            right.Position = rightPosition;
             center.OnCollision += HandleCollision;
         }
         public void Update(GameTime gameTime)
         {
-            center.Body.LinearVelocity = new Vector2(speed * direction, 0);
+            center.LinearVelocity = new Vector2(speed * direction, 0);
         }
 
-        public void Draw(SpriteBatch sb, Texture2D enemyTexture)
+        public void Draw(SpriteBatch sb, Texture2D enemyTexture, Texture2D boundsTexture)
         {
-            sb.Draw(enemyTexture, center.Body.Position, Color.White);
+            sb.Draw(enemyTexture, position: center.Position, color: Color.White, scale: new Vector2(0.2f));
+            sb.Draw(boundsTexture, position: left.Position, color: Color.White, scale: new Vector2(0.2f));
+            sb.Draw(boundsTexture, position: right.Position, color: Color.White, scale: new Vector2(0.2f));
         }
 
         public bool HandleCollision(Fixture f1, Fixture f2, Contact contact)
