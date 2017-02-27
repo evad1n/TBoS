@@ -47,7 +47,7 @@ namespace TheBondOfStone {
         }
 
         public void Draw(SpriteBatch sb) {
-            sb.Draw(Texture, Rect, Color.White);
+            sb.Draw(Texture, new Rectangle(Rect.X - Rect.Size.X / 2, Rect.Y - Rect.Size.Y / 2, Rect.Width, Rect.Height), Color.White);
         }
     }
 }

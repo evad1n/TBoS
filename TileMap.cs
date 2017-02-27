@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,12 +29,13 @@ namespace TheBondOfStone {
 
         Microsoft.Xna.Framework.Rectangle o;
 
-        public TileMap(Microsoft.Xna.Framework.Rectangle originTile) {
+        public TileMap(Microsoft.Xna.Framework.Rectangle originTile, World world) {
             o = originTile;
         }
 
         //default constructor generates the "starter chunk"
         public TileMap() {
+
             int[,] atlas = new int[,] {
                 { 0, 0, 0, 0, 0 },
                 { 0, 2, 2, 0, 0 },

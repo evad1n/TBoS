@@ -29,7 +29,6 @@ namespace Hi
         Enemy enemy;
         Player player;
 
-        //Convert pixels to meters float width = ConvertUnits.ToSimUnits(512f) 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);

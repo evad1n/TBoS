@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MonoGame.Extended;
+using FarseerPhysics.Dynamics;
 
 namespace TheBondOfStone {
     /// <summary>
@@ -15,9 +16,7 @@ namespace TheBondOfStone {
         Camera2D camera;
         //The speed of the camera
         Vector2 cameravelocity;
-
-        Vector2 playerposition;
-        bool playerfacing; //true if facing left, false if facing right.
+        
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -30,6 +29,12 @@ namespace TheBondOfStone {
         Color backgroundColor;
 
         public static Random RandomObject;
+
+        public Player player;
+        Texture2D playerTexture;
+        KeyboardState prevKeyboardState;
+
+        public static World world;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -55,7 +60,7 @@ namespace TheBondOfStone {
             Chunks = new List<TileMap>();
 
             camera = new Camera2D(GraphicsDevice);
-            cameravelocity = new Vector2(2, 0); //Use -GraphicsDevice.Viewport.Height/128 to get height up to half screenish if paired with chunk-updating y velocity, else, just, peg to player
+            //cameravelocity = new Vector2(2, 0); //Use -GraphicsDevice.Viewport.Height/128 to get height up to half screenish if paired with chunk-updating y velocity, else, just, peg to player
 
             base.Initialize();
         }
@@ -71,6 +76,7 @@ namespace TheBondOfStone {
             //Set the static Tile and TileDecoration classes to reference the Game's content loader, so they can load their own textures as needed.
             Tile.Content = Content;
             TileDecoration.Content = Content;
+            world = new World(new Vector2(0, 50.0f));
 
             //Get the count of maps in the maps folder
             string path = Directory.GetCurrentDirectory();
@@ -80,19 +86,23 @@ namespace TheBondOfStone {
             //TODO: Actual map generation script implementation goes here.
 
             //Starter generation: generate chunks out to the end of the screen to start off.
+            //And add the player to the world
             DoStarterGeneration();
-            
+
+            playerTexture = Content.Load<Texture2D>(@"graphics\entity\player");
+
+            SpawnPlayer();
 
             //Initialize and load background parallaxing layers
             parallaxLayers = new List<ParallaxLayer>();
             //Front Cloud
             parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, .5f), new Vector2(-0.0125f, 0f)));
             //Foreground Leaves
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, -0.25f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, 0.125f)));
             //Back Cloud
             parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, .6f), new Vector2(-0.03f, 0f)));
             //Background Leaves
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, -0.5f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, 0.25f)));
             
 
         }
@@ -115,29 +125,40 @@ namespace TheBondOfStone {
                 Exit();
 
             //DEBUG/TESTING MOVEMENT. UPDATE WITH CHARACTER/CAMERA UPDATE CALLS
-            KeyboardState kbState = Keyboard.GetState();
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            //Get directional vector based on keyboard input
-            Vector2 direction = Vector2.Zero;
-            if (kbState.IsKeyDown(Keys.Up)) {
-                direction += new Vector2(0, -5);
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            player.Update(gameTime, world);
+
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                player.Move(Movement.Left);
             }
-            if (kbState.IsKeyDown(Keys.Down)) {
-                direction += new Vector2(0, 5);
+            else if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                player.Move(Movement.Right);
             }
-            if (kbState.IsKeyDown(Keys.Left)) {
-                direction += new Vector2(-5, 0);
+            else
+            {
+                player.Move(Movement.Stop);
             }
-            if (kbState.IsKeyDown(Keys.Right)) {
-                direction += new Vector2(5, 0);
+
+            if (keyboardState.IsKeyDown(Keys.Space) && !prevKeyboardState.IsKeyDown(Keys.Space))
+            {
+                player.Jump(-15f);
             }
+
+            prevKeyboardState = keyboardState;
+
+            player.Update(gameTime, world);
+
             //Update camera
-            camera.Position += direction;
-            camera.Position += cameravelocity;
+            //camera.Position += cameravelocity;
 
             //Update backgrounds
             foreach (ParallaxLayer p in parallaxLayers)
-                p.Update(gameTime, direction+cameravelocity, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
+                p.Update(gameTime, cameravelocity, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
 
             //Update chunks, camera velocity
             if (UpdateChunkGeneration()) {
@@ -167,6 +188,8 @@ namespace TheBondOfStone {
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, camera.GetViewMatrix());
             foreach(TileMap map in Chunks)
                 map.Draw(spriteBatch); //Draw each active chunk
+
+            player.Draw(spriteBatch);
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
@@ -177,7 +200,7 @@ namespace TheBondOfStone {
 
         //Maybe use this to generate chunks eventually.
         void GenerateNewChunk(Rectangle startTileRect, string mapName) {
-            Chunks.Add(new TileMap(startTileRect));
+            Chunks.Add(new TileMap(startTileRect, Game1.world));
         }
 
         bool UpdateChunkGeneration() {
@@ -211,6 +234,11 @@ namespace TheBondOfStone {
         string GetNewMapName() {
             //Return the name of a file from mapFiles (the directory of the maps) 
             return mapFiles[RandomObject.Next(mapFiles.Length)].Name;
+        }
+
+        void SpawnPlayer()
+        {
+            player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(24 * PixelScaleFactor, 20 * PixelScaleFactor)));
         }
     }
 }

@@ -48,7 +48,7 @@ namespace Hi
 
         public bool HandleCollision(Fixture f1, Fixture f2, Contact contact)
         {
-            if((string)f2.UserData == "bound")
+            if((string)f2.Body.UserData == "bound")
             {
                 direction *= -1;
             }
