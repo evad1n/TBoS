@@ -4,6 +4,7 @@ using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Shapes;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,24 @@ namespace TheBondOfStone
 
         public void Update(GameTime gameTime, World w)
         {
+            if (Game1.keyboardState.IsKeyDown(Keys.Left))
+            {
+                Move(Movement.Left);
+            }
+            else if (Game1.keyboardState.IsKeyDown(Keys.Right))
+            {
+                Move(Movement.Right);
+            }
+            else
+            {
+                Move(Movement.Stop);
+            }
+
+            if (Game1.keyboardState.IsKeyDown(Keys.Space) && !Game1.prevKeyboardState.IsKeyDown(Keys.Space))
+            {
+                Jump(-15f);
+            }
+
             separationRect.Position = physicsRect.Position;
 
             Walled = hitLeft || hitRight;
