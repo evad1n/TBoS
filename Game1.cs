@@ -11,11 +11,17 @@ namespace TheBondOfStone {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
+    /// 
+
+    public enum GameState { MainMenu, Playing, Pause, GameOver };
+
     public class Game1 : Game {
         //The game's camera
         Camera camera;
         //The speed of the camera
         Vector2 cameravelocity;
+
+        GameState state;
         
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -40,6 +46,7 @@ namespace TheBondOfStone {
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
         }
 
         /// <summary>
@@ -51,6 +58,9 @@ namespace TheBondOfStone {
         protected override void Initialize() {
             //Scaling factor for ALL of the game's sprites
             PixelScaleFactor = 16;
+
+            //Set initial game state
+            state = GameState.Playing;
 
             //Random object for ALL THE GAME'S RNG. Reference this Random instance ONLY
             RandomObject = new Random();
@@ -123,8 +133,37 @@ namespace TheBondOfStone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+
+            keyboardState = Keyboard.GetState();
+
+            switch (state)
+            {
+                case GameState.MainMenu:
+                    UpdateMainMenu(gameTime);
+                    break;
+                case GameState.Playing:
+                    UpdatePlaying(gameTime);
+                    break;
+                case GameState.GameOver:
+                    UpdateGameOver(gameTime);
+                    break;
+                case GameState.Pause:
+                    UpdatePause(gameTime);
+                    break;
+            }
+
+            prevKeyboardState = keyboardState;
+
+            base.Update(gameTime);
+        }
+
+        void UpdateMainMenu(GameTime gameTime)
+        {
+
+        }
+
+        void UpdatePlaying(GameTime gameTime)
+        {
 
             //DEBUG/TESTING MOVEMENT. UPDATE WITH CHARACTER/CAMERA UPDATE CALLS
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -132,13 +171,27 @@ namespace TheBondOfStone {
             Generator.UpdateChunkGeneration();
 
             //Update the keyboard states and the player object
-            keyboardState = Keyboard.GetState();
 
             player.Update(gameTime, world);
 
-            prevKeyboardState = keyboardState;
 
-            base.Update(gameTime);
+            if(keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+            {
+                state = GameState.Pause;
+            }
+        }
+
+        void UpdatePause(GameTime gameTime)
+        {
+            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+            {
+                state = GameState.Playing;
+            }
+        }
+
+        void UpdateGameOver(GameTime gameTime)
+        {
+
         }
 
         /// <summary>
@@ -148,16 +201,41 @@ namespace TheBondOfStone {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(backgroundColor);
 
+            switch (state)
+            {
+                case GameState.MainMenu:
+                    DrawMainMenu(gameTime);
+                    break;
+                case GameState.Playing:
+                    DrawPlaying(gameTime);
+                    break;
+                case GameState.GameOver:
+                    DrawGameOver(gameTime);
+                    break;
+                case GameState.Pause:
+                    DrawPause(gameTime);
+                    break;
+            }
+            base.Draw(gameTime);
+        }
+
+        void DrawMainMenu(GameTime gameTime)
+        {
+
+        }
+
+        void DrawPlaying(GameTime gameTime)
+        {
             //Draw background parallaxing layers with different spritebatch settings 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
             foreach (ParallaxLayer p in parallaxLayers)
-                if(p != parallaxLayers[3])
+                if (p != parallaxLayers[3])
                     p.Draw(spriteBatch);
 
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, camera.GetViewMatrix());
-            foreach(Chunk map in Generator.Chunks)
+            foreach (Chunk map in Generator.Chunks)
                 map.Draw(spriteBatch); //Draw each active chunk
 
             player.Draw(spriteBatch);
@@ -166,7 +244,16 @@ namespace TheBondOfStone {
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
             parallaxLayers[3].Draw(spriteBatch);
             spriteBatch.End();
-            base.Draw(gameTime);
+        }
+
+        void DrawPause(GameTime gameTime)
+        {
+
+        }
+
+        void DrawGameOver(GameTime gameTime)
+        {
+
         }
 
         void SpawnPlayer()

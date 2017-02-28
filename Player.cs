@@ -69,11 +69,11 @@ namespace TheBondOfStone
 
         public void Update(GameTime gameTime, World w)
         {
-            if (Game1.keyboardState.IsKeyDown(Keys.Left))
+            if (Game1.keyboardState.IsKeyDown(Keys.Left) || Game1.keyboardState.IsKeyDown(Keys.A))
             {
                 Move(Movement.Left);
             }
-            else if (Game1.keyboardState.IsKeyDown(Keys.Right))
+            else if (Game1.keyboardState.IsKeyDown(Keys.Right) || Game1.keyboardState.IsKeyDown(Keys.D))
             {
                 Move(Movement.Right);
             }
