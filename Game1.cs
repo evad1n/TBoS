@@ -17,9 +17,7 @@ namespace TheBondOfStone {
 
     public class Game1 : Game {
         //The game's camera
-        Camera camera;
-        //The speed of the camera
-        Vector2 cameravelocity;
+        Camera Camera { get; set; }
 
         GameState state;
         
@@ -97,10 +95,10 @@ namespace TheBondOfStone {
             SpawnPlayer();
 
             //Instantiate the camera object
-            camera = new Camera(GraphicsDevice, player);
+            Camera = new Camera(GraphicsDevice, player);
 
             //Instantiate the level generator
-            Generator = new LevelGenerator(camera);
+            Generator = new LevelGenerator(Camera);
 
             //Use the generator to generate the starter chunk
             Generator.DoStarterGeneration();
@@ -173,11 +171,17 @@ namespace TheBondOfStone {
             //Update the keyboard states and the player object
 
             player.Update(gameTime, world);
+            Camera.Update(gameTime);
 
 
             if(keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
             {
                 state = GameState.Pause;
+            }
+
+            if(keyboardState.IsKeyDown(Keys.Q))
+            {
+                Camera.ScreenShake(100, 1f);
             }
         }
 
@@ -227,21 +231,21 @@ namespace TheBondOfStone {
         void DrawPlaying(GameTime gameTime)
         {
             //Draw background parallaxing layers with different spritebatch settings 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
             foreach (ParallaxLayer p in parallaxLayers)
                 if (p != parallaxLayers[3])
                     p.Draw(spriteBatch);
 
             spriteBatch.End();
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, camera.GetViewMatrix());
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
             foreach (Chunk map in Generator.Chunks)
                 map.Draw(spriteBatch); //Draw each active chunk
 
             player.Draw(spriteBatch);
             spriteBatch.End();
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
             parallaxLayers[3].Draw(spriteBatch);
             spriteBatch.End();
         }

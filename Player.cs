@@ -22,7 +22,7 @@ namespace TheBondOfStone
 
     public class Player
     {
-        private PhysicsObject physicsRect;
+        public PhysicsObject physicsRect;
         PhysicsObject separationRect;
         Texture2D texture;
 
@@ -36,6 +36,7 @@ namespace TheBondOfStone
 
         public bool Grounded { get; set; }
         public bool Walled { get; set; }
+
 
         public Player(World world, Texture2D texture, Vector2 size, float mass, Vector2 startPosition)
         {

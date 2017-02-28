@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TheBondOfStone
 {
-    class PhysicsObject
+    public class PhysicsObject
     {
         public Body Body { get; private set; }
 
