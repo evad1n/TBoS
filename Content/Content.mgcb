@@ -769,3 +769,9 @@
 /processorParam:TextureFormat=Color
 /build:graphics/entity/player.png
 
+#begin graphics\ui\SubtitleFontLarge.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:graphics\ui\SubtitleFontLarge.spritefont
+

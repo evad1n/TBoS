@@ -29,6 +29,7 @@ namespace TheBondOfStone {
         public static int PixelScaleFactor { get; set; }
 
         LevelGenerator Generator { get; set; }
+		UI UIManager { get; set; }
 
         List<ParallaxLayer> parallaxLayers;
         Color backgroundColor;
@@ -37,6 +38,8 @@ namespace TheBondOfStone {
 
         public Player player;
         Texture2D playerTexture;
+
+		
 
         public static KeyboardState keyboardState;
         public static KeyboardState prevKeyboardState;
@@ -88,8 +91,10 @@ namespace TheBondOfStone {
             TileDecoration.Content = Content;
             world = new World(new Vector2(0, 50.0f));
 
-            //TODO: Actual map generation script implementation goes here.
 
+
+			UIManager = new UI();
+			UIManager.LoadContent(Content);
             
 
             playerTexture = Content.Load<Texture2D>(@"graphics\entity\player");
@@ -243,7 +248,9 @@ namespace TheBondOfStone {
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
             parallaxLayers[3].Draw(spriteBatch);
-            spriteBatch.End();
+			UIManager.Draw(spriteBatch);
+			spriteBatch.End();
+
         }
 
         void DrawPause(GameTime gameTime)
