@@ -230,7 +230,7 @@ namespace TheBondOfStone {
 
         void DrawMainMenu(GameTime gameTime)
         {
-
+            //TODO: IMPLEMENT MAIN MENU
         }
 
         void DrawPlaying(GameTime gameTime)
@@ -259,12 +259,12 @@ namespace TheBondOfStone {
 
         void DrawPause(GameTime gameTime)
         {
-
+            //TODO: ACTUALLY DISPLAY SOMETHING
         }
 
         void DrawGameOver(GameTime gameTime)
         {
-
+            //TODO: DISPLAY GAMEOVER.
         }
 
         void SpawnPlayer()

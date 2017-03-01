@@ -11,14 +11,16 @@ namespace TheBondOfStone
 {
     class Camera : Camera2D
     {
+        //The target player of this Camera.
         Player target;
+        //The speed of the Camera.
         float speed = 0.5f;
         float shakeTimer;
-        float duration;
+        float duration; //What does this do?
         float shakeQuake;
         float lerpSpeed;
-        bool step = false;
-        bool screenShake = false;
+        bool step = false; //What does this do?
+        bool screenShake = false; //It might be best to explain *how* this does what it does.
 
         public Camera(GraphicsDevice graphicsDevice, Player target) : base(graphicsDevice)
         {
