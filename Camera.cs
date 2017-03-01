@@ -15,9 +15,9 @@ namespace TheBondOfStone
         float speed = 0.5f;
         float shakeTimer;
         float duration;
-        float timer;
         float shakeQuake;
         float lerpSpeed;
+        bool step = false;
         bool screenShake = false;
 
         public Camera(GraphicsDevice graphicsDevice, Player target) : base(graphicsDevice)
@@ -38,29 +38,34 @@ namespace TheBondOfStone
             if(screenShake)
             {
                 shakeTimer += 0.05f;
-                timer += 0.05f;
-                if (timer > lerpSpeed)
-                {
-                    timer = 0;
-                }
-                if (timer > lerpSpeed/2f)
+                if (step)
                 {
                     Rotate(shakeQuake);
+                    step = false;
                 }
                 else
                 {
                     Rotate(-shakeQuake);
+                    step = true;
                 }
+
+                shakeQuake = Lerp(shakeQuake, 0, shakeTimer / duration);
+
             }
         }
 
         public void ScreenShake(int magnitude, float duration)
         {
-            lerpSpeed = duration / (float)magnitude;
             shakeTimer = 0;
             this.duration = duration;
             screenShake = true;
             shakeQuake = 0.0005f * (float)magnitude;
+        }
+
+        public float Lerp(float a, float b, float speed)
+        {
+            //https://forum.yoyogames.com/index.php?threads/how-exactly-does-lerp-work.17177/
+            return (a + ((b - a) * speed));
         }
     }
 }
