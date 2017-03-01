@@ -5,43 +5,49 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MonoGame.Extended;
+using FarseerPhysics.Dynamics;
 
 namespace TheBondOfStone {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
+    /// 
+
+    public enum GameState { MainMenu, Playing, Pause, GameOver };
+
     public class Game1 : Game {
-
-        /// <summary>
-        /// The enumeration measuring the state of the game.
-        /// </summary>
-        enum GameState { StartMenu, Running, GameOver };
-        /// <summary>
-        /// The state the game is in.
-        /// </summary>
-        GameState state;
-
         //The game's camera
-        Camera2D camera;
-        //The speed of the camera
-        Vector2 cameravelocity;
+        Camera Camera { get; set; }
+
+        GameState state;
         
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         public static int PixelScaleFactor { get; set; }
 
-        List<TileMap> Chunks;
-        FileInfo[] mapFiles;
+        LevelGenerator Generator { get; set; }
+		UI UIManager { get; set; }
 
         List<ParallaxLayer> parallaxLayers;
         Color backgroundColor;
 
         public static Random RandomObject;
 
+        public Player player;
+        Texture2D playerTexture;
+
+		
+
+        public static KeyboardState keyboardState;
+        public static KeyboardState prevKeyboardState;
+
+        public static World world;
+
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
         }
 
         /// <summary>
@@ -51,21 +57,21 @@ namespace TheBondOfStone {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
+            //Scaling factor for ALL of the game's sprites
             PixelScaleFactor = 16;
+
+            //Set initial game state
+            state = GameState.Playing;
+
+            //Random object for ALL THE GAME'S RNG. Reference this Random instance ONLY
             RandomObject = new Random();
 
+            //Adjust the screen dimensions and other particulars
             graphics.PreferredBackBufferHeight = 512;
             graphics.PreferredBackBufferWidth = 1024;
             graphics.ApplyChanges();
 
             backgroundColor = new Color(86, 138, 205);
-
-            Chunks = new List<TileMap>();
-
-            camera = new Camera2D(GraphicsDevice);
-            cameravelocity = new Vector2(2, 0); //Use -GraphicsDevice.Viewport.Height/128 to get height up to half screenish if paired with chunk-updating y velocity, else, just, peg to player
-
-            state = GameState.StartMenu;
 
             base.Initialize();
         }
@@ -81,28 +87,37 @@ namespace TheBondOfStone {
             //Set the static Tile and TileDecoration classes to reference the Game's content loader, so they can load their own textures as needed.
             Tile.Content = Content;
             TileDecoration.Content = Content;
+            world = new World(new Vector2(0, 50.0f));
 
-            //Get the count of maps in the maps folder
-            string path = Directory.GetCurrentDirectory();
-            DirectoryInfo mapDir = new DirectoryInfo(Path.GetFullPath(Path.Combine(path, @".\Content\maps"))); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE - Amended 2/20/17 - Why are we using fancy concatenation here anyway?
-            mapFiles = mapDir.GetFiles();
 
-            //TODO: Actual map generation script implementation goes here.
 
-            //Starter generation: generate chunks out to the end of the screen to start off.
-            DoStarterGeneration();
+			UIManager = new UI();
+			UIManager.LoadContent(Content);
             
+
+            playerTexture = Content.Load<Texture2D>(@"graphics\entity\player");
+
+            SpawnPlayer();
+
+            //Instantiate the camera object
+            Camera = new Camera(GraphicsDevice, player);
+
+            //Instantiate the level generator
+            Generator = new LevelGenerator(Camera);
+
+            //Use the generator to generate the starter chunk
+            Generator.DoStarterGeneration();
 
             //Initialize and load background parallaxing layers
             parallaxLayers = new List<ParallaxLayer>();
-            //Front Cloud
+            //Foreground Cloud
             parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, .5f), new Vector2(-0.0125f, 0f)));
-            //Foreground Leaves
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, -0.25f)));
-            //Back Cloud
+            //Foreground particles
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, 0.125f)));
+            //Background Cloud
             parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, .6f), new Vector2(-0.03f, 0f)));
-            //Background Leaves
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, -0.5f)));
+            //Background particles
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, 0.25f)));
             
 
         }
@@ -121,42 +136,71 @@ namespace TheBondOfStone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
 
-            //DEBUG/TESTING MOVEMENT. UPDATE WITH CHARACTER/CAMERA UPDATE CALLS
-            KeyboardState kbState = Keyboard.GetState();
+            keyboardState = Keyboard.GetState();
 
-            //Get directional vector based on keyboard input
-            Vector2 direction = Vector2.Zero;
-            if (kbState.IsKeyDown(Keys.Up)) {
-                direction += new Vector2(0, -5);
+            switch (state)
+            {
+                case GameState.MainMenu:
+                    UpdateMainMenu(gameTime);
+                    break;
+                case GameState.Playing:
+                    UpdatePlaying(gameTime);
+                    break;
+                case GameState.GameOver:
+                    UpdateGameOver(gameTime);
+                    break;
+                case GameState.Pause:
+                    UpdatePause(gameTime);
+                    break;
             }
-            if (kbState.IsKeyDown(Keys.Down)) {
-                direction += new Vector2(0, 5);
-            }
-            if (kbState.IsKeyDown(Keys.Left)) {
-                direction += new Vector2(-5, 0);
-            }
-            if (kbState.IsKeyDown(Keys.Right)) {
-                direction += new Vector2(5, 0);
-            }
-            //Update camera
-            camera.Position += direction;
-            camera.Position += cameravelocity;
 
-            //Update backgrounds
-            foreach (ParallaxLayer p in parallaxLayers)
-                p.Update(gameTime, direction+cameravelocity, GraphicsDevice.Viewport); //Replace "direction" with player X velocity
-
-            //Update chunks, camera velocity
-            if (UpdateChunkGeneration()) {
-                //camera velocity = (same X), delta-y/(distance/x velocity)
-                //cameravelocity = new Vector2(cameravelocity.X, (Chunks[0].EndTile.Rect.Y - Chunks[0].StartTile.Rect.Y)/(Chunks[0].Width/cameravelocity.X));
-
-            }
+            prevKeyboardState = keyboardState;
 
             base.Update(gameTime);
+        }
+
+        void UpdateMainMenu(GameTime gameTime)
+        {
+
+        }
+
+        void UpdatePlaying(GameTime gameTime)
+        {
+
+            //DEBUG/TESTING MOVEMENT. UPDATE WITH CHARACTER/CAMERA UPDATE CALLS
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+
+            Generator.UpdateChunkGeneration();
+
+            //Update the keyboard states and the player object
+
+            player.Update(gameTime, world);
+            Camera.Update(gameTime);
+
+
+            if(keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+            {
+                state = GameState.Pause;
+            }
+
+            if(keyboardState.IsKeyDown(Keys.Q))
+            {
+                Camera.ScreenShake(100, 1f);
+            }
+        }
+
+        void UpdatePause(GameTime gameTime)
+        {
+            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+            {
+                state = GameState.Playing;
+            }
+        }
+
+        void UpdateGameOver(GameTime gameTime)
+        {
+
         }
 
         /// <summary>
@@ -166,61 +210,66 @@ namespace TheBondOfStone {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(backgroundColor);
 
+            switch (state)
+            {
+                case GameState.MainMenu:
+                    DrawMainMenu(gameTime);
+                    break;
+                case GameState.Playing:
+                    DrawPlaying(gameTime);
+                    break;
+                case GameState.GameOver:
+                    DrawGameOver(gameTime);
+                    break;
+                case GameState.Pause:
+                    DrawPause(gameTime);
+                    break;
+            }
+            base.Draw(gameTime);
+        }
+
+        void DrawMainMenu(GameTime gameTime)
+        {
+
+        }
+
+        void DrawPlaying(GameTime gameTime)
+        {
             //Draw background parallaxing layers with different spritebatch settings 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
             foreach (ParallaxLayer p in parallaxLayers)
-                if(p != parallaxLayers[3])
+                if (p != parallaxLayers[3])
                     p.Draw(spriteBatch);
 
             spriteBatch.End();
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, camera.GetViewMatrix());
-            foreach(TileMap map in Chunks)
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
+            foreach (Chunk map in Generator.Chunks)
                 map.Draw(spriteBatch); //Draw each active chunk
+
+            player.Draw(spriteBatch);
             spriteBatch.End();
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
             parallaxLayers[3].Draw(spriteBatch);
-            spriteBatch.End();
-            base.Draw(gameTime);
+			UIManager.Draw(spriteBatch);
+			spriteBatch.End();
+
         }
 
-        //Maybe use this to generate chunks eventually.
-        void GenerateNewChunk(Rectangle startTileRect, string mapName) {
-            Chunks.Add(new TileMap(startTileRect));
+        void DrawPause(GameTime gameTime)
+        {
+
         }
 
-        bool UpdateChunkGeneration() {
-            bool needToUpdateTheCamera = false;
-            foreach (TileMap chunk in Chunks) {
-                if (!chunk.Generated)
-                    chunk.Generate(chunk.ReadImage(GetNewMapName()), PixelScaleFactor);
-            }
+        void DrawGameOver(GameTime gameTime)
+        {
 
-
-            if (Chunks.Count > 0) {
-                if (Chunks[0].EndTile.Rect.X <= camera.Position.X - Chunks[0].EndTile.Rect.Width) {
-                    needToUpdateTheCamera = true;
-                    //last tile of first chunk is off screen, destroy that chunk (i.e. remove it from the list).
-                    Chunks.RemoveAt(0);
-                }
-
-                if (Chunks[Chunks.Count - 1].EndTile.Rect.X < GraphicsDevice.Viewport.Width + camera.Position.X) {
-                    //End tile of last chunk is on screen, generate new chunk
-                    GenerateNewChunk(Chunks[Chunks.Count - 1].EndTile.Rect, GetNewMapName());
-                }
-            }
-            return needToUpdateTheCamera;
         }
 
-        void DoStarterGeneration() {
-            Chunks.Add(new TileMap());
-        }
-
-        //Gets a random map name from the directory of the maps
-        string GetNewMapName() {
-            //Return the name of a file from mapFiles (the directory of the maps) 
-            return mapFiles[RandomObject.Next(mapFiles.Length)].Name;
+        void SpawnPlayer()
+        {
+            player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(24 * PixelScaleFactor, 20 * PixelScaleFactor)));
         }
     }
 }

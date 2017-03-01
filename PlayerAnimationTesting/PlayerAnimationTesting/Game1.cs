@@ -47,7 +47,7 @@ namespace PlayerAnimationTesting {
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			playerSpriteSheet = Content.Load<Texture2D>("Player Sprite");
+			playerSpriteSheet = Content.Load<Texture2D>("Player_Sprite");
 			animations["stand"] = new Rectangle[] { new Rectangle(0, 0, 8, 8), new Rectangle(8, 0, 8, 8) };
 			animations["walk"] = new Rectangle[] { new Rectangle(8, 0, 8, 8), new Rectangle(8, 8, 8, 8), new Rectangle(8, 16, 8, 8)};
 			animations["jump"] = new Rectangle[] { new Rectangle(16, 0, 8, 8), new Rectangle(16, 8, 8, 8), new Rectangle(16, 16, 8, 8) };
@@ -92,7 +92,7 @@ namespace PlayerAnimationTesting {
 
 			spriteBatch.Draw(playerSpriteSheet, new Rectangle(50, 50, 8 * scaleSize, 8 * scaleSize), animations["stand"][drawFrame], Color.White);
 
-			spriteBatch.Draw(playerSpriteSheet, new Rectangle(100, 50, 8 * scaleSize, 8 * scaleSize), animations["stand"][drawFrame], Color.White);
+			spriteBatch.Draw(playerSpriteSheet, new Rectangle(100, 50, 8 * scaleSize, 8 * scaleSize), animations["walk"][drawFrame], Color.White);
 
 			spriteBatch.Draw(playerSpriteSheet, new Rectangle(50, 50, 8 * scaleSize, 8 * scaleSize), animations["stand"][drawFrame], Color.White);
 

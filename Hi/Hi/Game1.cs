@@ -18,28 +18,17 @@ namespace Hi
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        KeyboardState oldKeyboardState;
-
-        World world;
-        float worldStep;
-        Body playerBody;
-        Body floor;
-        Fixture playerFixture;
-        Fixture floorFixture;
-        Vertices playerVertices;
-        Vertices floorVertices;
-
-        Vector2 jumpForce;
-        float maxJump;
-        bool isJumping;
-        bool isGrounded;
-        float jumpTime;
-
+        Texture2D enemyTexture;
         Texture2D playerTexture;
         Texture2D floorTexture;
+        World world;
 
+        Body floor1;
+        Body floor2;
 
-        //Convert pixels to meters float width = ConvertUnits.ToSimUnits(512f) 
+        Enemy enemy;
+        Player player;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -55,13 +44,7 @@ namespace Hi
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            world = new World(new Vector2(0,1010100101010f));
-            jumpForce = new Vector2(0, -10000000000000);
-            maxJump = 1f;
-            isJumping = false;
-            isGrounded = false;
-            jumpTime = 0;
-            worldStep = 0.1f;
+            world = new World(new Vector2(0, 9.8f));
 
             base.Initialize();
         }
@@ -76,25 +59,21 @@ namespace Hi
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            playerTexture = Content.Load<Texture2D>("tree");
-            floorTexture = Content.Load<Texture2D>("MONKEY");
+            floorTexture = Content.Load<Texture2D>("white");
+            enemyTexture = Content.Load<Texture2D>("enemy");
+            playerTexture = Content.Load<Texture2D>("player");
 
-            playerBody = BodyFactory.CreateRectangle(world, playerTexture.Width, playerTexture.Height, 1);
-            playerBody.BodyType = BodyType.Dynamic;
 
-            floorVertices = PolygonTools.CreateRectangle(1, 1);
-            playerVertices = PolygonTools.CreateRectangle(playerTexture.Width, playerTexture.Height);
+            floor1 = BodyFactory.CreateRectangle(world, floorTexture.Width, floorTexture.Height, 1, "ground");
+            floor1.BodyType = BodyType.Static;
+            floor2 = BodyFactory.CreateRectangle(world, floorTexture.Width, floorTexture.Height, 1, "ground");
+            floor2.BodyType = BodyType.Static;
 
-            floor = BodyFactory.CreateRectangle(world, 1, 1, 1);
-            floor.BodyType = BodyType.Static;
+            player = new Player(world, new Vector2(500, 0), playerTexture);
+            enemy = new Enemy(world, new Vector2(500, 100), new Vector2(50, 300), new Vector2(650, 300), enemyTexture);
 
-            playerFixture = playerBody.CreateFixture(new PolygonShape(playerVertices, 1));
-            floorFixture = floor.CreateFixture(new PolygonShape(floorVertices, 1));
-
-            floor.Position = new Vector2(100, 200);
-            playerBody.Position = new Vector2(100, 0);
-
-            playerBody.OnCollision += MyOnCollision;
+            floor1.Position = new Vector2(0, 300);
+            floor2.Position = new Vector2(400, 300);
         }
 
         /// <summary>
@@ -117,9 +96,10 @@ namespace Hi
                 Exit();
 
             // TODO: Add your update logic here
-            world.Step(worldStep);
+            world.Step(0.5f);
 
-            HandleKeyboard();
+            player.Update(gameTime);
+            enemy.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -135,65 +115,13 @@ namespace Hi
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-
-            spriteBatch.Draw(playerTexture, playerBody.Position, Color.White);
-            spriteBatch.Draw(floorTexture, floor.Position, Color.White);
-
+            spriteBatch.Draw(floorTexture, floor1.Position, Color.Black);
+            spriteBatch.Draw(floorTexture, floor2.Position, Color.Black);
+            enemy.Draw(spriteBatch, enemyTexture, floorTexture);
+            player.Draw(spriteBatch, playerTexture);
 
             spriteBatch.End();
             base.Draw(gameTime);
-        }
-
-        private void HandleKeyboard()
-        {
-            KeyboardState state = Keyboard.GetState();
-
-            if(state.IsKeyDown(Keys.A))
-            {
-                playerBody.Position = new Vector2(playerBody.Position.X -5, playerBody.Position.Y);
-            }
-            if (state.IsKeyDown(Keys.D))
-            {
-                playerBody.Position = new Vector2(playerBody.Position.X + 5, playerBody.Position.Y);
-            }
-
-            //if(state.IsKeyDown(Keys.Space))
-            //{
-            //    if(isGrounded)
-            //    {
-            //        isJumping = true;
-            //        isGrounded = false;
-            //    }
-            //}
-            //else
-            //{
-            //    isJumping = false;
-            //}
-
-            //if(isJumping && state.IsKeyDown(Keys.Space))
-            //{
-            //    if(jumpTime < maxJump)
-            //    {
-            //        playerBody.ApplyForce(jumpForce, playerBody.WorldCenter);
-            //        jumpTime += worldStep/2;
-            //    }
-            //    else
-            //    {
-            //        isJumping = false;
-            //    }
-            //}
-            //else
-            //{
-            //    jumpTime = 0;
-            //}
-
-            //oldKeyboardState = state;
-        }
-
-        public bool MyOnCollision(Fixture b1, Fixture b2, Contact contact)
-        {
-            isGrounded = true;
-            return true;
         }
     }
 }
