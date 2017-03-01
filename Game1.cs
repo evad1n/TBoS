@@ -257,9 +257,27 @@ namespace TheBondOfStone {
 
         }
 
-        void DrawPause(GameTime gameTime)
+        void DrawPause(GameTime gameTime) //I want to draw everything with a lightgray over it.  It's a pain however, I may have to do buggery with the Draws.
         {
-            //TODO: ACTUALLY DISPLAY SOMETHING
+            //Draw background parallaxing layers with different spritebatch settings 
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
+            foreach (ParallaxLayer p in parallaxLayers)
+                if (p != parallaxLayers[3])
+                    p.Draw(spriteBatch);
+
+            spriteBatch.End();
+
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
+            foreach (Chunk map in Generator.Chunks)
+                map.Draw(spriteBatch); //Draw each active chunk
+
+            player.Draw(spriteBatch);
+            spriteBatch.End();
+
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
+            parallaxLayers[3].Draw(spriteBatch);
+            UIManager.Draw(spriteBatch);
+            spriteBatch.End();
         }
 
         void DrawGameOver(GameTime gameTime)
