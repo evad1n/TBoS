@@ -46,8 +46,8 @@ namespace TheBondOfStone {
             return Content.Load<Texture2D>(@"graphics\deco\deco_0_" + r.Next(1, 12));
         }
 
-        public void Draw(SpriteBatch sb) {
-            sb.Draw(Texture, new Rectangle(Rect.X - Rect.Size.X / 2, Rect.Y - Rect.Size.Y / 2, Rect.Width, Rect.Height), Color.White);
+        public void Draw(SpriteBatch sb, Color color) {
+            sb.Draw(Texture, new Rectangle(Rect.X - Rect.Size.X / 2, Rect.Y - Rect.Size.Y / 2, Rect.Width, Rect.Height), color);
         }
     }
 }
