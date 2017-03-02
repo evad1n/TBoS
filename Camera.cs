@@ -62,15 +62,25 @@ namespace TheBondOfStone
             }
         }
 
-        //Gets a shaking intensity and duration, and "shakes" the screen accordingly
+        /// <summary>
+        /// Shakes the screen from the default point at a given magnitude for a given duration.
+        /// </summary>
+        /// <param name="magnitude">The initial magnitude of the quake in (units)</param>
+        /// <param name="duration">The duration of the quake in (units)</param>
         public void ScreenShake(int magnitude, float duration)
         {
             shakeTimer = 0;
             this.duration = duration;
             shakeQuake =  magnitude;
         }
-
-        //Returns a value x between a and b such that x is (t * 100)% between a and b
+        
+        /// <summary>
+        /// Returns a value x between a and b such that x is (t * 100)% between a and b
+        /// </summary>
+        /// <param name="a">The minimum value</param>
+        /// <param name="b">The maximum value (is it inclusive or exclusive?  Someone clarify please)</param>
+        /// <param name="t">The percentage of the difference between a and b to add to a.</param>
+        /// <returns>x, where x is t*100% between a and b</returns>
         public float Lerp(float a, float b, float t)
         {
             //https://forum.yoyogames.com/index.php?threads/how-exactly-does-lerp-work.17177/

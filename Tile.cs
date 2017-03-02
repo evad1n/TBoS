@@ -81,7 +81,7 @@ namespace TheBondOfStone {
             stitched = true;
         }
 
-        public void Draw(SpriteBatch sb) {
+        public void Draw(SpriteBatch sb, Color color) {
             if(!stitched)
                 StitchTile();
 
@@ -94,13 +94,13 @@ namespace TheBondOfStone {
                     (int)physics.Size.Y
                 );
 
-                sb.Draw(texture, destination, null, Color.White, physics.Body.Rotation, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
+                sb.Draw(texture, destination, null, color, physics.Body.Rotation, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
             } else {
-                sb.Draw(texture, Rect, null, Color.White, 0, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
+                sb.Draw(texture, Rect, null, color, 0, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
             }
 
             foreach (TileDecoration d in Decorations)
-                d.Draw(sb);
+                d.Draw(sb, color);
         }
 
         //Use bitmasking to determine which texture this tile should have
