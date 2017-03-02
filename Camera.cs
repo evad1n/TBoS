@@ -15,12 +15,22 @@ namespace TheBondOfStone
         Player target;
         //The speed of the Camera.
         float speed = 0.5f;
+
+        //ScreenShake variables
+        //How long screenshake has been going
         float shakeTimer;
-        float duration; //What does this do?
+        //The total time screenshake should be active for
+        float duration;
+        //The magnitude of the shaking
         float shakeQuake;
-        float lerpSpeed;
-        bool step = false; //What does this do?
-        bool screenShake = false; //It might be best to explain *how* this does what it does.
+        //How much the screen rotates by
+        float rotation;
+        //What direction (CCW or CC)
+        int direction = 1;
+        //The number of times the screen has rotated in the same direction
+        int count = 0;
+        //Determines if screenshake should be running
+        bool screenShake = false;
 
         public Camera(GraphicsDevice graphicsDevice, Player target) : base(graphicsDevice)
         {
@@ -37,22 +47,30 @@ namespace TheBondOfStone
                 screenShake = false;
             }
 
-            if(screenShake)
+            if (screenShake)
             {
-                shakeTimer += 0.05f;
-                if (step)
+                shakeTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                //Switch direction after 2 ticks
+                if (count % 2 == 0)
                 {
-                    Rotate(shakeQuake);
-                    step = false;
+                    direction *= -1;
                 }
-                else
+                //Make sure that each rotation is even so the net rotation is 0 (as close to 0 as possible whatever it gets fixed later)
+                if (count > 3)
                 {
-                    Rotate(-shakeQuake);
-                    step = true;
+                    direction *= -1;
+                    rotation = Lerp(shakeQuake, 0, shakeTimer / duration);
+                    count = 0;
                 }
 
-                shakeQuake = Lerp(shakeQuake, 0, shakeTimer / duration);
-
+                Rotate(rotation * direction);
+                count++;
+            }
+            else
+            {
+                //Make sure rotation is 0...
+                Rotation = 0;
             }
         }
 
@@ -61,7 +79,9 @@ namespace TheBondOfStone
             shakeTimer = 0;
             this.duration = duration;
             screenShake = true;
-            shakeQuake = 0.0005f * (float)magnitude;
+
+            //Convert magnitude scale to usable numbers
+            shakeQuake = 0.005f * (float)magnitude;
         }
 
         public float Lerp(float a, float b, float speed)

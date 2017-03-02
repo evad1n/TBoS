@@ -184,9 +184,10 @@ namespace TheBondOfStone {
                 state = GameState.Pause;
             }
 
+            //Screenshake Test key is Q
             if(keyboardState.IsKeyDown(Keys.Q))
             {
-                Camera.ScreenShake(100, 1f);
+                Camera.ScreenShake(10, 0.5f);
             }
         }
 
