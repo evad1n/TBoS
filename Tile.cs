@@ -9,6 +9,30 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TheBondOfStone {
+
+    /// <summary>
+    /// Controls the collision detection and response behavior of a tile.
+    /// </summary>
+    enum TileCollision {
+        /// <summary>
+        /// A passable tile is one which does not hinder player motion at all.
+        /// </summary>
+        Passable = 0,
+
+        /// <summary>
+        /// An impassable tile is one which does not allow the player to move through
+        /// it at all. It is completely solid.
+        /// </summary>
+        Impassable = 1,
+
+        /// <summary>
+        /// A platform tile is one which behaves like a passable tile except when the
+        /// player is above it. A player can jump up through a platform as well as move
+        /// past it to the left and right, but can not fall down through the top of it.
+        /// </summary>
+        Platform = 2,
+    }
+
     class Tile {
         public int DrawQueue { get; set; }
 
@@ -16,6 +40,7 @@ namespace TheBondOfStone {
         public bool IsStartTile { get; set; }
 
         public PhysicsObject physics;
+        public TileCollision Collision;
 
         private Texture2D texture;
         public Texture2D Texture {
@@ -55,10 +80,11 @@ namespace TheBondOfStone {
             set { id = value; }
         }
 
-        public Tile(int ID, Rectangle r) {
+        public Tile(int ID, Rectangle r, TileCollision collision) {
             
             this.ID = ID;
             Rect = r;
+            Collision = collision;
 
             if (ID == 1 || ID == 3 || ID == 4 || ID == 5) { //Draw queue means background tiles are rendered behind ground tiles
                 DrawQueue = 0;

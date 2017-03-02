@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="ContactDirection.cs" />
+    <Compile Include="RectangleExtensions.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="LevelGenerator.cs" />
