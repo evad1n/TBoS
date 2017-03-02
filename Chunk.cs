@@ -80,7 +80,7 @@ namespace TheBondOfStone {
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     //Add a new tile to the tiles list with an ID and rect from the Atlas.
-                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(o.X + (x * size + size), o.Y + (y * size) - (yoffset*size), size, size));
+                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(o.X + (x * size + size), o.Y + (y * size) - (yoffset*size), size, size), TileCollision.Impassable);
 
                     Tiles.Add(tileToAdd);
 
