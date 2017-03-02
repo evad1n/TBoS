@@ -142,8 +142,6 @@ namespace TheBondOfStone
             if (fixtureB.Body.UserData.ToString() != "ground")
                 return;
 
-            Console.WriteLine("separated");
-
             if (fixtureA.Body.Position.Y < fixtureB.Body.Position.Y)
                 hitGround = false;
 

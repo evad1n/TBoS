@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.ViewportAdapters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,7 +59,7 @@ namespace TheBondOfStone {
         /// </summary>
         protected override void Initialize() {
             //Scaling factor for ALL of the game's sprites
-            PixelScaleFactor = 16;
+            PixelScaleFactor = 24;
 
             //Set initial game state
             state = GameState.Playing;
@@ -111,13 +112,13 @@ namespace TheBondOfStone {
             //Initialize and load background parallaxing layers
             parallaxLayers = new List<ParallaxLayer>();
             //Foreground Cloud
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, .5f), new Vector2(-0.0125f, 0f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, .5f), new Vector2(-0.0125f, 0f), GraphicsDevice.Viewport));
             //Foreground particles
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, 0.125f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, 0.125f), GraphicsDevice.Viewport));
             //Background Cloud
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, .6f), new Vector2(-0.03f, 0f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, .6f), new Vector2(-0.03f, 0f), GraphicsDevice.Viewport));
             //Background particles
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, 0.25f)));
+            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, 0.25f), GraphicsDevice.Viewport));
             
 
         }
@@ -137,10 +138,10 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
 
+            //Update game and input states
             keyboardState = Keyboard.GetState();
 
-            switch (state)
-            {
+            switch (state) {
                 case GameState.MainMenu:
                     UpdateMainMenu(gameTime);
                     break;
@@ -160,47 +161,59 @@ namespace TheBondOfStone {
             base.Update(gameTime);
         }
 
-        void UpdateMainMenu(GameTime gameTime)
-        {
-
+        /// <summary>
+        /// Update the game while on the main menu.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        void UpdateMainMenu(GameTime gameTime) {
+            //TODO: IMPLEMENT MAIN MENU UPDATES
         }
 
-        void UpdatePlaying(GameTime gameTime)
-        {
-
-            //DEBUG/TESTING MOVEMENT. UPDATE WITH CHARACTER/CAMERA UPDATE CALLS
+        /// <summary>
+        /// Update the game with play behaviors.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        void UpdatePlaying(GameTime gameTime) {
+            //Physics garbage
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
+            //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS
             Generator.UpdateChunkGeneration();
 
-            //Update the keyboard states and the player object
-
+            //Update the Camera and the player object
             player.Update(gameTime, world);
             Camera.Update(gameTime);
 
+            //Update the parallaxed layers
+            foreach(ParallaxLayer pl in parallaxLayers)
+                pl.Update(gameTime);
+
 
             if(keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
-            {
                 state = GameState.Pause;
-            }
 
-            if(keyboardState.IsKeyDown(Keys.Q))
-            {
-                Camera.ScreenShake(100, 1f);
+            //TESTING
+            if (keyboardState.IsKeyDown(Keys.Q)) {
+                Camera.ScreenShake(5, 0.25f);
             }
         }
 
-        void UpdatePause(GameTime gameTime)
-        {
+        /// <summary>
+        /// Update the pause screen behaviors.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        void UpdatePause(GameTime gameTime) {
+            //Resume the game if the escape key is pressed again
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
-            {
                 state = GameState.Playing;
-            }
         }
 
-        void UpdateGameOver(GameTime gameTime)
-        {
-
+        /// <summary>
+        /// Update the game while on the game over screen.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        void UpdateGameOver(GameTime gameTime) {
+            //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
         }
 
         /// <summary>
@@ -228,15 +241,22 @@ namespace TheBondOfStone {
             base.Draw(gameTime);
         }
 
-        void DrawMainMenu(GameTime gameTime)
-        {
+        /// <summary>
+        /// Draw the main menu elements.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        void DrawMainMenu(GameTime gameTime) {
             //TODO: IMPLEMENT MAIN MENU
         }
 
+        /// <summary>
+        /// Draw the game screen elements.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPlaying(GameTime gameTime)
         {
             //Draw background parallaxing layers with different spritebatch settings 
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             foreach (ParallaxLayer p in parallaxLayers)
                 if (p != parallaxLayers[3])
                     p.Draw(spriteBatch);
@@ -250,43 +270,32 @@ namespace TheBondOfStone {
             player.Draw(spriteBatch);
             spriteBatch.End();
 
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             parallaxLayers[3].Draw(spriteBatch);
 			UIManager.Draw(spriteBatch);
 			spriteBatch.End();
 
         }
 
-        void DrawPause(GameTime gameTime) //I want to draw everything with a lightgray over it.  It's a pain however, I may have to do buggery with the Draws.
-        {
-            //Draw background parallaxing layers with different spritebatch settings 
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
-            foreach (ParallaxLayer p in parallaxLayers)
-                if (p != parallaxLayers[3])
-                    p.Draw(spriteBatch);
+        /// <summary>
+        /// Draw the paused screen (Same as the game screen elements, but with a special overlay).
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        void DrawPause(GameTime gameTime) {
+            DrawPlaying(gameTime);
 
-            spriteBatch.End();
-
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
-            foreach (Chunk map in Generator.Chunks)
-                map.Draw(spriteBatch); //Draw each active chunk
-
-            player.Draw(spriteBatch);
-            spriteBatch.End();
-
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap, transformMatrix: Camera.GetViewMatrix());
-            parallaxLayers[3].Draw(spriteBatch);
-            UIManager.Draw(spriteBatch);
-            spriteBatch.End();
+            //TODO: IMPLEMENT OTHER PAUSED SCREEN DRAWS
         }
 
-        void DrawGameOver(GameTime gameTime)
-        {
+        /// <summary>
+        /// Draw the game over screen.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        void DrawGameOver(GameTime gameTime) {
             //TODO: DISPLAY GAMEOVER.
         }
 
-        void SpawnPlayer()
-        {
+        void SpawnPlayer() {
             player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(24 * PixelScaleFactor, 20 * PixelScaleFactor)));
         }
     }
