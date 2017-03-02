@@ -162,7 +162,10 @@ namespace TheBondOfStone {
 
         void UpdateMainMenu(GameTime gameTime)
         {
-
+            //Play game
+            //Quit game
+            //cool stuff
+            //High scores?
         }
 
         void UpdatePlaying(GameTime gameTime)
@@ -197,11 +200,13 @@ namespace TheBondOfStone {
             {
                 state = GameState.Playing;
             }
+            //Have buttons to take you to main menu and back to playing state (you can also hit escape again but UX and stuff...)
         }
 
         void UpdateGameOver(GameTime gameTime)
         {
-
+            //Game over screen
+            //Reset chunks and such
         }
 
         /// <summary>

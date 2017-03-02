@@ -56,7 +56,7 @@ namespace TheBondOfStone
                 {
                     direction *= -1;
                 }
-                //Make sure that each rotation is even so the net rotation is 0 (as close to 0 as possible whatever it gets fixed later)
+                //Make sure that each rotation is the same so the net rotation is 0 (as close to 0 as possible whatever it gets fixed later)
                 if (count > 3)
                 {
                     direction *= -1;
@@ -69,7 +69,7 @@ namespace TheBondOfStone
             }
             else
             {
-                //Make sure rotation is 0...
+                //Make sure rotation is 0...this actually doesnt look bad at all thanks to the partial fix above
                 Rotation = 0;
             }
         }
@@ -84,10 +84,11 @@ namespace TheBondOfStone
             shakeQuake = 0.005f * (float)magnitude;
         }
 
-        public float Lerp(float a, float b, float speed)
+        public float Lerp(float a, float b, float position)
         {
+            //Do you even lerp bro?
             //https://forum.yoyogames.com/index.php?threads/how-exactly-does-lerp-work.17177/
-            return (a + ((b - a) * speed));
+            return (a + ((b - a) * position));
         }
     }
 }
