@@ -20,7 +20,7 @@ namespace TheBondOfStone {
         //The game's camera
         Camera Camera { get; set; }
 
-        GameState state;
+        public GameState State { get; set; }
         
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -62,7 +62,7 @@ namespace TheBondOfStone {
             PixelScaleFactor = 24;
 
             //Set initial game state
-            state = GameState.Playing;
+            State = GameState.Playing;
 
             //Random object for ALL THE GAME'S RNG. Reference this Random instance ONLY
             RandomObject = new Random();
@@ -141,7 +141,7 @@ namespace TheBondOfStone {
             //Update game and input states
             keyboardState = Keyboard.GetState();
 
-            switch (state) {
+            switch (State) {
                 case GameState.MainMenu:
                     UpdateMainMenu(gameTime);
                     break;
@@ -190,7 +190,7 @@ namespace TheBondOfStone {
 
 
             if(keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
-                state = GameState.Pause;
+                State = GameState.Pause;
 
             //TESTING
             if (keyboardState.IsKeyDown(Keys.Q)) {
@@ -205,7 +205,7 @@ namespace TheBondOfStone {
         void UpdatePause(GameTime gameTime) {
             //Resume the game if the escape key is pressed again
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
-                state = GameState.Playing;
+                State = GameState.Playing;
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace TheBondOfStone {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(backgroundColor);
 
-            switch (state)
+            switch (State)
             {
                 case GameState.MainMenu:
                     DrawMainMenu(gameTime);
