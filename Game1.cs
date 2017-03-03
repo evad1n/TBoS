@@ -20,7 +20,7 @@ namespace TheBondOfStone {
         //The game's camera
         Camera Camera { get; set; }
 
-        GameState state;
+        public GameState state { get; set; }
         
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;

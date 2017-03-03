@@ -47,7 +47,7 @@ namespace TheBondOfStone {
 
 		public void Draw(SpriteBatch sb) {
 
-			if (game.State == GameState.Playing) {
+			if (game.state == GameState.Playing) {
 				sb.DrawString(subtitleFontLarge, "BLAH BLAH blah blah", new Vector2(20, 20), Color.WhiteSmoke);
 
 				for (int i = 0; i < playStats.Health / 2; i++) {
