@@ -28,6 +28,8 @@ namespace TheBondOfStone {
             get { return tiles; }
         }
 
+        public TileCollision[,] Collisions { get; set; }
+
         //Width and height of this chunk
         private int width, height;
         /// <summary>
@@ -56,6 +58,14 @@ namespace TheBondOfStone {
                 { 0, 1, 1, 0, 0 }
             };
 
+            Collisions = new TileCollision[,] {
+                { 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0 },
+                { TileCollision.Impassable, TileCollision.Impassable, TileCollision.Impassable, TileCollision.Impassable, TileCollision.Impassable },
+                { 0, TileCollision.Impassable, TileCollision.Impassable, 0, 0 }
+            };
+
             Generate(atlas, Game1.PixelScaleFactor);
             EndTile = Tiles[23];
 
@@ -69,6 +79,9 @@ namespace TheBondOfStone {
         /// <param name="atlas">The 2D array of tile IDs</param>
         /// <param name="size">The size of the TILES.</param>
         public void Generate(int[,] atlas, int size) {
+            //Initialize the collision array
+            Collisions = new TileCollision[atlas.GetLength(0), atlas.GetLength(1)];
+
             //Generate the offset so the chunk is added at the correct height
             int yoffset = 0;
             for (int iter = 0; iter < atlas.GetLength(0); iter++) {
@@ -80,7 +93,29 @@ namespace TheBondOfStone {
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     //Add a new tile to the tiles list with an ID and rect from the Atlas.
-                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(o.X + (x * size + size), o.Y + (y * size) - (yoffset*size), size, size), TileCollision.Impassable);
+                    //Set the proper collision value for this tile based on its ID
+                    TileCollision tc;
+
+                    switch(atlas[y, x]) {
+                        case 1:
+                        case 4:
+                        case 5:
+                            tc = TileCollision.Impassable;
+                            break;
+
+                        case 6:
+                            tc = TileCollision.Platform;
+                            break;
+
+                        default:
+                            tc = TileCollision.Passable;
+                            break;
+                    }
+                    //Set the collision matrix value for this tile
+                    Collisions[y, x] = tc;
+
+                    //Add the tile to the list, instantiate it
+                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(o.X + (x * size + size), o.Y + (y * size) - (yoffset * size), size, size), tc);
 
                     Tiles.Add(tileToAdd);
 
@@ -154,6 +189,26 @@ namespace TheBondOfStone {
             }
 
             Generated = true;
+        }
+
+        //Returns the collision at the tile of row x and column y in this chunk
+        public TileCollision GetCollision(int x, int y) {
+            // Prevent escaping past the level ends.
+            if (x < 0 || x >= Width)
+                return TileCollision.Impassable;
+            // Allow jumping past the level top and falling through the bottom.
+            if (y < 0 || y >= Height)
+                return TileCollision.Passable;
+
+            return Collisions[x, y];
+        }
+
+        /// <summary>
+        /// Gets the bounding rectangle of a tile in world space.
+        /// </summary>        
+        public Rectangle GetBounds(int x, int y) {
+            int size = Tiles[0].Rect.Width;
+            return new Rectangle(x * size, y * size, size, size);
         }
 
         public void Draw(SpriteBatch sb, Microsoft.Xna.Framework.Color color) {
