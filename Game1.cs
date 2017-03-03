@@ -26,6 +26,7 @@ namespace TheBondOfStone {
         SpriteBatch spriteBatch;
 
         public static int PixelScaleFactor { get; set; }
+		public static int UIScaleFactor { get; set; }
 
         LevelGenerator Generator { get; set; }
 		UI UIManager { get; set; }
@@ -60,6 +61,7 @@ namespace TheBondOfStone {
         protected override void Initialize() {
             //Scaling factor for ALL of the game's sprites
             PixelScaleFactor = 24;
+			UIScaleFactor = PixelScaleFactor / 7;
 
             //Set initial game state
             State = GameState.Playing;
@@ -88,20 +90,17 @@ namespace TheBondOfStone {
             //Set the static Tile and TileDecoration classes to reference the Game's content loader, so they can load their own textures as needed.
             Tile.Content = Content;
             TileDecoration.Content = Content;
-            world = new World(new Vector2(0, 50.0f));
-
-
-
-			UIManager = new UI();
-			UIManager.LoadContent(Content);
-            
+            world = new World(new Vector2(0, 50.0f));            
 
             playerTexture = Content.Load<Texture2D>(@"graphics\entity\player");
 
             SpawnPlayer();
 
-            //Instantiate the camera object
-            Camera = new Camera(GraphicsDevice, player);
+			UIManager = new UI(this, player.p);
+			UIManager.LoadContent(Content);
+
+			//Instantiate the camera object
+			Camera = new Camera(GraphicsDevice, player);
 
             //Instantiate the level generator
             Generator = new LevelGenerator(Camera);

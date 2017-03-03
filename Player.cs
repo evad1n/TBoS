@@ -22,7 +22,9 @@ namespace TheBondOfStone
 
     public class Player
     {
-        public PhysicsObject physicsRect;
+		public PlayerStats p;
+
+		public PhysicsObject physicsRect;
         PhysicsObject separationRect;
         Texture2D texture;
 
@@ -53,6 +55,7 @@ namespace TheBondOfStone
 
             physicsRect.Body.OnCollision += Body_OnCollision;
             separationRect.Body.OnSeparation += Body_OnSeparation;
+			p = new PlayerStats();
         }
 
         public void Draw(SpriteBatch spriteBatch)
