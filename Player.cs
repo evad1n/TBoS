@@ -13,6 +13,9 @@ using System.Text;
 using System.Threading.Tasks;
 namespace TheBondOfStone
 {
+    /// <summary>
+    /// The drection of movement.
+    /// </summary>
     public enum Movement
     {
         Left,
@@ -22,8 +25,9 @@ namespace TheBondOfStone
 
     public class Player
     {
-        public PhysicsObject physicsRect;
-        Camera camera;
+		public PlayerStats p;
+
+		public PhysicsObject physicsRect;
         PhysicsObject separationRect;
         Texture2D texture;
 
@@ -58,10 +62,12 @@ namespace TheBondOfStone
 
             physicsRect.Body.OnCollision += Body_OnCollision;
             separationRect.Body.OnSeparation += Body_OnSeparation;
+			p = new PlayerStats();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Color color)
         {
+            if (color == null) color = Color.White;
             Rectangle destination = new Rectangle
             (
                 (int)physicsRect.Position.X,
@@ -70,7 +76,7 @@ namespace TheBondOfStone
                 (int)textureSize
             );
 
-            spriteBatch.Draw(texture, destination, null, Color.White, physicsRect.Body.Rotation, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, destination, null, color, physicsRect.Body.Rotation, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
         }
 
         public void Update(GameTime gameTime, World w)
