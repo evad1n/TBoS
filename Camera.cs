@@ -24,10 +24,21 @@ namespace TheBondOfStone
         //Should the camera snap to a grid (makes it look UGLY)
         public bool Snapping { get; set; }
 
-        //Shaking parameters
+        //ScreenShake variables
+        //How long screenshake has been going
         float shakeTimer;
-        float duration; 
+        //The total time screenshake should be active for
+        float duration;
+        //The magnitude of the shaking
         float shakeQuake;
+        //How much the screen rotates by
+        float rotation;
+        //What direction (CCW or CC)
+        int direction = 1;
+        //The number of times the screen has rotated in the same direction
+        int count = 0;
+        //Should screenshake rotate screen or just shake
+        bool rotating = true;
 
         public Camera(GraphicsDevice graphicsDevice, Player target) : base(graphicsDevice)
         {
@@ -51,25 +62,56 @@ namespace TheBondOfStone
             }
 
             //Screen shake code
-            if (shakeTimer < duration) {
+            if (shakeTimer < duration)
+            {
                 shakeTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                
-                //Change the screen's position by either -shakeQuake or +shakeQuake each frame on each axis, and dampen shakeQuake.
-                Position = new Vector2(Position.X + Game1.RandomObject.Next(-1, 2) * shakeQuake, Position.Y + Game1.RandomObject.Next(-1, 2) * shakeQuake);
-                shakeQuake = Lerp(shakeQuake, 0, shakeTimer / duration);              
+
+                if (rotating)
+                {
+                    //Switch direction after 2 ticks
+                    if (count % 2 == 0)
+                    {
+                        direction *= -1;
+                    }
+                    //Make sure that each rotation is the same so the net rotation is 0 (as close to 0 as possible whatever it gets fixed later)
+                    if (count > 3)
+                    {
+                        direction *= -1;
+                        rotation = Lerp(shakeQuake, 0, shakeTimer / duration);
+                        count = 0;
+                    }
+
+                    Rotate(rotation * direction);
+                    count++;
+                }
+                else
+                {
+                    //Change the screen's position by either -shakeQuake or +shakeQuake each frame on each axis, and dampen shakeQuake.
+                    Position = new Vector2(Position.X + Game1.RandomObject.Next(-1, 2) * rotation, Position.Y + Game1.RandomObject.Next(-1, 2) * rotation);
+                    rotation = Lerp(shakeQuake, 0, shakeTimer / duration);
+                }
+            }
+            else
+            {
+                //Make sure rotation is 0...this actually doesnt look bad at all thanks to the partial fix above
+                Rotation = 0;
             }
         }
+
 
         /// <summary>
         /// Shakes the screen from the default point at a given magnitude for a given duration.
         /// </summary>
         /// <param name="magnitude">The initial magnitude of the quake in (units)</param>
         /// <param name="duration">The duration of the quake in (units)</param>
-        public void ScreenShake(int magnitude, float duration)
+        public void ScreenShake(int magnitude, float duration, bool rotating)
         {
+            this.rotating = rotating;
             shakeTimer = 0;
             this.duration = duration;
-            shakeQuake =  magnitude;
+
+            //Convert magnitude scale to usable numbers
+            shakeQuake = 0.005f * (float)magnitude;
         }
         
         /// <summary>

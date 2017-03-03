@@ -186,7 +186,8 @@ namespace TheBondOfStone {
 
             if(!player.Alive)
             {
-                //State = GameState.GameOver;
+                Camera.ScreenShake(5, 2f, true);
+                state = GameState.GameOver;
             }
 
             //Update the parallaxed layers
@@ -201,7 +202,7 @@ namespace TheBondOfStone {
 
             //TESTING
             if (keyboardState.IsKeyDown(Keys.Q)) {
-                Camera.ScreenShake(5, 5f);
+                Camera.ScreenShake(5, 1f, true);
             }
         }
 
@@ -223,6 +224,13 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateGameOver(GameTime gameTime) {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
+            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+            {
+                state = GameState.Playing;
+                backgroundColor = Color.CornflowerBlue;
+            }
+
+            //Code to restart game
         }
 
         /// <summary>
@@ -241,7 +249,7 @@ namespace TheBondOfStone {
                     DrawPlaying(gameTime, Color.White);
                     break;
                 case GameState.GameOver:
-                    DrawGameOver(gameTime);
+                    DrawGameOver(gameTime, Color.Red);
                     break;
                 case GameState.Pause:
                     DrawPause(gameTime, Color.Gray);
@@ -300,7 +308,9 @@ namespace TheBondOfStone {
         /// Draw the game over screen.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        void DrawGameOver(GameTime gameTime) {
+        void DrawGameOver(GameTime gameTime, Color color) {
+            DrawPlaying(gameTime, color);
+
             //TODO: DISPLAY GAMEOVER.
         }
 

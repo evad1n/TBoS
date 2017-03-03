@@ -28,6 +28,7 @@ namespace TheBondOfStone
 		public PlayerStats p;
 
 		public PhysicsObject physicsRect;
+        Camera camera;
         PhysicsObject separationRect;
         Texture2D texture;
 
@@ -84,7 +85,6 @@ namespace TheBondOfStone
             //CHECK IF PLAYER IS ALIVE BASED ON IF THE PLAYER IS IN THE CAMERA BOUNDS (ON SCREEN)
             if(physicsRect.Position.X < 0 || physicsRect.Position.X > camera.graphicsDevice.Viewport.Width || physicsRect.Position.Y < 0 || physicsRect.Position.Y > camera.graphicsDevice.Viewport.Height)
             {               
-                camera.ScreenShake(5, 2f);
                 Alive = false;
             }
 
