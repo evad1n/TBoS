@@ -46,6 +46,7 @@ namespace TheBondOfStone
             this.graphicsDevice = graphicsDevice;
             this.target = target;
             Snapping = false;
+            rect = new Rectangle((int)(Origin.X - Game1.screenWidth / 2), ((int)Origin.Y - Game1.screenHeight / 2), Game1.screenWidth, Game1.screenHeight);
         } 
 
         public void Update(GameTime gameTime)
@@ -138,7 +139,7 @@ namespace TheBondOfStone
 
         public void Draw(SpriteBatch sb, Color color)
         {
-            sb.Draw(Game1.foregroundTiles[0], rect, color);
+            //sb.Draw(Game1.foregroundTiles[0], rect, color);
         }
     }
 }
