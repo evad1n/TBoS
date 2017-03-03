@@ -25,7 +25,10 @@ namespace TheBondOfStone
 
     public class Player
     {
-        public PhysicsObject physicsRect;
+		public PlayerStats p;
+
+		public PhysicsObject physicsRect;
+        Camera camera;
         PhysicsObject separationRect;
         Texture2D texture;
 
@@ -39,9 +42,10 @@ namespace TheBondOfStone
 
         public bool Grounded { get; set; }
         public bool Walled { get; set; }
+        public bool Alive { get; set; }
 
 
-        public Player(World world, Texture2D texture, Vector2 size, float mass, Vector2 startPosition)
+        public Player(World world, Texture2D texture, Vector2 size, float mass, Vector2 startPosition, Camera camera)
         {
             // Create the physics objects of the player
             textureSize = size.X;
@@ -53,9 +57,13 @@ namespace TheBondOfStone
             physicsRect.Body.FixedRotation = true;
 
             this.texture = texture;
+            //SETS THE CAMERA DOM DONT DELETE IT DONT DO IT PLEASE GOD NO
+            this.camera = camera;
+            Alive = true;
 
             physicsRect.Body.OnCollision += Body_OnCollision;
             separationRect.Body.OnSeparation += Body_OnSeparation;
+			p = new PlayerStats();
         }
 
         public void Draw(SpriteBatch spriteBatch, Color color)
@@ -74,6 +82,12 @@ namespace TheBondOfStone
 
         public void Update(GameTime gameTime, World w)
         {
+            //CHECK IF PLAYER IS ALIVE BASED ON IF THE PLAYER IS IN THE CAMERA BOUNDS (ON SCREEN)
+            if (physicsRect.Position.X < camera.rect.Left || physicsRect.Position.X > camera.rect.Right || physicsRect.Position.Y < camera.rect.Bottom || physicsRect.Position.Y > camera.rect.Top)
+            {
+                Alive = false;
+            }
+
             if (Game1.keyboardState.IsKeyDown(Keys.Left) || Game1.keyboardState.IsKeyDown(Keys.A))
             {
                 Move(Movement.Left);

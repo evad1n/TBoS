@@ -55,6 +55,8 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="ContactDirection.cs" />
+    <Compile Include="PlayerStats.cs" />
+    <Compile Include="SpriteSheetManager.cs" />
     <Compile Include="Player2.cs" />
     <Compile Include="RectangleExtensions.cs" />
     <Compile Include="UI.cs" />
