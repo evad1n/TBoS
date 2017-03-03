@@ -27,6 +27,11 @@ namespace TheBondOfStone {
 
         public static int PixelScaleFactor { get; set; }
 		public static int UIScaleFactor { get; set; }
+        public static int screenWidth { get; set; }
+        public static int screenHeight { get; set; }
+
+        public static Texture2D[] foregroundTiles { get; set; }
+        public static Texture2D[] backgroundTiles { get; set; }
 
         LevelGenerator Generator { get; set; }
 		UI UIManager { get; set; }
@@ -70,11 +75,14 @@ namespace TheBondOfStone {
             RandomObject = new Random();
 
             //Adjust the screen dimensions and other particulars
-            graphics.PreferredBackBufferHeight = 512;
-            graphics.PreferredBackBufferWidth = 1024;
+            screenHeight = graphics.PreferredBackBufferHeight = 512;
+            screenWidth = graphics.PreferredBackBufferWidth = 1024;
             graphics.ApplyChanges();
 
             backgroundColor = new Color(86, 138, 205);
+
+            foregroundTiles = new Texture2D[16];
+            backgroundTiles = new Texture2D[16];
 
             base.Initialize();
         }
@@ -90,9 +98,16 @@ namespace TheBondOfStone {
             //Set the static Tile and TileDecoration classes to reference the Game's content loader, so they can load their own textures as needed.
             Tile.Content = Content;
             TileDecoration.Content = Content;
-            world = new World(new Vector2(0, 50.0f));            
+            world = new World(new Vector2(0, 50.0f));
 
             playerTexture = Content.Load<Texture2D>(@"graphics\entity\player");
+
+            //Load tilesets
+            for (int i = 0; i < 16; i++)
+            {
+                foregroundTiles[i] = Content.Load<Texture2D>(@"graphics\tile\tile_1_" + i);
+                backgroundTiles[i] = Content.Load<Texture2D>(@"graphics\tile\tile_2_" + i);
+            }
 
             SpawnPlayer();
 
@@ -289,6 +304,7 @@ namespace TheBondOfStone {
                 map.Draw(spriteBatch, color); //Draw each active chunk
 
             player.Draw(spriteBatch, color);
+            Camera.Draw(spriteBatch, color);
             spriteBatch.End();
 
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);

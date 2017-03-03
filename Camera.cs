@@ -52,6 +52,7 @@ namespace TheBondOfStone
         {
             //Player follow code.
             Origin = new Vector2(Origin.X + speed, Lerp(Origin.Y, target.physicsRect.Position.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / smoothing));
+            rect = new Rectangle((int)(Origin.X - Game1.screenWidth / 2), ((int)Origin.Y - Game1.screenHeight / 2), Game1.screenWidth, Game1.screenHeight);
 
             if(Snapping)
             {
@@ -133,6 +134,11 @@ namespace TheBondOfStone
             float scale = Game1.PixelScaleFactor / 8;
             int rounded = (int)(a / scale);
             return (rounded * scale);
+        }
+
+        public void Draw(SpriteBatch sb, Color color)
+        {
+            sb.Draw(Game1.foregroundTiles[0], rect, color);
         }
     }
 }
