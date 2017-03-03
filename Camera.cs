@@ -9,18 +9,20 @@ using System.Threading.Tasks;
 
 namespace TheBondOfStone
 {
-    class Camera : Camera2D
+    public class Camera : Camera2D
     {
         //The target player of this Camera.
-        Player target;
+        public Player target { get; set; }
+
+        public GraphicsDevice graphicsDevice { get; set; }
         //The left-translation-speed of the Camera.
         float speed = 0.5f;
 
         //The smoothing factor of the camera's follow behavior (greater values = slower following)
-        float smoothing = 2f;
+        float smoothing = 0.3f;
 
-        Vector2 actualLookVector;
-        Vector2 actualOrigin;
+        //Should the camera snap to a grid (makes it look UGLY)
+        public bool Snapping { get; set; }
 
         //Shaking parameters
         float shakeTimer;
@@ -29,28 +31,24 @@ namespace TheBondOfStone
 
         public Camera(GraphicsDevice graphicsDevice, Player target) : base(graphicsDevice)
         {
+            this.graphicsDevice = graphicsDevice;
             this.target = target;
-
-            actualLookVector = new Vector2(Origin.X, target.physicsRect.Position.Y);
-            actualOrigin = new Vector2(Origin.X + speed, Origin.Y);
+            Snapping = false;
         } 
 
         public void Update(GameTime gameTime)
         {
-            //Player follow code. Snaps to pixels.
-            //Get the "actual" origin and position.
-            actualLookVector = new Vector2(actualOrigin.X, target.physicsRect.Position.Y);
-            actualOrigin = new Vector2(actualOrigin.X + speed, actualOrigin.Y);
+            //Player follow code.
+            Origin = new Vector2(Origin.X + speed, Lerp(Origin.Y, target.physicsRect.Position.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / smoothing));
 
-            //Snap the camera's view to the pixel grid as per Game1.PixelScaleFactor
-            LookAt(new Vector2(
-                (int)(Math.Round(actualLookVector.X * Game1.PixelScaleFactor) / Game1.PixelScaleFactor), 
-                (int)(Math.Round(actualLookVector.Y * Game1.PixelScaleFactor) / Game1.PixelScaleFactor)
-                ));
-            Origin = new Vector2(
-                (int)(Math.Round(actualOrigin.X * Game1.PixelScaleFactor) / Game1.PixelScaleFactor),
-                (int)(Math.Round(actualOrigin.Y * Game1.PixelScaleFactor) / Game1.PixelScaleFactor)
-                );
+            if(Snapping)
+            {
+                LookAt(new Vector2(Snap(Origin.X), Snap(Origin.Y)));
+            }
+            else
+            {
+                LookAt(Origin);
+            }
 
             //Screen shake code
             if (shakeTimer < duration) {
@@ -58,7 +56,7 @@ namespace TheBondOfStone
                 
                 //Change the screen's position by either -shakeQuake or +shakeQuake each frame on each axis, and dampen shakeQuake.
                 Position = new Vector2(Position.X + Game1.RandomObject.Next(-1, 2) * shakeQuake, Position.Y + Game1.RandomObject.Next(-1, 2) * shakeQuake);
-                shakeQuake = Lerp(shakeQuake, 0, shakeTimer / duration);
+                shakeQuake = Lerp(shakeQuake, 0, shakeTimer / duration);              
             }
         }
 
@@ -75,6 +73,15 @@ namespace TheBondOfStone
         {
             //https://forum.yoyogames.com/index.php?threads/how-exactly-does-lerp-work.17177/
             return (a + ((b - a) * t));
+        }
+
+        //Snap camera movement to pixel grid for.....consistency
+        public float Snap(float a)
+        {
+            //Divide by 8 because that is the size of a tile
+            float scale = Game1.PixelScaleFactor / 8;
+            int rounded = (int)(a / scale);
+            return (rounded * scale);
         }
     }
 }

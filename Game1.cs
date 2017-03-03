@@ -59,7 +59,7 @@ namespace TheBondOfStone {
         /// </summary>
         protected override void Initialize() {
             //Scaling factor for ALL of the game's sprites
-            PixelScaleFactor = 24;
+            PixelScaleFactor = 16;
 
             //Set initial game state
             State = GameState.Playing;
@@ -98,8 +98,6 @@ namespace TheBondOfStone {
 
             playerTexture = Content.Load<Texture2D>(@"graphics\entity\player");
 
-            SpawnPlayer();
-
             //Instantiate the camera object
             Camera = new Camera(GraphicsDevice, player);
 
@@ -119,8 +117,9 @@ namespace TheBondOfStone {
             parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, .6f), new Vector2(-0.03f, 0f), GraphicsDevice.Viewport));
             //Background particles
             parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, 0.25f), GraphicsDevice.Viewport));
-            
 
+            SpawnPlayer();
+            Camera.target = player;
         }
 
         /// <summary>
@@ -184,6 +183,11 @@ namespace TheBondOfStone {
             player.Update(gameTime, world);
             Camera.Update(gameTime);
 
+            if(!player.Alive)
+            {
+                //State = GameState.GameOver;
+            }
+
             //Update the parallaxed layers
             foreach(ParallaxLayer pl in parallaxLayers)
                 pl.Update(gameTime);
@@ -194,7 +198,7 @@ namespace TheBondOfStone {
 
             //TESTING
             if (keyboardState.IsKeyDown(Keys.Q)) {
-                Camera.ScreenShake(5, 0.25f);
+                Camera.ScreenShake(5, 5f);
             }
         }
 
@@ -296,7 +300,7 @@ namespace TheBondOfStone {
         }
 
         void SpawnPlayer() {
-            player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(24 * PixelScaleFactor, 20 * PixelScaleFactor)));
+            player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(24 * PixelScaleFactor, 20 * PixelScaleFactor)), Camera);
         }
     }
 }
