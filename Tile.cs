@@ -88,13 +88,13 @@ namespace TheBondOfStone {
 
             if (ID == 1 || ID == 3 || ID == 4 || ID == 5) { //Draw queue means background tiles are rendered behind ground tiles
                 DrawQueue = 0;
-                texture = Content.Load<Texture2D>("tile_1");
+                texture = Game1.emptyTile;
                 //physics = new PhysicsObject(new Vector2(Rect.Size.X, Rect.Size.Y), 1f, "ground");
                 physics = new PhysicsObject(Rect.Size.X, Rect.Size.Y, 1f, "ground");
                 physics.Position = new Vector2(Rect.X, Rect.Y);
             } else {
                 DrawQueue = -1;
-                texture = Content.Load<Texture2D>("tile_" + ID);
+                texture = Game1.emptyTile;
             }
 
         }
@@ -143,18 +143,27 @@ namespace TheBondOfStone {
                     2 * Convert.ToInt32(adjacents[1]) +
                     4 * Convert.ToInt32(adjacents[2]) +
                     8 * Convert.ToInt32(adjacents[3]);
-                
-                if(ID == 4 || ID == 5) //Start and end tiles should be textured as Grass
-                    Texture = Content.Load<Texture2D>(@"graphics\tile\tile_1_" + bmv);
+
+                if (ID == 4 || ID == 5) //Start and end tiles should be textured as Grass
+                    Texture = Game1.foregroundTiles[bmv];
                 else //Other tiles are textured according to their IDs
-                    Texture = Content.Load<Texture2D>(@"graphics\tile\tile_" + ID + "_" + bmv);
+                {
+                    if(ID == 1)
+                    {
+                        Texture = Game1.foregroundTiles[bmv];
+                    }
+                    if(ID == 2)
+                    {
+                        Texture = Game1.backgroundTiles[bmv];
+                    }
+                }
             }
 
             stitched = true;
         }
 
         public Tile AddBackgroundTile() {
-            return new Tile(Content.Load<Texture2D>(@"graphics\tile\tile_2_15"), Rect);
+            return new Tile(Game1.backgroundTiles[15], Rect);
         }
 
         public void GenerateDecorations() {

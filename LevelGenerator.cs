@@ -71,5 +71,11 @@ namespace TheBondOfStone
         {
             Chunks.Add(new Chunk());
         }
+
+        public void Restart()
+        {
+            Chunks.Clear();
+            DoStarterGeneration();
+        }
     }
 }

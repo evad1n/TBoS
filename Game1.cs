@@ -33,6 +33,8 @@ namespace TheBondOfStone {
         public static Texture2D[] foregroundTiles { get; set; }
         public static Texture2D[] backgroundTiles { get; set; }
 
+        public static Texture2D emptyTile { get; set; }
+
         LevelGenerator Generator { get; set; }
 		UI UIManager { get; set; }
 
@@ -108,6 +110,7 @@ namespace TheBondOfStone {
                 foregroundTiles[i] = Content.Load<Texture2D>(@"graphics\tile\tile_1_" + i);
                 backgroundTiles[i] = Content.Load<Texture2D>(@"graphics\tile\tile_2_" + i);
             }
+            emptyTile = Content.Load<Texture2D>("tile_0");
 
             SpawnPlayer();
 
@@ -115,7 +118,7 @@ namespace TheBondOfStone {
 			UIManager.LoadContent(Content);
 
 			//Instantiate the camera object
-			Camera = new Camera(GraphicsDevice, player);
+			Camera = new Camera(GraphicsDevice);
 
             //Instantiate the level generator
             Generator = new LevelGenerator(Camera);
@@ -245,6 +248,8 @@ namespace TheBondOfStone {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
             {
+                Generator.Restart();
+                SpawnPlayer();
                 state = GameState.Playing;
                 backgroundColor = Color.CornflowerBlue;
             }
