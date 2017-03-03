@@ -42,8 +42,8 @@ namespace TheBondOfStone
             offset += newDisp;
         }
 
-        public void Draw(SpriteBatch sb) {
-            sb.Draw(texture, new Vector2(viewport.X, viewport.Y), Rect, Color.White, 0, Vector2.Zero, Game1.PixelScaleFactor/8, SpriteEffects.None, 1);
+        public void Draw(SpriteBatch sb, Color color) {
+            sb.Draw(texture, new Vector2(viewport.X, viewport.Y), Rect, color, 0, Vector2.Zero, Game1.PixelScaleFactor/8, SpriteEffects.None, 1);
         }
     }
 }

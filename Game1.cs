@@ -20,7 +20,7 @@ namespace TheBondOfStone {
         //The game's camera
         Camera Camera { get; set; }
 
-        public GameState State { get; set; }
+        GameState state;
         
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -64,7 +64,7 @@ namespace TheBondOfStone {
 			UIScaleFactor = PixelScaleFactor / 7;
 
             //Set initial game state
-            State = GameState.Playing;
+            state = GameState.Playing;
 
             //Random object for ALL THE GAME'S RNG. Reference this Random instance ONLY
             RandomObject = new Random();
@@ -140,7 +140,7 @@ namespace TheBondOfStone {
             //Update game and input states
             keyboardState = Keyboard.GetState();
 
-            switch (State) {
+            switch (state) {
                 case GameState.MainMenu:
                     UpdateMainMenu(gameTime);
                     break;
@@ -188,8 +188,10 @@ namespace TheBondOfStone {
                 pl.Update(gameTime);
 
 
-            if(keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
-                State = GameState.Pause;
+            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
+                state = GameState.Pause;
+                backgroundColor = new Color(0,119,190); //Darker CornflowerBlue
+            }
 
             //TESTING
             if (keyboardState.IsKeyDown(Keys.Q)) {
@@ -203,8 +205,10 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdatePause(GameTime gameTime) {
             //Resume the game if the escape key is pressed again
-            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
-                State = GameState.Playing;
+            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
+                state = GameState.Playing;
+                backgroundColor = Color.CornflowerBlue;
+            }
         }
 
         /// <summary>
@@ -222,19 +226,19 @@ namespace TheBondOfStone {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(backgroundColor);
 
-            switch (State)
+            switch (state)
             {
                 case GameState.MainMenu:
                     DrawMainMenu(gameTime);
                     break;
                 case GameState.Playing:
-                    DrawPlaying(gameTime);
+                    DrawPlaying(gameTime, Color.White);
                     break;
                 case GameState.GameOver:
                     DrawGameOver(gameTime);
                     break;
                 case GameState.Pause:
-                    DrawPause(gameTime);
+                    DrawPause(gameTime, Color.Gray);
                     break;
             }
             base.Draw(gameTime);
@@ -252,25 +256,25 @@ namespace TheBondOfStone {
         /// Draw the game screen elements.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        void DrawPlaying(GameTime gameTime)
+        void DrawPlaying(GameTime gameTime, Color color)
         {
             //Draw background parallaxing layers with different spritebatch settings 
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             foreach (ParallaxLayer p in parallaxLayers)
                 if (p != parallaxLayers[3])
-                    p.Draw(spriteBatch);
+                    p.Draw(spriteBatch, color);
 
             spriteBatch.End();
 
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
             foreach (Chunk map in Generator.Chunks)
-                map.Draw(spriteBatch); //Draw each active chunk
+                map.Draw(spriteBatch, color); //Draw each active chunk
 
-            player.Draw(spriteBatch);
+            player.Draw(spriteBatch, color);
             spriteBatch.End();
 
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
-            parallaxLayers[3].Draw(spriteBatch);
+            parallaxLayers[3].Draw(spriteBatch, color);
 			UIManager.Draw(spriteBatch);
 			spriteBatch.End();
 
@@ -280,8 +284,8 @@ namespace TheBondOfStone {
         /// Draw the paused screen (Same as the game screen elements, but with a special overlay).
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        void DrawPause(GameTime gameTime) {
-            DrawPlaying(gameTime);
+        void DrawPause(GameTime gameTime, Color color) {
+            DrawPlaying(gameTime, color);
 
             //TODO: IMPLEMENT OTHER PAUSED SCREEN DRAWS
         }

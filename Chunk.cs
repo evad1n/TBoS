@@ -9,7 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TheBondOfStone {
-    class Chunk { //This object class represents a chunk's tile data
+    /// <summary>
+    /// Represents a chunk's tile data.
+    /// </summary>
+    class Chunk {
 
         List<Tile> tiles = new List<Tile>(); //List holds tiles linearly (w/ property)
 
@@ -18,13 +21,22 @@ namespace TheBondOfStone {
 
         public bool Generated { get; set; }
 
+        /// <summary>
+        /// The list of tiles in this chunk, in linear order.
+        /// </summary>
         public List<Tile> Tiles {
             get { return tiles; }
         }
 
         //Width and height of this chunk
         private int width, height;
+        /// <summary>
+        /// The width of the chunk.
+        /// </summary>
         public int Width { get { return width; } }
+        /// <summary>
+        /// The height of the chunk.
+        /// </summary>
         public int Height { get { return height; } }
 
         Microsoft.Xna.Framework.Rectangle o;
@@ -51,6 +63,11 @@ namespace TheBondOfStone {
         }
 
         //Generate this chunk in a drawable format. Takes a 2D array of tile IDs and a tile size.
+        /// <summary>
+        /// Generates the chunk for rendering.
+        /// </summary>
+        /// <param name="atlas">The 2D array of tile IDs</param>
+        /// <param name="size">The size of the TILES.</param>
         public void Generate(int[,] atlas, int size) {
             //Generate the offset so the chunk is added at the correct height
             int yoffset = 0;
@@ -63,7 +80,7 @@ namespace TheBondOfStone {
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     //Add a new tile to the tiles list with an ID and rect from the Atlas.
-                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(o.X + (x * size + size), o.Y + (y * size) - (yoffset*size), size, size));
+                    Tile tileToAdd = new Tile(atlas[y, x], new Microsoft.Xna.Framework.Rectangle(o.X + (x * size + size), o.Y + (y * size) - (yoffset*size), size, size), TileCollision.Impassable);
 
                     Tiles.Add(tileToAdd);
 
@@ -139,18 +156,23 @@ namespace TheBondOfStone {
             Generated = true;
         }
 
-        public void Draw(SpriteBatch sb) {
+        public void Draw(SpriteBatch sb, Microsoft.Xna.Framework.Color color) {
             //The tiles are sorted and drawn in ascending order of the DrawQueue property value
             List<Tile> sortedTiles = Tiles.OrderBy(o => o.DrawQueue).ToList();
             foreach (Tile tile in sortedTiles)
-                tile.Draw(sb);
+                tile.Draw(sb, color);
         }
 
         //Reads in an image from a given path and returns that image converted to tile IDs in a 2D array
+        /// <summary>
+        /// Reads in an image from a given path relative to the directory .\Content\maps\ (of the executable) and converts it to a 2D array of tile IDs.
+        /// </summary>
+        /// <param name="imagePath">The relative path of the image, starting from .\Content\maps\ in the application's current directory.</param>
+        /// <returns>A 2D array of tile IDs.</returns>
         public int[,] ReadImage(string imagePath) {
-            string path = Directory.GetCurrentDirectory();
-            string newPath = Path.GetFullPath(Path.Combine(path, @"..\..\..\..\Content\maps\" + imagePath)); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE
-            Bitmap img = new Bitmap(newPath); //Convert it to a readable format
+            /*string path = Directory.GetCurrentDirectory();
+            string newPath = Path.GetFullPath(Path.Combine(path, @".\Content\maps\" + imagePath)); //THIS PATH MAY NEED TO BE AMENDED IN THE FUTURE*/
+            Bitmap img = new Bitmap(Path.Combine(@".\Content\maps\"+imagePath)); //Get and convert the file to a readable bitmap.
 
             int[,] atlas = new int[img.Height, img.Width]; //Initialize dimensions of returned array
 
