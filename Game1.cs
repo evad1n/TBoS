@@ -202,6 +202,10 @@ namespace TheBondOfStone {
 
             //TESTING
             if (keyboardState.IsKeyDown(Keys.Q)) {
+                Camera.ScreenShake(5, 1f, false);
+            }
+            if (keyboardState.IsKeyDown(Keys.W))
+            {
                 Camera.ScreenShake(5, 1f, true);
             }
         }

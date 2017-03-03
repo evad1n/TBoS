@@ -13,7 +13,8 @@ namespace TheBondOfStone
     {
         //The target player of this Camera.
         public Player target { get; set; }
-
+        //The actual viewing rectangle bounds of the camera
+        public Rectangle rect { get; set; }
         public GraphicsDevice graphicsDevice { get; set; }
         //The left-translation-speed of the Camera.
         float speed = 0.5f;
@@ -77,7 +78,7 @@ namespace TheBondOfStone
                     if (count > 3)
                     {
                         direction *= -1;
-                        rotation = Lerp(shakeQuake, 0, shakeTimer / duration);
+                        rotation = Lerp(shakeQuake/1000, 0, shakeTimer / duration);
                         count = 0;
                     }
 
@@ -109,9 +110,7 @@ namespace TheBondOfStone
             this.rotating = rotating;
             shakeTimer = 0;
             this.duration = duration;
-
-            //Convert magnitude scale to usable numbers
-            shakeQuake = 0.005f * (float)magnitude;
+            shakeQuake = magnitude;
         }
         
         /// <summary>

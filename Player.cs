@@ -83,10 +83,16 @@ namespace TheBondOfStone
         public void Update(GameTime gameTime, World w)
         {
             //CHECK IF PLAYER IS ALIVE BASED ON IF THE PLAYER IS IN THE CAMERA BOUNDS (ON SCREEN)
-            if(physicsRect.Position.X < 0 || physicsRect.Position.X > camera.graphicsDevice.Viewport.Width || physicsRect.Position.Y < 0 || physicsRect.Position.Y > camera.graphicsDevice.Viewport.Height)
-            {               
+            if (physicsRect.Position.X < 0 || physicsRect.Position.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width || physicsRect.Position.Y < 0 || physicsRect.Position.Y > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
+            {
                 Alive = false;
             }
+
+            //if(!camera.graphicsDevice.Viewport.Bounds.Contains(physicsRect.Position))
+            //{
+            //    Alive = false;
+            //    camera.
+            //}
 
             if (Game1.keyboardState.IsKeyDown(Keys.Left) || Game1.keyboardState.IsKeyDown(Keys.A))
             {
