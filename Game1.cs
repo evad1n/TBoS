@@ -250,6 +250,8 @@ namespace TheBondOfStone {
             {
                 Generator.Restart();
                 SpawnPlayer();
+                Camera.target = player;
+                Camera.Reset();
                 state = GameState.Playing;
                 backgroundColor = Color.CornflowerBlue;
             }

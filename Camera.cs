@@ -19,6 +19,8 @@ namespace TheBondOfStone
         //The left-translation-speed of the Camera.
         float speed = 0.5f;
 
+        private Vector2 startPos;
+
         //The smoothing factor of the camera's follow behavior (greater values = slower following)
         float smoothing = 0.3f;
 
@@ -46,6 +48,7 @@ namespace TheBondOfStone
             this.graphicsDevice = graphicsDevice;
             Snapping = false;
             rect = new Rectangle((int)(Origin.X - Game1.screenWidth / 2), ((int)Origin.Y - Game1.screenHeight / 2), Game1.screenWidth, Game1.screenHeight);
+            startPos = Origin;
         } 
 
         public void Update(GameTime gameTime)
@@ -140,6 +143,11 @@ namespace TheBondOfStone
         public void Draw(SpriteBatch sb, Color color)
         {
             //sb.Draw(Game1.foregroundTiles[0], rect, color);
+        }
+
+        public void Reset()
+        {
+            Origin = startPos;
         }
     }
 }
