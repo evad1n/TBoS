@@ -46,13 +46,13 @@ namespace TheBondOfStone
 
             if (Chunks.Count > 0)
             {
-                if (Chunks[0].EndTile.Rect.X <= camera.Position.X - Chunks[0].EndTile.Rect.Width)
+                if (Chunks[0].EndTile.Rect.X <= camera.rect.Left - Chunks[0].EndTile.Rect.Width)
                 {
                     //last tile of first chunk is off screen, destroy that chunk (i.e. remove it from the list).
                     Chunks.RemoveAt(0);
                 }
 
-                if (Chunks[Chunks.Count - 1].EndTile.Rect.X < camera.GetBoundingRectangle().Right + camera.Position.X) //This needs to updated to use the camera bounding box
+                if (Chunks[Chunks.Count - 1].EndTile.Rect.X < camera.rect.Right) //This needs to updated to use the camera bounding box
                 {
                     //End tile of last chunk is on screen, generate new chunk
                     GenerateNewChunk(Chunks[Chunks.Count - 1].EndTile.Rect, GetNewMapName());
