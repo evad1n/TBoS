@@ -46,7 +46,7 @@ namespace TheBondOfStone {
         public Player player;
         Texture2D playerTexture;
 
-		
+        bool reset;
 
         public static KeyboardState keyboardState;
         public static KeyboardState prevKeyboardState;
@@ -72,6 +72,7 @@ namespace TheBondOfStone {
 
             //Set initial game state
             state = GameState.Playing;
+            reset = false;
 
             //Random object for ALL THE GAME'S RNG. Reference this Random instance ONLY
             RandomObject = new Random();
@@ -249,14 +250,19 @@ namespace TheBondOfStone {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))  //This causes an exception to be thrown.
             {
-                Generator.Restart();
-                SpawnPlayer();
-                Camera.target = player;
-                Camera.Reset();
-                state = GameState.Playing;
+                if(!reset)
+                {
+                    Reset();
+                }
                 backgroundColor = Color.CornflowerBlue;
+                state = GameState.Playing;
+                reset = false;
             }
-            //Code to restart game
+
+            Generator.UpdateChunkGeneration();
+            Camera.Update(gameTime);
+            foreach (ParallaxLayer pl in parallaxLayers)
+                pl.Update(gameTime);
         }
 
         /// <summary>
@@ -343,6 +349,17 @@ namespace TheBondOfStone {
 
         void SpawnPlayer() {
             player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(24 * PixelScaleFactor, 20 * PixelScaleFactor)), Camera);
+        }
+
+        private void Reset()
+        {
+            Console.WriteLine("RESET");
+            Camera.Reset();
+            Generator.Restart();
+            SpawnPlayer();
+            Camera.target = player;
+            player.p.Reset();
+            reset = true;
         }
     }
 }

@@ -40,5 +40,14 @@ namespace TheBondOfStone {
 			multiplier = 1;
 		}
 
+        //Reset all values to game start
+        public void Reset()
+        {
+            PlayerScore = 0;
+            health = 6;
+            scoreBits = 0;
+            multiplier = 1;
+        }
+
 	}
 }
