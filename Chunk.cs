@@ -67,7 +67,7 @@ namespace TheBondOfStone {
         /// Generates the chunk for rendering.
         /// </summary>
         /// <param name="atlas">The 2D array of tile IDs</param>
-        /// <param name="size">The size of the TILES.</param>
+        /// <param name="size">The size of the tiles.</param>
         public void Generate(int[,] atlas, int size) {
             //Generate the offset so the chunk is added at the correct height
             int yoffset = 0;
@@ -163,7 +163,6 @@ namespace TheBondOfStone {
                 tile.Draw(sb, color);
         }
 
-        //Reads in an image from a given path and returns that image converted to tile IDs in a 2D array
         /// <summary>
         /// Reads in an image from a given path relative to the directory .\Content\maps\ (of the executable) and converts it to a 2D array of tile IDs.
         /// </summary>
@@ -193,7 +192,13 @@ namespace TheBondOfStone {
             return atlas; //Return the complete array
         }
 
-        //Switch statement which converts pixel colors as strings into integer tile IDs
+        /// <summary>
+        /// Returns the integer tile ID from a given color, the relative x position within the chunk, and the width of the chunk.
+        /// </summary>
+        /// <param name="color">The color of the tile, in RGBA "### ### ### ###" format.</param>
+        /// <param name="x">The x position of the tile within the chunk.</param>
+        /// <param name="width">The width of the chunk.</param>
+        /// <returns>The integer tile ID.</returns>
         int TileID(string color, int x = -1, int width = -1) {
             int tileID = 0;
 
