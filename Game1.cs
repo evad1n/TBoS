@@ -20,12 +20,20 @@ namespace TheBondOfStone {
         //The game's camera
         Camera Camera { get; set; }
 
-        GameState state;
+        public GameState state { get; set; }
         
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         public static int PixelScaleFactor { get; set; }
+		public static int UIScaleFactor { get; set; }
+        public static int screenWidth { get; set; }
+        public static int screenHeight { get; set; }
+
+        public static Texture2D[] foregroundTiles { get; set; }
+        public static Texture2D[] backgroundTiles { get; set; }
+
+        public static Texture2D emptyTile { get; set; }
 
         LevelGenerator Generator { get; set; }
 		UI UIManager { get; set; }
@@ -60,6 +68,7 @@ namespace TheBondOfStone {
         protected override void Initialize() {
             //Scaling factor for ALL of the game's sprites
             PixelScaleFactor = 24;
+			UIScaleFactor = PixelScaleFactor / 7;
 
             //Set initial game state
             state = GameState.Playing;
@@ -68,11 +77,14 @@ namespace TheBondOfStone {
             RandomObject = new Random();
 
             //Adjust the screen dimensions and other particulars
-            graphics.PreferredBackBufferHeight = 512;
-            graphics.PreferredBackBufferWidth = 1024;
+            screenHeight = graphics.PreferredBackBufferHeight = 512;
+            screenWidth = graphics.PreferredBackBufferWidth = 1024;
             graphics.ApplyChanges();
 
             backgroundColor = new Color(86, 138, 205);
+
+            foregroundTiles = new Texture2D[16];
+            backgroundTiles = new Texture2D[16];
 
             base.Initialize();
         }
@@ -90,18 +102,23 @@ namespace TheBondOfStone {
             TileDecoration.Content = Content;
             world = new World(new Vector2(0, 50.0f));
 
-
-
-			UIManager = new UI();
-			UIManager.LoadContent(Content);
-            
-
             playerTexture = Content.Load<Texture2D>(@"graphics\entity\player");
+
+            //Load tilesets
+            for (int i = 0; i < 16; i++)
+            {
+                foregroundTiles[i] = Content.Load<Texture2D>(@"graphics\tile\tile_1_" + i);
+                backgroundTiles[i] = Content.Load<Texture2D>(@"graphics\tile\tile_2_" + i);
+            }
+            emptyTile = Content.Load<Texture2D>("tile_0");
 
             SpawnPlayer();
 
-            //Instantiate the camera object
-            Camera = new Camera(GraphicsDevice, player);
+			UIManager = new UI(this, player.p);
+			UIManager.LoadContent(Content);
+
+			//Instantiate the camera object
+			Camera = new Camera(GraphicsDevice);
 
             //Instantiate the level generator
             Generator = new LevelGenerator(Camera);
@@ -119,8 +136,9 @@ namespace TheBondOfStone {
             parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, .6f), new Vector2(-0.03f, 0f), GraphicsDevice.Viewport));
             //Background particles
             parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, 0.25f), GraphicsDevice.Viewport));
-            
 
+            SpawnPlayer();
+            Camera.target = player;
         }
 
         /// <summary>
@@ -184,6 +202,12 @@ namespace TheBondOfStone {
             player.Update(gameTime, world);
             Camera.Update(gameTime);
 
+            if(!player.Alive)
+            {
+                Camera.ScreenShake(5, 2f, true);
+                state = GameState.GameOver;
+            }
+
             //Update the parallaxed layers
             foreach(ParallaxLayer pl in parallaxLayers)
                 pl.Update(gameTime);
@@ -196,7 +220,11 @@ namespace TheBondOfStone {
 
             //TESTING
             if (keyboardState.IsKeyDown(Keys.Q)) {
-                Camera.ScreenShake(5, 0.25f);
+                Camera.ScreenShake(5, 1f, false);
+            }
+            if (keyboardState.IsKeyDown(Keys.W))
+            {
+                Camera.ScreenShake(5, 1f, true);
             }
         }
 
@@ -218,6 +246,17 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateGameOver(GameTime gameTime) {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
+            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+            {
+                Generator.Restart();
+                SpawnPlayer();
+                Camera.target = player;
+                Camera.Reset();
+                state = GameState.Playing;
+                backgroundColor = Color.CornflowerBlue;
+            }
+
+            //Code to restart game
         }
 
         /// <summary>
@@ -236,7 +275,7 @@ namespace TheBondOfStone {
                     DrawPlaying(gameTime, Color.White);
                     break;
                 case GameState.GameOver:
-                    DrawGameOver(gameTime);
+                    DrawGameOver(gameTime, Color.Red);
                     break;
                 case GameState.Pause:
                     DrawPause(gameTime, Color.Gray);
@@ -272,6 +311,7 @@ namespace TheBondOfStone {
                 map.Draw(spriteBatch, color); //Draw each active chunk
 
             player.Draw(spriteBatch, color);
+            Camera.Draw(spriteBatch, color);
             spriteBatch.End();
 
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
@@ -295,12 +335,14 @@ namespace TheBondOfStone {
         /// Draw the game over screen.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        void DrawGameOver(GameTime gameTime) {
+        void DrawGameOver(GameTime gameTime, Color color) {
+            DrawPlaying(gameTime, color);
+
             //TODO: DISPLAY GAMEOVER.
         }
 
         void SpawnPlayer() {
-            player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(24 * PixelScaleFactor, 20 * PixelScaleFactor)));
+            player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(24 * PixelScaleFactor, 20 * PixelScaleFactor)), Camera);
         }
     }
 }
