@@ -205,6 +205,7 @@ namespace TheBondOfStone {
             if(!player.Alive)
             {
                 Camera.ScreenShake(5, 2f, true);
+                backgroundColor = Color.Gray;
                 state = GameState.GameOver;
             }
 
@@ -246,7 +247,7 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateGameOver(GameTime gameTime) {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
-            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))  //This causes an exception to be thrown.
             {
                 Generator.Restart();
                 SpawnPlayer();
@@ -255,7 +256,6 @@ namespace TheBondOfStone {
                 state = GameState.Playing;
                 backgroundColor = Color.CornflowerBlue;
             }
-
             //Code to restart game
         }
 

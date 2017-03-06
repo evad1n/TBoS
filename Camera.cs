@@ -53,7 +53,7 @@ namespace TheBondOfStone
 
         public void Update(GameTime gameTime)
         {
-            //Player follow code.
+            //Player follow code.  //Note:  The camera should probably follow the player's y directly till the end of the lowest currently generated chunk, and then stop.  Otherwise it might kill the player when they get a run of really large negative y deviations.
             Origin = new Vector2(Origin.X + speed, Lerp(Origin.Y, target.physicsRect.Position.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / smoothing));
             rect = new Rectangle((int)(Origin.X - Game1.screenWidth / 2), ((int)Origin.Y - Game1.screenHeight / 2), Game1.screenWidth, Game1.screenHeight);
 

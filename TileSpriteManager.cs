@@ -38,7 +38,7 @@ namespace TheBondOfStone {
         /// </summary>
         /// <param name="path">The relative path to the directory containing the tiles.  Preceding .\\ is optional.</param>
         /// <param name="IDs">The integer values of valid tile texture files.</param>
-        public void InitializeTextures(String path, int[] IDs, ContentManager cm) {
+        public void InitializeTextures(String path, int[] IDs, ContentManager cm, int empty_ID) {
             path = Path.Combine(@".\", path);
             if (Directory.Exists(path)) {
                 foreach(int i in IDs) {
@@ -51,5 +51,13 @@ namespace TheBondOfStone {
             }
             else throw new NullReferenceException("File not found.");
         }
+
+        public void InitializeDecorations(String path, Vector2[] ID_mask_pairs, ContentManager cm) {
+
+        }
+
+        /*public TileDecoration GetDecoration(Random RNGesus) { //WIP
+
+        }*/
     }
 }
