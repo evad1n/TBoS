@@ -208,6 +208,7 @@ namespace TheBondOfStone {
                 Camera.ScreenShake(5, 2f, true);
                 backgroundColor = Color.Gray;
                 state = GameState.GameOver;
+                Camera.target = null;
             }
 
             //Update the parallaxed layers
