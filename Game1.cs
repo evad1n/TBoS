@@ -48,8 +48,6 @@ namespace TheBondOfStone {
 
         bool reset;
 
-        bool isFirstGameOverUpdate;
-
         public static KeyboardState keyboardState;
         public static KeyboardState prevKeyboardState;
 
@@ -89,8 +87,6 @@ namespace TheBondOfStone {
             foregroundTiles = new Texture2D[16];
             backgroundTiles = new Texture2D[16];
 
-            isFirstGameOverUpdate = true;
-
             base.Initialize();
         }
 
@@ -117,11 +113,6 @@ namespace TheBondOfStone {
             }
             emptyTile = Content.Load<Texture2D>("tile_0");
 
-            SpawnPlayer();
-
-			UIManager = new UI(this, player.p);
-			UIManager.LoadContent(Content);
-
 			//Instantiate the camera object
 			Camera = new Camera(GraphicsDevice);
 
@@ -144,6 +135,10 @@ namespace TheBondOfStone {
 
             SpawnPlayer();
             Camera.target = player;
+            Camera.startPos = new Vector2(Camera.Origin.X, player.physicsRect.Position.Y);
+
+            UIManager = new UI(this, player.p);
+            UIManager.LoadContent(Content);
         }
 
         /// <summary>
@@ -209,7 +204,6 @@ namespace TheBondOfStone {
 
             if(!player.Alive)
             {
-                Camera.ScreenShake(5, 2f, true);
                 backgroundColor = Color.Gray;
                 state = GameState.GameOver;
                 Camera.target = null;
@@ -231,7 +225,7 @@ namespace TheBondOfStone {
             }
             if (keyboardState.IsKeyDown(Keys.W))
             {
-                Camera.ScreenShake(5, 1f, true);
+                Camera.Reset();
             }
         }
 
@@ -253,28 +247,21 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateGameOver(GameTime gameTime) {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
-
-            if (isFirstGameOverUpdate) {
-                foreach(ParallaxLayer p in parallaxLayers) {
-                    p.disp = new Vector2(p.disp.X / 10, p.disp.Y / 10);
-                }
-            }
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))  //This causes an exception to be thrown.
             {
                 if(!reset)
                 {
                     Reset();
                 }
-                foreach (ParallaxLayer p in parallaxLayers) {
-                    p.disp = new Vector2(p.disp.X * 10, p.disp.Y * 10);
-                }
                 backgroundColor = Color.CornflowerBlue;
                 state = GameState.Playing;
                 reset = false;
             }
-            foreach (ParallaxLayer pl in parallaxLayers) {
+
+            Generator.UpdateChunkGeneration();
+            Camera.Update(gameTime);           
+            foreach (ParallaxLayer pl in parallaxLayers)
                 pl.Update(gameTime);
-            }
         }
 
         /// <summary>
@@ -354,7 +341,24 @@ namespace TheBondOfStone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawGameOver(GameTime gameTime, Color color) {
-            DrawPlaying(gameTime, color);
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
+            foreach (ParallaxLayer p in parallaxLayers)
+                if (p != parallaxLayers[3])
+                    p.Draw(spriteBatch, color);
+
+            spriteBatch.End();
+
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
+            foreach (Chunk map in Generator.Chunks)
+                map.Draw(spriteBatch, color); //Draw each active chunk
+
+            Camera.Draw(spriteBatch, color);
+            spriteBatch.End();
+
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
+            parallaxLayers[3].Draw(spriteBatch, color);
+            UIManager.Draw(spriteBatch);
+            spriteBatch.End();
 
             //TODO: DISPLAY GAMEOVER.
         }
@@ -366,8 +370,8 @@ namespace TheBondOfStone {
         private void Reset()
         {
             Console.WriteLine("RESET");
-            Camera.Reset();
             Generator.Restart();
+            Camera.Reset();
             SpawnPlayer();
             Camera.target = player;
             player.p.Reset();

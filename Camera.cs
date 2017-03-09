@@ -19,13 +19,17 @@ namespace TheBondOfStone
         //The left-translation-speed of the Camera.
         float speed = 1f;
 
-        private Vector2 startPos;
+        public Vector2 startPos { get; set; }
 
         //The smoothing factor of the camera's follow behavior (greater values = slower following)
         float smoothing = 0.3f;
 
         //Should the camera snap to a grid (makes it look UGLY)
         public bool Snapping { get; set; }
+        //Initiate flip maneuver
+        bool flip = false;
+        //Flip timer
+        float flipTimer;
 
         //ScreenShake variables
         //How long screenshake has been going
@@ -48,7 +52,7 @@ namespace TheBondOfStone
             this.graphicsDevice = graphicsDevice;
             Snapping = false;
             rect = new Rectangle((int)(Origin.X - Game1.screenWidth / 2), ((int)Origin.Y - Game1.screenHeight / 2), Game1.screenWidth, Game1.screenHeight);
-            startPos = Origin;
+            Origin = new Vector2(Origin.X - 400, Origin.Y);
         } 
 
         public void Update(GameTime gameTime)
@@ -103,11 +107,13 @@ namespace TheBondOfStone
                     rotation = Lerp(shakeQuake, 0, shakeTimer / duration);
                 }
             }
-            else
+
+            if(flip)
             {
-                //Make sure rotation is 0...this actually doesnt look bad at all thanks to the partial fix above
-                Rotation = 0;
+                Flip(gameTime);
             }
+
+
         }
 
 
@@ -155,6 +161,20 @@ namespace TheBondOfStone
         public void Reset()
         {
             Origin = startPos;
+        }
+
+        public void Flip(GameTime g)
+        {
+            flipTimer += (float)g.ElapsedGameTime.TotalSeconds;
+            if (flipTimer <= 1f)
+            {                
+                
+            }
+
+            if (flipTimer > 2f)
+            {
+                flip = false;
+            }
         }
     }
 }
