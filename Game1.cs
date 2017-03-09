@@ -364,7 +364,7 @@ namespace TheBondOfStone {
         }
 
         void SpawnPlayer() {
-            player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(24 * PixelScaleFactor, 20 * PixelScaleFactor)), Camera);
+            player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(86 * PixelScaleFactor, 20 * PixelScaleFactor)), Camera);
         }
 
         private void Reset()

@@ -51,19 +51,19 @@ namespace TheBondOfStone {
         public Chunk() {
 
             int[,] atlas = new int[,] {
-                { 0, 0, 0, 0, 0 },
-                { 0, 2, 2, 0, 0 },
-                { 0, 2, 2, 2, 0 },
-                { 1, 1, 1, 1, 5 },
-                { 0, 1, 1, 0, 0 }
+                { 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 2, 2, 0, 0 },
+                { 0, 0, 2, 2, 2, 0 },
+                { 0, 1, 1, 1, 1, 5 },
+                { 0, 0, 1, 1, 0, 0 }
             };
 
             Collisions = new TileCollision[,] {
-                { 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0 },
-                { TileCollision.Impassable, TileCollision.Impassable, TileCollision.Impassable, TileCollision.Impassable, TileCollision.Impassable },
-                { 0, TileCollision.Impassable, TileCollision.Impassable, 0, 0 }
+                { 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0 },
+                { 0, TileCollision.Impassable, TileCollision.Impassable, TileCollision.Impassable, TileCollision.Impassable, TileCollision.Impassable },
+                { 0, 0, TileCollision.Impassable, TileCollision.Impassable, 0, 0 }
             };
 
             Generate(atlas, Game1.PixelScaleFactor);
