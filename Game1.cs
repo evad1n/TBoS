@@ -48,6 +48,8 @@ namespace TheBondOfStone {
 
         bool reset;
 
+        bool isFirstGameOverUpdate;
+
         public static KeyboardState keyboardState;
         public static KeyboardState prevKeyboardState;
 
@@ -86,6 +88,8 @@ namespace TheBondOfStone {
 
             foregroundTiles = new Texture2D[16];
             backgroundTiles = new Texture2D[16];
+
+            isFirstGameOverUpdate = true;
 
             base.Initialize();
         }
@@ -249,21 +253,28 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateGameOver(GameTime gameTime) {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
+
+            if (isFirstGameOverUpdate) {
+                foreach(ParallaxLayer p in parallaxLayers) {
+                    p.disp = new Vector2(p.disp.X / 10, p.disp.Y / 10);
+                }
+            }
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))  //This causes an exception to be thrown.
             {
                 if(!reset)
                 {
                     Reset();
                 }
+                foreach (ParallaxLayer p in parallaxLayers) {
+                    p.disp = new Vector2(p.disp.X * 10, p.disp.Y * 10);
+                }
                 backgroundColor = Color.CornflowerBlue;
                 state = GameState.Playing;
                 reset = false;
             }
-
-            Generator.UpdateChunkGeneration();
-            Camera.Update(gameTime);
-            foreach (ParallaxLayer pl in parallaxLayers)
+            foreach (ParallaxLayer pl in parallaxLayers) {
                 pl.Update(gameTime);
+            }
         }
 
         /// <summary>
