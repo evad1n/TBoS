@@ -1,7 +1,4 @@
-﻿using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Factories;
+﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -27,176 +24,67 @@ namespace TheBondOfStone
     {
 		public PlayerStats p;
 
-		public PhysicsObject physicsRect;
         Camera camera;
-        PhysicsObject separationRect;
         Texture2D texture;
 
-        float speed = 8.0f;
+        KeyboardState prevKbState;
 
-        bool hitGround;
-        bool hitLeft;
-        bool hitRight;
+        float speed = 8.0f;
 
         float textureSize;
 
         public bool Grounded { get; set; }
-        public bool Walled { get; set; }
         public bool Alive { get; set; }
 
+        public Vector2 Position { get; set; }
 
-        public Player(World world, Texture2D texture, Vector2 size, float mass, Vector2 startPosition, Camera camera)
+
+        public Player(Texture2D texture, Vector2 size, float mass, Vector2 startPosition, Camera camera)
         {
-            // Create the physics objects of the player
             textureSize = size.X;
-            physicsRect = new PhysicsObject(size.X - 2 * size.X / Game1.PixelScaleFactor, size.Y - 2 *size.Y / Game1.PixelScaleFactor, mass / 2f, "player", BodyType.Dynamic);
-            //physicsRect = new PhysicsObject(size, 1f, "player", BodyType.Dynamic);
-            separationRect = new PhysicsObject(new Vector2(size.X + 1 * UnitConvert.pixelToUnit, size.Y + UnitConvert.pixelToUnit), mass / 2f, "player", BodyType.Dynamic);
-            physicsRect.Position = startPosition;
-            separationRect.Body.FixedRotation = true;
-            physicsRect.Body.FixedRotation = true;
 
             this.texture = texture;
             //SETS THE CAMERA DOM DONT DELETE IT DONT DO IT PLEASE GOD NO
             this.camera = camera;
             Alive = true;
 
-            physicsRect.Body.OnCollision += Body_OnCollision;
-            separationRect.Body.OnSeparation += Body_OnSeparation;
 			p = new PlayerStats();
         }
 
         public void Draw(SpriteBatch spriteBatch, Color color)
         {
-            if (color == null) color = Color.White;
-            Rectangle destination = new Rectangle
-            (
-                (int)physicsRect.Position.X,
-                (int)physicsRect.Position.Y,
-                (int)textureSize,
-                (int)textureSize
-            );
-
-            spriteBatch.Draw(texture, destination, null, color, physicsRect.Body.Rotation, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, Position, color);
         }
 
-        public void Update(GameTime gameTime, World w)
+        public void Update(GameTime gameTime)
         {
-            //CHECK IF PLAYER IS ALIVE BASED ON IF THE PLAYER IS IN THE CAMERA BOUNDS (ON SCREEN)
-            if (physicsRect.Position.X < camera.rect.Left || physicsRect.Position.X > camera.rect.Right || physicsRect.Position.Y > camera.rect.Bottom + (2* texture.Height) || physicsRect.Position.Y < camera.rect.Top)
+            KeyboardState kb = Keyboard.GetState();
+
+            //Check if player is off screen
+            if (Position.X < camera.rect.Left || Position.X > camera.rect.Right || Position.Y > camera.rect.Bottom || Position.Y < camera.rect.Top)
             {
                 Alive = false;
             }
 
-            if (Game1.keyboardState.IsKeyDown(Keys.Left) || Game1.keyboardState.IsKeyDown(Keys.A))
+            if (kb.IsKeyDown(Keys.W))
             {
-                Move(Movement.Left);
+                Position = new Vector2(Position.X, Position.Y - speed);
             }
-            else if (Game1.keyboardState.IsKeyDown(Keys.Right) || Game1.keyboardState.IsKeyDown(Keys.D))
+            if (kb.IsKeyDown(Keys.A))
             {
-                Move(Movement.Right);
+                Position = new Vector2(Position.X - speed, Position.Y);
             }
-            else
+            if (kb.IsKeyDown(Keys.S))
             {
-                Move(Movement.Stop);
+                Position = new Vector2(Position.X, Position.Y + speed);
             }
-
-            if (Game1.keyboardState.IsKeyDown(Keys.Space) && !Game1.prevKeyboardState.IsKeyDown(Keys.Space))
+            if (kb.IsKeyDown(Keys.D))
             {
-                Jump(-15f);
+                Position = new Vector2(Position.X + speed, Position.Y);
             }
 
-            separationRect.Position = physicsRect.Position;
-
-            Walled = hitLeft || hitRight;
-            Grounded = hitGround;
-
-            if (Walled && physicsRect.Body.LinearVelocity.Y > 0)
-                physicsRect.Body.GravityScale = 0.5f;
-            else
-                physicsRect.Body.GravityScale = 1.0f;
-
+            prevKbState = kb;
         }
 
-        public void Move(Movement movement)
-        {
-
-            switch (movement)
-            {
-
-                case Movement.Left:
-                    physicsRect.Body.LinearVelocity = new Vector2(-speed, physicsRect.Body.LinearVelocity.Y);
-                    break;
-
-                case Movement.Right:
-                    physicsRect.Body.LinearVelocity = new Vector2(speed, physicsRect.Body.LinearVelocity.Y);
-                    break;
-
-                case Movement.Stop:
-                    physicsRect.Body.LinearVelocity = new Vector2(0, physicsRect.Body.LinearVelocity.Y);
-                    break;
-            }
-        }
-
-        public void Jump(float force = -1f)
-        {
-            if (Grounded)
-            {
-                physicsRect.Body.LinearVelocity = new Vector2(physicsRect.Body.LinearVelocity.X, force);
-
-                Grounded = false;
-            }
-            else
-            {
-                if (Walled)
-                    physicsRect.Body.LinearVelocity = new Vector2(physicsRect.Body.LinearVelocity.X, force);
-            }
-        }
-
-        public void Body_OnSeparation(Fixture fixtureA, Fixture fixtureB)
-        {
-            
-
-            if (fixtureB.Body.UserData.ToString() != "ground")
-                return;
-
-            if (fixtureA.Body.Position.Y < fixtureB.Body.Position.Y)
-                hitGround = false;
-
-            if (fixtureA.Body.Position.X > fixtureB.Body.Position.X)
-                hitLeft = false;
-
-             if (fixtureA.Body.Position.X < fixtureB.Body.Position.X)
-                hitRight = false;
-        }
-
-        public bool Body_OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
-        {
-            //This body collided with a ground physicsobject
-            if (fixtureB.Body.UserData.Equals("ground"))
-            {
-                switch (ContactDirection.Direction(contact))
-                {
-                    case CollisionDirection.Bottom:
-                        hitGround = true;
-                        break;
-
-                    case CollisionDirection.Left:
-                        hitLeft = true;
-                        break;
-
-                    case CollisionDirection.Right:
-                        hitRight = true;
-                        break;
-
-                    case CollisionDirection.Top:
-
-                        break;
-                }
-            }else if (fixtureB.Body.UserData.Equals("player"))
-                return false;
-
-            return true;
-        }
     }
 }

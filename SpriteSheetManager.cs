@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MonoGame.Extended;
-using FarseerPhysics.Dynamics;
 
 namespace TheBondOfStone {
 	static class SpriteSheetManager {

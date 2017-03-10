@@ -26,10 +26,6 @@ namespace TheBondOfStone
 
         //Should the camera snap to a grid (makes it look UGLY)
         public bool Snapping { get; set; }
-        //Initiate flip maneuver
-        bool flip = false;
-        //Flip timer
-        float flipTimer;
 
         //ScreenShake variables
         //How long screenshake has been going
@@ -60,12 +56,13 @@ namespace TheBondOfStone
             //Player follow code.  //Note:  The camera should probably follow the player's y directly till the end of the lowest currently generated chunk, and then stop.  Otherwise it might kill the player when they get a run of really large negative y deviations.
             if(target != null)
             {
-                Origin = new Vector2(Origin.X + speed, Lerp(Origin.Y, target.physicsRect.Position.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / smoothing));
+                Origin = new Vector2(Origin.X + speed, Lerp(Origin.Y, target.Position.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / smoothing));
             }
             else
             {
                 Origin = new Vector2(Origin.X + speed, Origin.Y);
             }
+
             rect = new Rectangle((int)(Origin.X - Game1.screenWidth / 2), ((int)Origin.Y - Game1.screenHeight / 2), Game1.screenWidth, Game1.screenHeight);
 
             if(Snapping)
@@ -107,13 +104,6 @@ namespace TheBondOfStone
                     rotation = Lerp(shakeQuake, 0, shakeTimer / duration);
                 }
             }
-
-            if(flip)
-            {
-                Flip(gameTime);
-            }
-
-
         }
 
 
@@ -161,20 +151,6 @@ namespace TheBondOfStone
         public void Reset()
         {
             Origin = startPos;
-        }
-
-        public void Flip(GameTime g)
-        {
-            flipTimer += (float)g.ElapsedGameTime.TotalSeconds;
-            if (flipTimer <= 1f)
-            {                
-                
-            }
-
-            if (flipTimer > 2f)
-            {
-                flip = false;
-            }
         }
     }
 }

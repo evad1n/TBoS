@@ -54,17 +54,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
-    <Compile Include="ContactDirection.cs" />
     <Compile Include="PlayerStats.cs" />
     <Compile Include="SpriteSheetManager.cs" />
-    <Compile Include="Player2.cs" />
     <Compile Include="RectangleExtensions.cs" />
     <Compile Include="TileSpriteManager.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="LevelGenerator.cs" />
     <Compile Include="ParallaxLayer.cs" />
-    <Compile Include="PhysicsObject.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,10 +71,6 @@
     <Compile Include="UnitConvert.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FarseerPhysics MonoGame, Version=3.5.0.40766, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\FarseerPhysics.MonoGame.Unofficial.3.5.0\lib\FarseerPhysics MonoGame.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="MonoGame.Extended, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MonoGame.Extended.0.4.64\lib\MonoGame.Extended.dll</HintPath>
       <Private>True</Private>

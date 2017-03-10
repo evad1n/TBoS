@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MonoGame.Extended;
-using FarseerPhysics.Dynamics;
 
 namespace TheBondOfStone {
     /// <summary>
@@ -51,7 +50,6 @@ namespace TheBondOfStone {
         public static KeyboardState keyboardState;
         public static KeyboardState prevKeyboardState;
 
-        public static World world;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -101,7 +99,6 @@ namespace TheBondOfStone {
             //Set the static Tile and TileDecoration classes to reference the Game's content loader, so they can load their own textures as needed.
             Tile.Content = Content;
             TileDecoration.Content = Content;
-            world = new World(new Vector2(0, 50.0f));
 
             playerTexture = Content.Load<Texture2D>(@"graphics\entity\player");
 
@@ -135,7 +132,8 @@ namespace TheBondOfStone {
 
             SpawnPlayer();
             Camera.target = player;
-            Camera.startPos = new Vector2(Camera.Origin.X, player.physicsRect.Position.Y);
+            Camera.Origin = new Vector2(Camera.Origin.X, player.Position.Y);
+            Camera.startPos = Camera.Origin;
 
             UIManager = new UI(this, player.p);
             UIManager.LoadContent(Content);
@@ -192,14 +190,12 @@ namespace TheBondOfStone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdatePlaying(GameTime gameTime) {
-            //Physics garbage
-            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS
             Generator.UpdateChunkGeneration();
 
             //Update the Camera and the player object
-            player.Update(gameTime, world);
+            player.Update(gameTime);
             Camera.Update(gameTime);
 
             if(!player.Alive)
@@ -223,9 +219,9 @@ namespace TheBondOfStone {
             if (keyboardState.IsKeyDown(Keys.Q)) {
                 Camera.ScreenShake(5, 1f, false);
             }
-            if (keyboardState.IsKeyDown(Keys.W))
+            if (keyboardState.IsKeyDown(Keys.E))
             {
-                Camera.Reset();
+                Reset();
             }
         }
 
@@ -364,7 +360,7 @@ namespace TheBondOfStone {
         }
 
         void SpawnPlayer() {
-            player = new Player(world, playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(86 * PixelScaleFactor, 20 * PixelScaleFactor)), Camera);
+            player = new Player(playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(86 * PixelScaleFactor, 20 * PixelScaleFactor)), Camera);
         }
 
         private void Reset()

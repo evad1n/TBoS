@@ -1,4 +1,4 @@
-﻿using FarseerPhysics.Dynamics;
+﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -39,7 +39,6 @@ namespace TheBondOfStone {
         public bool IsEndTile { get; set; }
         public bool IsStartTile { get; set; }
 
-        public PhysicsObject physics;
         public TileCollision Collision;
 
         private Texture2D texture;
@@ -81,17 +80,15 @@ namespace TheBondOfStone {
         }
 
         public Tile(int ID, Rectangle r, TileCollision collision) {
-            
+
             this.ID = ID;
-            Rect = r;
+            Rect = r; 
             Collision = collision;
 
             if (ID == 1 || ID == 3 || ID == 4 || ID == 5) { //Draw queue means background tiles are rendered behind ground tiles
                 DrawQueue = 0;
                 texture = Game1.emptyTile;
-                //physics = new PhysicsObject(new Vector2(Rect.Size.X, Rect.Size.Y), 1f, "ground");
-                physics = new PhysicsObject(Rect.Size.X, Rect.Size.Y, 1f, "ground");
-                physics.Position = new Vector2(Rect.X, Rect.Y);
+
             } else {
                 DrawQueue = -1;
                 texture = Game1.emptyTile;
@@ -111,19 +108,7 @@ namespace TheBondOfStone {
             if(!stitched)
                 StitchTile();
 
-            if (physics != null) {
-                Rectangle destination = new Rectangle
-                (
-                    (int)physics.Position.X,
-                    (int)physics.Position.Y,
-                    (int)physics.Size.X,
-                    (int)physics.Size.Y
-                );
-
-                sb.Draw(texture, destination, null, color, physics.Body.Rotation, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
-            } else {
                 sb.Draw(texture, Rect, null, color, 0, new Vector2(texture.Width / 2, texture.Height / 2), SpriteEffects.None, 0);
-            }
 
             foreach (TileDecoration d in Decorations)
                 d.Draw(sb, color);

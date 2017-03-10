@@ -31,7 +31,7 @@ namespace TheBondOfStone
 
         public void GenerateNewChunk(Rectangle startTileRect, string mapName)
         {
-            Chunks.Add(new Chunk(startTileRect, Game1.world));
+            Chunks.Add(new Chunk(startTileRect));
         }
 
         public void UpdateChunkGeneration()

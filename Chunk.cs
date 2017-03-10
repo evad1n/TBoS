@@ -1,4 +1,4 @@
-﻿using FarseerPhysics.Dynamics;
+﻿
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace TheBondOfStone {
 
         Microsoft.Xna.Framework.Rectangle o;
 
-        public Chunk(Microsoft.Xna.Framework.Rectangle originTile, World world) {
+        public Chunk(Microsoft.Xna.Framework.Rectangle originTile) {
             o = originTile;
         }
 
