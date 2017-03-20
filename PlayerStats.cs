@@ -1,53 +1,92 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TheBondOfStone {
-	public class PlayerStats {
+namespace The_Bond_of_Stone {
+    public class PlayerStats {
+        public Player Player;
 
-		private int health;
-		private int scoreBits;
-		private int multiplier;
+        public int Health;
+        public int MaxHealth;
 
-		public int PlayerScore { get; set; }
-		public int Health {
-			get { return health; }
-			set {
-				if (value <= 6 && value >= 0)
-					health = value;
-			}
-		}
-		public int ScoreBits {
-			get { return scoreBits; }
-			set {
-				if (value > 0 && value <= 4)
-					scoreBits = value;
-			}
-		}
-		public int Multiplier {
-			get { return multiplier; }
-			set {
-				if (value <= 4 && value >= 1)
-					multiplier = value;
-			}
-		}
+        public int Score = 0;
+        public int ScoreMultiplier = 1;
 
-		public PlayerStats() {
-			health = 6;
-			scoreBits = 0;
-			multiplier = 1;
-		}
+        float distance;
+        public float Distance {
+            get { return distance / Game1.TILE_SIZE; }
+        }
+        float lastDistance;
 
-        //Reset all values to game start
-        public void Reset()
-        {
-            PlayerScore = 0;
-            health = 6;
-            scoreBits = 0;
-            multiplier = 1;
+        public float Time = 0f;
+
+        bool isAlive = true;
+        public bool IsAlive { get { return isAlive; } }
+
+        public PlayerStats(Player player, int maxHealth) {
+            Player = player;
+
+            //set the max health (it has to be a multiple of 2 for drawing).
+            if (maxHealth % 2 == 1)
+                MaxHealth = maxHealth + 1;
+            else
+                MaxHealth = maxHealth;
+
+            Health = MaxHealth;
         }
 
-	}
+        public void Update(GameTime gameTime) {
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            //Calculate scoring, time, and distance
+            if (Player.Rect.Left > distance) {
+                Score += (int)((distance - lastDistance) * ScoreMultiplier);
+
+                lastDistance = distance;
+                distance = Player.Rect.Left;
+            }
+
+            Time += elapsed;
+
+            //Calculate whether the player died this update
+            //if the player is alive
+            //and the player has a chunk and is a certain distance below that chunk
+            //or if the player is off the screen on the left
+            //kill the player.
+            if (isAlive &&
+                (Player.CurrentChunk != null && Player.Position.Y > Player.CurrentChunk.Bottom + Game1.CHUNK_LOWER_BOUND) ||
+                Player.Position.X <= Game1.Camera.Rect.Left) {
+                Die();
+            }
+                
+        }
+
+        //removes health from the player. If the health is 0, kills the player.
+        public void TakeDamage(int damage) {
+            Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
+
+            if (Health == 0)
+                Die();
+        }
+
+        //Just sets isAlive to false.
+        public void Die() {
+            isAlive = false;
+        }
+
+        //Resets this object to its default values.
+        public void Reset() {
+            Score = 0;
+            ScoreMultiplier = 1;
+            distance = 0;
+            lastDistance = distance;
+            Time = 0;
+
+            Health = MaxHealth;
+            isAlive = true;
+        }
+    }
 }

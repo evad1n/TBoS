@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -7,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TheBondOfStone {
-    class TileDecoration {
+namespace The_Bond_of_Stone {
+    public class TileDecoration {
         private Texture2D texture;
         public Texture2D Texture {
             get { return texture; }
@@ -21,29 +20,29 @@ namespace TheBondOfStone {
             protected set { rect = value; }
         }
 
-        private static ContentManager content;
-        public static ContentManager Content {
-            protected get { return content; }
-            set { content = value; }
-        }
-
         public TileDecoration(Rectangle r, int id = 0) {
             Rect = r;
-            Content = content;
             Texture = PickTexture(id, Game1.RandomObject);
         }
 
+        //Pretty self explanatory
         Texture2D PickTexture(int ID, Random r) {
-            if (ID == 0)
-                return Content.Load<Texture2D>(@"graphics\deco\deco_0_" + r.Next(1, 12));
-            if(ID == 1)
-                return Content.Load<Texture2D>(@"graphics\deco\deco_1_" + r.Next(1, 3));
-            if (ID == 2)
-                return Content.Load<Texture2D>(@"graphics\deco\deco_2_" + r.Next(1, 3));
-            if (ID == 3)
-                return Content.Load<Texture2D>(@"graphics\deco\deco_3_" + r.Next(1, 3));
-            
-            return Content.Load<Texture2D>(@"graphics\deco\deco_0_" + r.Next(1, 12));
+            switch (ID) {
+                case 0:
+                    return Graphics.Deco_groundTop[r.Next(0, Graphics.Deco_groundTop.Length)];
+                case 1:
+                    return Graphics.Deco_groundBottom[r.Next(0, Graphics.Deco_groundBottom.Length)];
+                case 2:
+                    return Graphics.Deco_backgroundMiddle[r.Next(0, Graphics.Deco_backgroundMiddle.Length)];
+                case 3:
+                    return Graphics.Deco_backgroundBottom[r.Next(0, Graphics.Deco_backgroundBottom.Length)];
+                case 4:
+                    return Graphics.Deco_groundMiddle[r.Next(0, Graphics.Deco_groundMiddle.Length)];
+                case 5:
+                    return Graphics.Deco_stoneMiddle[r.Next(0, Graphics.Deco_stoneMiddle.Length)];
+                default:
+                    return Graphics.Deco_groundTop[r.Next(0, Graphics.Deco_groundTop.Length)];
+            }
         }
 
         public void Draw(SpriteBatch sb, Color color) {

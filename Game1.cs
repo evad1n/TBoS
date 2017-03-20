@@ -1,60 +1,53 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.ViewportAdapters;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using MonoGame.Extended;
 
-namespace TheBondOfStone {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
-    /// 
+namespace The_Bond_of_Stone {
 
     public enum GameState { MainMenu, Playing, Pause, GameOver };
 
+    /// <summary>
+    /// This is the main type for your game.
+    /// </summary>
     public class Game1 : Game {
-        //The game's camera
-        Camera Camera { get; set; }
-
-        public GameState state { get; set; }
-        
+        //BASIC
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public static int PixelScaleFactor { get; set; }
-		public static int UIScaleFactor { get; set; }
-        public static int screenWidth { get; set; }
-        public static int screenHeight { get; set; }
+        public GameState State { get; set; }
 
-        public static Texture2D[] foregroundTiles { get; set; }
-        public static Texture2D[] backgroundTiles { get; set; }
+        //STATICS AND CONSTANTS
+        public const int TILE_SIZE = 24;
+        public const int TILE_PIXEL_SIZE = 8;
+        public static int PIXEL_SCALE { get { return TILE_SIZE / TILE_PIXEL_SIZE; } }
+        public static Vector2 GRAVITY = new Vector2(0, 2750f);
+        public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
 
-        public static Texture2D emptyTile { get; set; }
+        Vector2 playerStartPos;
+        Rectangle chunkStartPos;
 
-        LevelGenerator Generator { get; set; }
-		UI UIManager { get; set; }
-
-        List<ParallaxLayer> parallaxLayers;
-        Color backgroundColor;
-
+        public static int ScreenWidth { get; set; }
+        public static int ScreenHeight { get; set; }
         public static Random RandomObject;
-
-        public Player player;
-        Texture2D playerTexture;
-
-        bool reset;
 
         public static KeyboardState keyboardState;
         public static KeyboardState prevKeyboardState;
 
+        //CONTENT
+        Graphics LoadedGraphics;
+        public static LevelGenerator Generator;
+        public static Camera Camera;
+        public static UI Interface;
+
+        Player Player;
+        PlayerStats PlayerStats;
+
+        ParallaxLayer[] parallaxLayers;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
         }
 
         /// <summary>
@@ -64,26 +57,25 @@ namespace TheBondOfStone {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-            //Scaling factor for ALL of the game's sprites
-            PixelScaleFactor = 24;
-			UIScaleFactor = PixelScaleFactor / 7;
+            State = GameState.Playing;
 
-            //Set initial game state
-            state = GameState.Playing;
-            reset = false;
+            parallaxLayers = new ParallaxLayer[2];
+
+            playerStartPos = new Vector2(64, 64);
+            chunkStartPos = new Rectangle(
+                0,
+                TILE_SIZE * 8,
+                TILE_SIZE,
+                TILE_SIZE);
 
             //Random object for ALL THE GAME'S RNG. Reference this Random instance ONLY
             RandomObject = new Random();
 
             //Adjust the screen dimensions and other particulars
-            screenHeight = graphics.PreferredBackBufferHeight = 512;
-            screenWidth = graphics.PreferredBackBufferWidth = 1024;
+            ScreenHeight = graphics.PreferredBackBufferHeight = 512;
+            ScreenWidth = graphics.PreferredBackBufferWidth = 1024;
+            IsMouseVisible = true;
             graphics.ApplyChanges();
-
-            backgroundColor = new Color(86, 138, 205);
-
-            foregroundTiles = new Texture2D[16];
-            backgroundTiles = new Texture2D[16];
 
             base.Initialize();
         }
@@ -96,47 +88,20 @@ namespace TheBondOfStone {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //Set the static Tile and TileDecoration classes to reference the Game's content loader, so they can load their own textures as needed.
-            Tile.Content = Content;
-            TileDecoration.Content = Content;
+            //Load all of the game's graphical content into a static object.
+            LoadedGraphics = new Graphics();
+            LoadedGraphics.LoadContent(Content);
 
-            playerTexture = Content.Load<Texture2D>(@"graphics\entity\player");
+            Player = new Player(Graphics.PlayerTexture, playerStartPos);
+            PlayerStats = new PlayerStats(Player, 6);
+            Interface = new UI(PlayerStats, GraphicsDevice.Viewport);
+            Camera = new Camera(GraphicsDevice, Player, 1f);
+            Generator = new LevelGenerator(graphics, chunkStartPos);
 
-            //Load tilesets
-            for (int i = 0; i < 16; i++)
-            {
-                foregroundTiles[i] = Content.Load<Texture2D>(@"graphics\tile\tile_1_" + i);
-                backgroundTiles[i] = Content.Load<Texture2D>(@"graphics\tile\tile_2_" + i);
-            }
-            emptyTile = Content.Load<Texture2D>("tile_0");
-
-			//Instantiate the camera object
-			Camera = new Camera(GraphicsDevice);
-
-            //Instantiate the level generator
-            Generator = new LevelGenerator(Camera);
-
-            //Use the generator to generate the starter chunk
             Generator.DoStarterGeneration();
 
-            //Initialize and load background parallaxing layers
-            parallaxLayers = new List<ParallaxLayer>();
-            //Foreground Cloud
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_0"), new Vector2(10, .5f), new Vector2(-0.0125f, 0f), GraphicsDevice.Viewport));
-            //Foreground particles
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_2"), new Vector2(30, 4f), new Vector2(-0.5f, 0.125f), GraphicsDevice.Viewport));
-            //Background Cloud
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_1"), new Vector2(30, .6f), new Vector2(-0.03f, 0f), GraphicsDevice.Viewport));
-            //Background particles
-            parallaxLayers.Add(new ParallaxLayer(Content.Load<Texture2D>(@"graphics\misc\parallax_3"), new Vector2(10, 3f), new Vector2(-0.1f, 0.25f), GraphicsDevice.Viewport));
-
-            SpawnPlayer();
-            Camera.target = player;
-            Camera.Origin = new Vector2(Camera.Origin.X, player.Position.Y);
-            Camera.startPos = Camera.Origin;
-
-            UIManager = new UI(this, player.p);
-            UIManager.LoadContent(Content);
+            parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
+            parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(2f, 0f), GraphicsDevice.Viewport);
         }
 
         /// <summary>
@@ -157,7 +122,7 @@ namespace TheBondOfStone {
             //Update game and input states
             keyboardState = Keyboard.GetState();
 
-            switch (state) {
+            switch (State) {
                 case GameState.MainMenu:
                     UpdateMainMenu(gameTime);
                     break;
@@ -191,38 +156,33 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdatePlaying(GameTime gameTime) {
 
-            //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS
-            Generator.UpdateChunkGeneration();
+            Player.Update(gameTime, keyboardState, prevKeyboardState);
+            PlayerStats.Update(gameTime);
 
-            //Update the Camera and the player object
-            player.Update(gameTime);
+            if (!PlayerStats.IsAlive)
+                State = GameState.GameOver;
+
             Camera.Update(gameTime);
 
-            if(!player.Alive)
-            {
-                backgroundColor = Color.Gray;
-                state = GameState.GameOver;
-                Camera.target = null;
-            }
-
-            //Update the parallaxed layers
-            foreach(ParallaxLayer pl in parallaxLayers)
+            foreach (ParallaxLayer pl in parallaxLayers)
                 pl.Update(gameTime);
 
-
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
-                state = GameState.Pause;
-                backgroundColor = new Color(0,119,190); //Darker CornflowerBlue
+                State = GameState.Pause;
             }
 
-            //TESTING
-            if (keyboardState.IsKeyDown(Keys.Q)) {
-                Camera.ScreenShake(5, 1f, false);
+
+            //Testing things
+            if(keyboardState.IsKeyDown(Keys.H) && prevKeyboardState.IsKeyUp(Keys.H)) {
+                PlayerStats.TakeDamage(1);
             }
-            if (keyboardState.IsKeyDown(Keys.E))
-            {
-                Reset();
+
+            if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
+                Camera.ScreenShake(3, 0.25f);
             }
+
+            //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
+            Generator.UpdateChunkGeneration();
         }
 
         /// <summary>
@@ -232,8 +192,7 @@ namespace TheBondOfStone {
         void UpdatePause(GameTime gameTime) {
             //Resume the game if the escape key is pressed again
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
-                state = GameState.Playing;
-                backgroundColor = Color.CornflowerBlue;
+                State = GameState.Playing;
             }
         }
 
@@ -243,21 +202,10 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateGameOver(GameTime gameTime) {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
-            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))  //This causes an exception to be thrown.
-            {
-                if(!reset)
-                {
-                    Reset();
-                }
-                backgroundColor = Color.CornflowerBlue;
-                state = GameState.Playing;
-                reset = false;
-            }
 
-            Generator.UpdateChunkGeneration();
-            Camera.Update(gameTime);           
-            foreach (ParallaxLayer pl in parallaxLayers)
-                pl.Update(gameTime);
+            //Reset on an ESC key press.
+            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+                ResetGame();
         }
 
         /// <summary>
@@ -265,10 +213,10 @@ namespace TheBondOfStone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(backgroundColor);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            switch (state)
-            {
+            //Organizational: Draw according to the current game state
+            switch (State) {
                 case GameState.MainMenu:
                     DrawMainMenu(gameTime);
                     break;
@@ -282,6 +230,12 @@ namespace TheBondOfStone {
                     DrawPause(gameTime, Color.Gray);
                     break;
             }
+
+            //Always draw the interface. It has its own state switch.
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
+            Interface.Draw(spriteBatch, State);
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
 
@@ -290,36 +244,27 @@ namespace TheBondOfStone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawMainMenu(GameTime gameTime) {
-            //TODO: IMPLEMENT MAIN MENU
+            
         }
 
         /// <summary>
         /// Draw the game screen elements.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        void DrawPlaying(GameTime gameTime, Color color)
-        {
-            //Draw background parallaxing layers with different spritebatch settings 
+        void DrawPlaying(GameTime gameTime, Color color) {
+            //Draw the parallax layers in the background.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
-            foreach (ParallaxLayer p in parallaxLayers)
-                if (p != parallaxLayers[3])
-                    p.Draw(spriteBatch, color);
-
+            foreach (ParallaxLayer pl in parallaxLayers)
+                pl.Draw(spriteBatch);
             spriteBatch.End();
 
+            //Draw the foreground elements (Level, entities)
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
             foreach (Chunk map in Generator.Chunks)
                 map.Draw(spriteBatch, color); //Draw each active chunk
 
-            player.Draw(spriteBatch, color);
-            Camera.Draw(spriteBatch, color);
+            Player.Draw(spriteBatch);
             spriteBatch.End();
-
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
-            parallaxLayers[3].Draw(spriteBatch, color);
-			UIManager.Draw(spriteBatch);
-			spriteBatch.End();
-
         }
 
         /// <summary>
@@ -328,8 +273,6 @@ namespace TheBondOfStone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPause(GameTime gameTime, Color color) {
             DrawPlaying(gameTime, color);
-
-            //TODO: IMPLEMENT OTHER PAUSED SCREEN DRAWS
         }
 
         /// <summary>
@@ -337,41 +280,31 @@ namespace TheBondOfStone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawGameOver(GameTime gameTime, Color color) {
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
-            foreach (ParallaxLayer p in parallaxLayers)
-                if (p != parallaxLayers[3])
-                    p.Draw(spriteBatch, color);
-
-            spriteBatch.End();
-
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
-            foreach (Chunk map in Generator.Chunks)
-                map.Draw(spriteBatch, color); //Draw each active chunk
-
-            Camera.Draw(spriteBatch, color);
-            spriteBatch.End();
-
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
-            parallaxLayers[3].Draw(spriteBatch, color);
-            UIManager.Draw(spriteBatch);
-            spriteBatch.End();
-
-            //TODO: DISPLAY GAMEOVER.
+            DrawPlaying(gameTime, color);
         }
 
-        void SpawnPlayer() {
-            player = new Player(playerTexture, new Vector2(PixelScaleFactor, PixelScaleFactor), 10f, UnitConvert.ToWorld(new Vector2(86 * PixelScaleFactor, 20 * PixelScaleFactor)), Camera);
-        }
-
-        private void Reset()
-        {
-            Console.WriteLine("RESET");
+        /// <summary>
+        /// Resets the game.
+        /// </summary>
+        public void ResetGame() {
+            //Generate a new level
             Generator.Restart();
+
+            //Reset the player and camera
+            Player = new Player(Graphics.PlayerTexture, playerStartPos);
+
+            Camera.Target = Player;
             Camera.Reset();
-            SpawnPlayer();
-            Camera.target = player;
-            player.p.Reset();
-            reset = true;
+
+            PlayerStats.Player = Player;
+            PlayerStats.Reset();
+
+            //Reset the game state
+            State = GameState.Playing;
+        }
+
+        public static bool KeyPressed(Keys key) {
+            return (keyboardState.IsKeyDown(key) && !prevKeyboardState.IsKeyDown(key));
         }
     }
 }

@@ -1,65 +1,68 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
 
-namespace TheBondOfStone {
-	class UI {
+namespace The_Bond_of_Stone {
+    public class UI {
+        public PlayerStats PlayerStats;
 
-		Game1 game;
-		PlayerStats playStats;
+        public Viewport viewport;
 
-		SpriteFont subtitleFontLarge;
+        public UI(PlayerStats playerStats, Viewport viewport) {
+            PlayerStats = playerStats;
+            this.viewport = viewport;
+        }
 
-		// HUD elements
-		Texture2D heartSheet;
-		Texture2D scoreBitSheet;
-		Texture2D multiplierSheet;
+        public void Draw(SpriteBatch spriteBatch, GameState gameState) {
+            switch (gameState) {
+                case GameState.Playing:
+                    //Draw the player's score
+                    spriteBatch.DrawString(
+                        Graphics.Font_Main,
+                        "Score " + PlayerStats.Score,
+                        new Vector2(Game1.PIXEL_SCALE, (Graphics.UI_Hearts[0].Height + 1) * Game1.PIXEL_SCALE),
+                        Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
 
-		// HUD rectangles
-		Rectangle[] heartFrames;
-		Rectangle[] scorebitFrames;
-		Rectangle[] multiplierFrames;
+                    //Draw the player's time and distance
+                    spriteBatch.DrawString(
+                        Graphics.Font_Small,
+                        "Time " + PlayerStats.Time.ToString("0.0") + " Dist " + PlayerStats.Distance.ToString("0.0"),
+                        new Vector2(Game1.PIXEL_SCALE, (Graphics.UI_Hearts[0].Height + Graphics.Font_Main.LineSpacing + 2) * Game1.PIXEL_SCALE),
+                        Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
 
-		public UI(Game1 game, PlayerStats playStats) {
-			this.game = game;
-			this.playStats = playStats;
-		}
 
-		public void LoadContent(ContentManager Content) {
-			// Fonts
-			subtitleFontLarge = Content.Load<SpriteFont>("graphics/ui/SubtitleFontLarge");
+                    //Draw the player's Health
+                    for (int i = 0; i < PlayerStats.MaxHealth / 2; i++) {
 
-			// HUD elements
-			heartSheet = Content.Load<Texture2D>("graphics/ui/HeartsSpriteSheet");
-			scoreBitSheet = Content.Load<Texture2D>("graphics/ui/ScoreBitsSpriteSheet");
-			multiplierSheet = Content.Load<Texture2D>("graphics/ui/ScoreMultiplierSpriteSheet");
+                        int halfHealth = PlayerStats.Health / 2;
+                        int indexToDraw = 0;
 
-			heartFrames = SpriteSheetManager.Split(9, 8, 3);
-			scorebitFrames = SpriteSheetManager.Split(6, 6, 2);
-			multiplierFrames = SpriteSheetManager.Split(21, 16, 4);
-		}
+                        if (i < halfHealth)
+                            indexToDraw = 0;
+                        else if (i == halfHealth) {
+                            if (i * 2 + 1 == PlayerStats.Health)
+                                indexToDraw = 1;
+                            else
+                                indexToDraw = 2;
+                        } else
+                            indexToDraw = 2;
 
-		public void Draw(SpriteBatch sb) {
+                        spriteBatch.Draw(Graphics.UI_Hearts[indexToDraw], new Rectangle(Game1.PIXEL_SCALE + (i * (Graphics.UI_Hearts[0].Width + 1) * Game1.PIXEL_SCALE), Game1.PIXEL_SCALE, Graphics.UI_Hearts[0].Width * Game1.PIXEL_SCALE, Graphics.UI_Hearts[0].Height * Game1.PIXEL_SCALE), Color.White);
+                    }
+                    break;
 
-			if (game.state == GameState.Playing || game.state == GameState.Pause) {
-				sb.DrawString(subtitleFontLarge, "BLAH BLAH blah blah", new Vector2(20, 20), Color.WhiteSmoke);
-
-				for (int i = 0; i < playStats.Health / 2; i++) {
-					sb.Draw(heartSheet, new Rectangle(10 + 11 * i* Game1.UIScaleFactor, 25 * Game1.UIScaleFactor, 9 * Game1.UIScaleFactor, 8 * Game1.UIScaleFactor), heartFrames[0], Color.White);
-				}
-				if (playStats.Health % 2 == 1)
-					sb.Draw(heartSheet, new Rectangle(10 + 11 * (playStats.Health / 2 % 3) * Game1.UIScaleFactor, 25 * Game1.UIScaleFactor, 9 * Game1.UIScaleFactor, 8 * Game1.UIScaleFactor), Color.White);
-				if (playStats.Health < 5)
-					sb.Draw(heartSheet, new Rectangle(32 * Game1.UIScaleFactor, 25 * Game1.UIScaleFactor, 9 * Game1.UIScaleFactor, 8 * Game1.UIScaleFactor), heartFrames[2], Color.White);
-				if (playStats.Health < 3)
-					sb.Draw(heartSheet, new Rectangle(21 * Game1.UIScaleFactor, 25 * Game1.UIScaleFactor, 9 * Game1.UIScaleFactor, 8 * Game1.UIScaleFactor), heartFrames[2], Color.White);
-			}
-		}
-	}
+                case GameState.GameOver:
+                    spriteBatch.DrawString(
+                        Graphics.Font_Main,
+                        "Game Over!",
+                        new Vector2(viewport.Width / 2 - Graphics.Font_Main.MeasureString("Game Over").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 - Graphics.Font_Main.MeasureString("Game Over").Y * Game1.PIXEL_SCALE / 2),
+                        Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
+                    break;
+            }
+        }
+    }
 }

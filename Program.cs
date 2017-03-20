@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TheBondOfStone {
+namespace The_Bond_of_Stone {
 #if WINDOWS || LINUX
     /// <summary>
     /// The main class.

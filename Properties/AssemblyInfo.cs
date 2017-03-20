@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TheBondOfStone")]
-[assembly: AssemblyProduct("TheBondOfStone")]
+[assembly: AssemblyTitle("The Bond of Stone")]
+[assembly: AssemblyProduct("The Bond of Stone")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("eb2cc0d4-a27f-4d91-8589-eb81d49a01fb")]
+[assembly: Guid("a6fdb4c6-2e3b-4914-b4c5-37f2ae1719ca")]
 
 // Version information for an assembly consists of the following four values:
 //
