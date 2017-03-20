@@ -1,0 +1,80 @@
+﻿using Microsoft.Xna.Framework;
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace The_Bond_of_Stone {
+    public class LevelGenerator {
+        Camera Camera;
+
+        public List<Chunk> Chunks { get; set; }
+
+        FileInfo[] mapFiles;
+
+        Rectangle startRect;
+
+        public LevelGenerator(GraphicsDeviceManager graphics, Rectangle startRect) {
+            //Initialize the camera and chunk list
+            Camera = Game1.Camera;
+            this.startRect = startRect;
+            Chunks = new List<Chunk>();
+
+            //Get the count of maps in the maps folder
+            DirectoryInfo mapDir = new DirectoryInfo(@"..\..\..\..\Content\maps");
+            mapFiles = mapDir.GetFiles().Where(name => !name.Name.Contains("starter")).ToArray();
+        }
+
+        public void GenerateNewChunk(Rectangle startTileRect, string mapName) {
+            Chunks.Add(new Chunk(startTileRect));
+        }
+
+        public void UpdateChunkGeneration() {
+            foreach (Chunk chunk in Chunks) {
+                if (!chunk.Generated)
+                    chunk.Generate(MapReader.ReadImage(GetNewMapName()), Game1.TILE_SIZE);
+            }
+
+            if (Chunks.Count > 0) {
+                if (Chunks[Chunks.Count - 1].EndTile.Rect.X < Camera.Rect.Right) {
+                    //End tile of last chunk is on screen, generate new chunk
+                    GenerateNewChunk(Chunks[Chunks.Count - 1].EndTile.Rect, GetNewMapName());
+                }
+
+                if (Chunks[0].EndTile.Rect.X <= Camera.Rect.Left - Chunks[0].EndTile.Rect.Width) {
+                    //last tile of first chunk is off screen, destroy that chunk (i.e. remove it from the list).
+                    Chunks.RemoveAt(0);
+                }
+            }
+        }
+
+        //Gets a random map name from the directory of the maps
+        string GetNewMapName() {
+            //Return the name of a file from mapFiles (the directory of the maps) 
+            return mapFiles[Game1.RandomObject.Next(mapFiles.Length)].Name;
+        }
+
+        public void DoStarterGeneration() {
+            Chunks.Add(new Chunk("starter.png", startRect));
+        }
+
+        public void Restart() {
+            Chunks.Clear();
+
+            DoStarterGeneration();
+        }
+
+        //Returns the chunk that an entity is 'in,' AKA the "current level"
+        public Chunk GetEntityChunkID(Entity obj) {
+            Vector2 r = obj.Position;
+            foreach(Chunk c in Chunks) {
+                if (r.X >= c.Rect.X && r.X <= c.Rect.X + c.Rect.Width) {
+                    return c;
+                }
+            }
+            return null;
+        }
+    }
+}
