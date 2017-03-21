@@ -13,7 +13,7 @@ namespace The_Bond_of_Stone {
         //PHYSICS
         float speedJump = -1500f; //Speed of the player's initial jump
         float acceleration = 13000f; //how fast the player picks up speed from rest
-        float maxFallSpeed = 900f; //max effect of gravity
+        float maxFallSpeed = 450f; //max effect of gravity
         float maxSpeed = 1200f; //maximum speed
 
         float drag = .48f; //speed reduction (need this)
@@ -31,15 +31,16 @@ namespace The_Bond_of_Stone {
         int walkFramesTotal = 4;
 
         //Jumping
-        bool isJumping;
+        public bool isJumping;
         bool wasJumping;
         float jumpTime; //The length of the jump
         float maxJumpTime = 0.45f; //how long can the player "sustain" a jump?
         float jumpControlPower = 0.14f;
 
         bool wallJumped;
-        bool canStartJump;
+        public bool canStartJump;
 
+        public bool Alive;
         public bool Grounded;
         public bool Walled;
         bool walledRight;
@@ -74,7 +75,9 @@ namespace The_Bond_of_Stone {
         /// <param name="keyboardState">Provides a snapshot of inputs.</param>
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public void Update(GameTime gameTime, KeyboardState keyboardState, KeyboardState prevKeyboardState) {
-            
+
+            Alive = Game1.PlayerStats.IsAlive;
+
             //Check collision directions
             Grounded = CheckCardinalCollision(new Vector2(0, 3));
             walledLeft = CheckCardinalCollision(new Vector2(-3, 0));
@@ -99,6 +102,12 @@ namespace The_Bond_of_Stone {
                 prevKeyboardState.IsKeyDown(Keys.W) ||
                 prevKeyboardState.IsKeyDown(Keys.Up)) &&
                 !wallJumped;
+
+            if (!Alive)
+            {
+                    Walled = false;
+                    canStartJump = false;
+            }
 
             if (Walled && !wallJumped)
                 maxFallSpeed = 125;
@@ -144,14 +153,16 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         /// <param name="keyboardState">Provides a snapshot of inputs.</param>
-        void ApplyPhysics(GameTime gameTime, KeyboardState keyboardState) {
+        public void ApplyPhysics(GameTime gameTime, KeyboardState keyboardState) {
             //Save the elapsed time
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float motion = 0f;
 
             //Save the previous position
-            Vector2 previousPosition = Position;
+            Vector2 previousPosition = Position;    
             //Save the horizontal motion
-            float motion = GetXMotionFromInput(keyboardState);
+            if(Alive)
+                motion = GetXMotionFromInput(keyboardState);
 
             //Set the X and Y components of the velocity separately.
             velocity.X += motion * acceleration * elapsed;
@@ -168,7 +179,7 @@ namespace The_Bond_of_Stone {
             Position += velocity * elapsed;
             Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
-            if (CurrentChunk != null)
+            if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
 
             //Reset the velocity vector.
@@ -192,7 +203,7 @@ namespace The_Bond_of_Stone {
         /// <param name="velocityY">The Y velocity to modify.</param>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         /// <returns></returns>
-        float DoJump(float velocityY, GameTime gameTime) {
+        public float DoJump(float velocityY, GameTime gameTime) {
             //Do the following is we're jumping
             if (isJumping) {
                 //If we're in the middle of a jump...
@@ -200,13 +211,13 @@ namespace The_Bond_of_Stone {
                     if (jumpTime == 0f && !wallJumped && !Grounded)
                         wallJumped = true;
 
-                    //If we're just starting a jump and we can jump, start a jump, or we're midair... 
-                    if (!(jumpTime == 0f && !canStartJump)) {
+                    //If we're just starting a jump or we're midair... 
+                    if (jumpTime != 0f || canStartJump) {
                         jumpTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
                     }
                 }
 
-                //If we're in the descent of the jump...
+                //If we're in the ascent of the jump...
                 if (0f < jumpTime && jumpTime <= maxJumpTime) {
                     velocityY = speedJump * (1.0f - (float)Math.Pow(jumpTime / maxJumpTime, jumpControlPower));
                 } else
@@ -312,6 +323,13 @@ namespace The_Bond_of_Stone {
 
             foreach (Particle p in particles)
                 p.Draw(spriteBatch);
+        }
+
+        public void KnockBack(Vector2 asdf)
+        {
+            velocity.X = asdf.X;
+            velocity.Y = asdf.Y;
+            Game1.Camera.ScreenShake(4f, 0.3f);
         }
     }
 }
