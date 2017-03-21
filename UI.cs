@@ -114,10 +114,10 @@ namespace The_Bond_of_Stone {
 		}
 
 		private void DrawMultiplier(SpriteBatch spriteBatch) {
-				spriteBatch.Draw(Graphics.UI_Multipliers[PlayerStats.TechnicalScoreMulti], destinationRectangle: new Rectangle(4 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 *Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE, 
+				spriteBatch.Draw(Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier-1], destinationRectangle: new Rectangle(4 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 *Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE, 
 					Game1.PIXEL_SCALE * 14, 
-					 Graphics.UI_Multipliers[PlayerStats.TechnicalScoreMulti].Width * Game1.PIXEL_SCALE, 
-					Graphics.UI_Multipliers[PlayerStats.TechnicalScoreMulti].Height * Game1.PIXEL_SCALE), 
+					 Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Width * Game1.PIXEL_SCALE, 
+					Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Height * Game1.PIXEL_SCALE), 
 					color: Color.White,
 					rotation: 5.8f);
 			// Game1.PIXEL_SCALE * ~7 = one character
