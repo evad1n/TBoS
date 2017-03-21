@@ -42,16 +42,17 @@ namespace The_Bond_of_Stone
         {
             Rectangle rect;
 
-            //Check each tile in this chunk
-            foreach(Tile t in chunk.Tiles) {
-                //Save the rectangle of this tile as it should be represented on the collision grid.
-                rect = new Rectangle(t.Rect.X - Game1.TILE_SIZE / 2, t.Rect.Y - Game1.TILE_SIZE / 2, t.Rect.Width, t.Rect.Height);
+			if (chunk != null) {
+				//Check each tile in this chunk
+				foreach (Tile t in chunk.Tiles) {
+					//Save the rectangle of this tile as it should be represented on the collision grid.
+					rect = new Rectangle(t.Rect.X - Game1.TILE_SIZE / 2, t.Rect.Y - Game1.TILE_SIZE / 2, t.Rect.Width, t.Rect.Height);
 
-                //If this is a solid tile and it is intersecting with the rectangle to check against, there is a collision.
-                if (!IsPassable(t.ID) && rect.Intersects(toCheck))
-                    return true;
-            }
-
+					//If this is a solid tile and it is intersecting with the rectangle to check against, there is a collision.
+					if (!IsPassable(t.ID) && rect.Intersects(toCheck))
+						return true;
+				}
+			}
             //Otherwise, there is no collision.
             return false;
         }
