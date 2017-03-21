@@ -30,6 +30,8 @@ namespace The_Bond_of_Stone {
 					//Draw the player's Health
 					DrawHealth(spriteBatch);
 
+					DrawMultiplier(spriteBatch);
+
 					break;
 
                 case GameState.Pause:
@@ -39,9 +41,10 @@ namespace The_Bond_of_Stone {
 					//Draw the player's time and distance
 					DrawTechnicalScores(spriteBatch);
 
-
 					//Draw the player's Health
 					DrawHealth(spriteBatch);
+
+					DrawMultiplier(spriteBatch);
 
 					spriteBatch.DrawString(
                         Graphics.Font_Main,
@@ -61,7 +64,9 @@ namespace The_Bond_of_Stone {
 					//Draw the player's Health
 					DrawHealth(spriteBatch);
 
-                    spriteBatch.DrawString(
+					DrawMultiplier(spriteBatch);
+
+					spriteBatch.DrawString(
                         Graphics.Font_Main,
                         "Game Over!",
                         new Vector2(viewport.Width / 2 - Graphics.Font_Main.MeasureString("Game Over").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 - Graphics.Font_Main.MeasureString("Game Over").Y * Game1.PIXEL_SCALE / 2),
@@ -106,6 +111,16 @@ namespace The_Bond_of_Stone {
 			"Score " + PlayerStats.Score,
 			new Vector2(Game1.PIXEL_SCALE * 5, (Graphics.UI_Hearts[0].Height + 6) * Game1.PIXEL_SCALE),
 			Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
+		}
+
+		private void DrawMultiplier(SpriteBatch spriteBatch) {
+				spriteBatch.Draw(Graphics.UI_Multipliers[PlayerStats.TechnicalScoreMulti], destinationRectangle: new Rectangle(4 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 *Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE, 
+					Game1.PIXEL_SCALE * 14, 
+					 Graphics.UI_Multipliers[PlayerStats.TechnicalScoreMulti].Width * Game1.PIXEL_SCALE, 
+					Graphics.UI_Multipliers[PlayerStats.TechnicalScoreMulti].Height * Game1.PIXEL_SCALE), 
+					color: Color.White,
+					rotation: 5.8f);
+			// Game1.PIXEL_SCALE * ~7 = one character
 		}
 	}
 }

@@ -179,12 +179,16 @@ namespace The_Bond_of_Stone {
                 PlayerStats.TakeDamage(1);
             }
 
-            //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
-            //    Camera.ScreenShake(3, 0.25f);
-            //}
+			if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P)) {
+				PlayerStats.TickScore();
+			}
 
-            //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
-            Generator.UpdateChunkGeneration();
+			//if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
+			//    Camera.ScreenShake(3, 0.25f);
+			//}
+
+			//TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
+			Generator.UpdateChunkGeneration();
         }
 
         /// <summary>

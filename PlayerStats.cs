@@ -13,7 +13,9 @@ namespace The_Bond_of_Stone {
         public int MaxHealth;
 
         public int Score = 0;
-        public int ScoreMultiplier = 1;
+		public int TechnicalScoreMulti = 0;
+		public int ScoreMultiTicks = 0;
+		private int scoreMultiplier = 0;
 
         float distance;
         public float Distance {
@@ -25,6 +27,16 @@ namespace The_Bond_of_Stone {
 
         bool isAlive = true;
         public bool IsAlive { get { return isAlive; } }
+
+		public int ScoreMultiplier {
+			get { return (int)Math.Pow(2, scoreMultiplier); }
+			set {
+				if (scoreMultiplier < 4) {
+					scoreMultiplier = value;
+					TechnicalScoreMulti = value;
+				}
+			}
+		}
 
         public PlayerStats(Player player, int maxHealth) {
             Player = player;
@@ -51,6 +63,11 @@ namespace The_Bond_of_Stone {
 
             Time += elapsed;
 
+			if (ScoreMultiTicks >= 4 && ScoreMultiplier < 8) {
+				ScoreMultiplier++;
+				ScoreMultiTicks = 0;
+			}
+
             //Calculate whether the player died this update
             //if the player is alive
             //and the player has a chunk and is a certain distance below that chunk
@@ -72,8 +89,11 @@ namespace The_Bond_of_Stone {
                 Die();
         }
 
-        //Just sets isAlive to false.
-        public void Die() {
+		public void TickScore() {
+			ScoreMultiTicks++;
+		}
+		//Just sets isAlive to false.
+		public void Die() {
             isAlive = false;
         }
 
