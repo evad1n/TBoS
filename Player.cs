@@ -13,7 +13,7 @@ namespace The_Bond_of_Stone {
         //PHYSICS
         float speedJump = -1500f; //Speed of the player's initial jump
         float acceleration = 13000f; //how fast the player picks up speed from rest
-        float maxFallSpeed = 450f; //max effect of gravity
+        float maxFallSpeed = 900f; //max effect of gravity
         float maxSpeed = 1200f; //maximum speed
 
         float drag = .48f; //speed reduction (need this)

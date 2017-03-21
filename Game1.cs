@@ -95,10 +95,12 @@ namespace The_Bond_of_Stone {
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
             PlayerStats = new PlayerStats(Player, 6);
             Interface = new UI(PlayerStats, GraphicsDevice.Viewport);
-            Camera = new Camera(GraphicsDevice, Player, 1f);
+            Camera = new Camera(GraphicsDevice, Player, 2f);
             Generator = new LevelGenerator(graphics, chunkStartPos);
 
             Generator.DoStarterGeneration();
+            Camera.Reset();
+
 
             parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
             parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(2f, 0f), GraphicsDevice.Viewport);
