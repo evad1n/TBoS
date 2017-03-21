@@ -20,7 +20,10 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] Deco_backgroundBottom;
 
         //ENTITIES
-        public static Texture2D PlayerTexture;
+        public static Texture2D[] PlayerTextures;
+        public static Texture2D[] Effect_PlayerParticlesBottom;
+        public static Texture2D[] Effect_PlayerParticlesLeft;
+        public static Texture2D[] Effect_PlayerParticlesRight;
 
         //UI
         public static Texture2D[] UI_Hearts;
@@ -54,7 +57,10 @@ namespace The_Bond_of_Stone {
 
             ParallaxLayers = PopulateTextureArray("parallax", 2, @"graphics\misc\");
 
-            PlayerTexture = Content.Load<Texture2D>(@"graphics\entities\player");
+            PlayerTextures = PopulateTextureArray("player", 7, @"graphics\entities\");
+            Effect_PlayerParticlesBottom = PopulateTextureArray("playerParticles_0", 3, @"graphics\entities\");
+            Effect_PlayerParticlesLeft = PopulateTextureArray("playerParticles_2", 3, @"graphics\entities\");
+            Effect_PlayerParticlesRight = PopulateTextureArray("playerParticles_1", 3, @"graphics\entities\");
 
             EmptyTexture = Content.Load<Texture2D>(@"graphics\empty");
 

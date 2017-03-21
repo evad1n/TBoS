@@ -18,6 +18,14 @@ namespace The_Bond_of_Stone {
 
         float drag = .48f; //speed reduction (need this)
 
+        //Particle production
+        float particleFrequency = 0.075f;
+        float particleTimer;
+        List<Particle> particles = new List<Particle>();
+
+        //Animation?
+        SpriteEffects facing = SpriteEffects.None;
+
         //Jumping
         bool isJumping;
         bool wasJumping;
@@ -30,12 +38,29 @@ namespace The_Bond_of_Stone {
 
         public bool Grounded;
         public bool Walled;
+        bool walledRight;
+        bool walledLeft;
 
         public Vector2 velocity;
+
+        public new Rectangle Rect
+        {
+            get
+            {
+                return new Rectangle(
+                    (int)Position.X,
+                    (int)Position.Y,
+                    Graphics.PlayerTextures[0].Width * Game1.PIXEL_SCALE,
+                    Graphics.PlayerTextures[0].Height * Game1.PIXEL_SCALE
+                    );
+            }
+        }
 
         public Player(Texture2D texture, Vector2 position) : base(texture, position) {
             Texture = texture;
             Position = position;
+
+            particleTimer = 0;
         }
 
         /// <summary>
@@ -48,7 +73,15 @@ namespace The_Bond_of_Stone {
             
             //Check collision directions
             Grounded = CheckCardinalCollision(new Vector2(0, 3));
-            Walled = CheckCardinalCollision(new Vector2(3, 0)) || CheckCardinalCollision(new Vector2(-3, 0));
+            walledLeft = CheckCardinalCollision(new Vector2(-3, 0));
+            walledRight = CheckCardinalCollision(new Vector2(3, 0));
+            Walled = walledLeft || walledRight;
+
+            if(Grounded && velocity.Y == 450)
+                Game1.Camera.ScreenShake(2, 0.1f);
+
+            //Create particles if necessary
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             //Determine canStartJump states (Yes, this is necessary)
             isJumping = (keyboardState.IsKeyDown(Keys.Space) || 
@@ -73,6 +106,32 @@ namespace The_Bond_of_Stone {
 
             //Clear the jumping state
             isJumping = false;
+
+            particleTimer += elapsed;
+            if (particleTimer >= particleFrequency) {
+                bool canSpawnBottom = CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.X, Rect.Center.Y, 1, Rect.Height/2 + 1)) &&
+                    CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Right, Rect.Center.Y, 1, Rect.Height/2 + 1));
+                bool canSpawnLeft = CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X - (Rect.Width/2 + 1), Rect.Top, Rect.Width/2 + 1, 1)) &&
+                    CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X - (Rect.Width/2 + 1), Rect.Bottom, Rect.Width/2 + 1, 1));
+                bool canSpawnRight = CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X, Rect.Top, Rect.Width/2 + 1, 1)) &&
+                    CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X, Rect.Bottom, Rect.Width/2 + 1, 1));
+
+                if (Grounded && canSpawnBottom && velocity.X != 0)
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 6), 0.25f + (float)Game1.RandomObject.NextDouble() * 0.25f));
+                else if (walledLeft && canSpawnLeft && velocity.Y != 0)
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), 0.25f + (float)Game1.RandomObject.NextDouble() * 0.25f));
+                else if (walledRight && canSpawnRight && velocity.Y != 0)
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesRight[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesRight.Length)], new Vector2(Position.X + Game1.PIXEL_SCALE * 4, Position.Y), 0.25f + (float)Game1.RandomObject.NextDouble() * 0.25f));
+                particleTimer = 0;
+            }
+            
+            for (int i = particles.Count - 1; i >= 0; i--)
+            {
+                particles[i].Update(gameTime);
+
+                if (!particles[i].Active)
+                    particles.Remove(particles[i]);
+            }
         }
 
         /// <summary>
@@ -150,6 +209,22 @@ namespace The_Bond_of_Stone {
 
             wasJumping = isJumping;
 
+            //Jump animation
+            if (!Grounded) {
+                if (velocityY < -450 && velocityY < -100)
+                    Texture = Graphics.PlayerTextures[2];
+                else if (velocityY < -100 && velocityY < -50)
+                    Texture = Graphics.PlayerTextures[3];
+                else if(velocityY > -50 && velocityY < 50)
+                    Texture = Graphics.PlayerTextures[4];
+                else if (velocityY > 50 && velocityY < 100)
+                    Texture = Graphics.PlayerTextures[5];
+                else if (velocityY > -100 && velocityY < 450)
+                    Texture = Graphics.PlayerTextures[6];
+            }else {
+                Texture = Graphics.PlayerTextures[0]; //REPLACE THIS WITH A CALL TO A METHOD WHICH RETURNS A WALK CYCLE FRAME
+            }
+
             return velocityY;
         }
 
@@ -157,11 +232,20 @@ namespace The_Bond_of_Stone {
         public float GetXMotionFromInput(KeyboardState keyboardState) {
             float motion = 0f;
 
-            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)) {
                 motion += -1f;
 
+                if(!Walled)
+                    facing = SpriteEffects.FlipHorizontally;
+            }
+
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+            {
                 motion += 1f;
+
+                if(!Walled)
+                    facing = SpriteEffects.None;
+            }
 
             return motion;
         }
@@ -195,10 +279,13 @@ namespace The_Bond_of_Stone {
                         Texture.Height * Game1.PIXEL_SCALE
                         );
         
-                    spriteBatch.Draw(Texture, drawRect, Color.White);
+                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: Color.White, effects: facing);
                 } else
-                    spriteBatch.Draw(Texture, Rect, Color.White);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: Color.White, effects: facing);
             }
+
+            foreach (Particle p in particles)
+                p.Draw(spriteBatch);
         }
     }
 }

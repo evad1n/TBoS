@@ -92,7 +92,7 @@ namespace The_Bond_of_Stone {
             LoadedGraphics = new Graphics();
             LoadedGraphics.LoadContent(Content);
 
-            Player = new Player(Graphics.PlayerTexture, playerStartPos);
+            Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
             PlayerStats = new PlayerStats(Player, 6);
             Interface = new UI(PlayerStats, GraphicsDevice.Viewport);
             Camera = new Camera(GraphicsDevice, Player, 1f);
@@ -177,9 +177,9 @@ namespace The_Bond_of_Stone {
                 PlayerStats.TakeDamage(1);
             }
 
-            if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
-                Camera.ScreenShake(3, 0.25f);
-            }
+            //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
+            //    Camera.ScreenShake(3, 0.25f);
+            //}
 
             //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
             Generator.UpdateChunkGeneration();
@@ -291,7 +291,7 @@ namespace The_Bond_of_Stone {
             Generator.Restart();
 
             //Reset the player and camera
-            Player = new Player(Graphics.PlayerTexture, playerStartPos);
+            Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
 
             Camera.Target = Player;
             Camera.Reset();

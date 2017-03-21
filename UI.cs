@@ -24,14 +24,14 @@ namespace The_Bond_of_Stone {
                     spriteBatch.DrawString(
                         Graphics.Font_Main,
                         "Score " + PlayerStats.Score,
-                        new Vector2(Game1.PIXEL_SCALE, (Graphics.UI_Hearts[0].Height + 1) * Game1.PIXEL_SCALE),
+                        new Vector2(Game1.PIXEL_SCALE * 5, (Graphics.UI_Hearts[0].Height + 6) * Game1.PIXEL_SCALE),
                         Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
 
                     //Draw the player's time and distance
                     spriteBatch.DrawString(
                         Graphics.Font_Small,
                         "Time " + PlayerStats.Time.ToString("0.0") + " Dist " + PlayerStats.Distance.ToString("0.0"),
-                        new Vector2(Game1.PIXEL_SCALE, (Graphics.UI_Hearts[0].Height + Graphics.Font_Main.LineSpacing + 2) * Game1.PIXEL_SCALE),
+                        new Vector2(Game1.PIXEL_SCALE * 5, (Graphics.UI_Hearts[0].Height + Graphics.Font_Main.LineSpacing + 7) * Game1.PIXEL_SCALE),
                         Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
 
 
@@ -51,7 +51,7 @@ namespace The_Bond_of_Stone {
                         } else
                             indexToDraw = 2;
 
-                        spriteBatch.Draw(Graphics.UI_Hearts[indexToDraw], new Rectangle(Game1.PIXEL_SCALE + (i * (Graphics.UI_Hearts[0].Width + 1) * Game1.PIXEL_SCALE), Game1.PIXEL_SCALE, Graphics.UI_Hearts[0].Width * Game1.PIXEL_SCALE, Graphics.UI_Hearts[0].Height * Game1.PIXEL_SCALE), Color.White);
+                        spriteBatch.Draw(Graphics.UI_Hearts[indexToDraw], new Rectangle(Game1.PIXEL_SCALE * 5 + (i * (Graphics.UI_Hearts[0].Width + 1) * Game1.PIXEL_SCALE), Game1.PIXEL_SCALE * 5, Graphics.UI_Hearts[0].Width * Game1.PIXEL_SCALE, Graphics.UI_Hearts[0].Height * Game1.PIXEL_SCALE), Color.White);
                     }
                     break;
 

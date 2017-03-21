@@ -47,6 +47,7 @@
     <Compile Include="LevelGenerator.cs" />
     <Compile Include="MapReader.cs" />
     <Compile Include="ParallaxLayer.cs" />
+    <Compile Include="Particle.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerStats.cs" />
     <Compile Include="Program.cs" />
