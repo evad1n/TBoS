@@ -186,6 +186,8 @@ namespace The_Bond_of_Stone {
                 jumpTime = 0.0f;
             }
 
+            GetAnimation();
+
             //set the grounded-walled state
             if (Grounded || !Walled)
                 wallJumped = false;
@@ -220,22 +222,6 @@ namespace The_Bond_of_Stone {
                 jumpTime = 0f;
 
             wasJumping = isJumping;
-
-            //Jump animation
-            if (!Grounded) {
-                if (velocityY < -450 && velocityY < -100)
-                    Texture = Graphics.PlayerTextures[2];
-                else if (velocityY < -100 && velocityY < -50)
-                    Texture = Graphics.PlayerTextures[3];
-                else if(velocityY > -50 && velocityY < 50)
-                    Texture = Graphics.PlayerTextures[4];
-                else if (velocityY > 50 && velocityY < 100)
-                    Texture = Graphics.PlayerTextures[5];
-                else if (velocityY > -100 && velocityY < 450)
-                    Texture = Graphics.PlayerTextures[6];
-            }else {
-                Texture = Graphics.PlayerTextures[0]; //REPLACE THIS WITH A CALL TO A METHOD WHICH RETURNS A WALK CYCLE FRAME
-            }
 
             return velocityY;
         }
@@ -278,6 +264,28 @@ namespace The_Bond_of_Stone {
                 return CollisionHelper.IsCollidingWithChunk(CurrentChunk, check);
             } else
                 return false;
+        }
+
+        void GetAnimation() {
+            //Jump animation
+            if (!Grounded && !Walled) {
+                if (velocity.Y > -450 && velocity.Y < -100)
+                    Texture = Graphics.PlayerTextures[2];
+                else if (velocity.Y > -100 && velocity.Y < -50)
+                    Texture = Graphics.PlayerTextures[3];
+                else if (velocity.Y > -50 && velocity.Y < 50)
+                    Texture = Graphics.PlayerTextures[4];
+                else if (velocity.Y > 50 && velocity.Y < 100)
+                    Texture = Graphics.PlayerTextures[5];
+                else if (velocity.Y > -100 && velocity.Y < 450)
+                    Texture = Graphics.PlayerTextures[6];
+            }
+            else if (Grounded && !Walled) {
+                Texture = Graphics.PlayerTextures[0]; //REPLACE THIS WITH A CALL TO A METHOD WHICH RETURNS A WALK CYCLE FRAME
+            }
+            else if (!Grounded && Walled) {
+                    Texture = Graphics.PlayerTextures[1];
+            }
         }
 
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
