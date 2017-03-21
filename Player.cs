@@ -19,12 +19,16 @@ namespace The_Bond_of_Stone {
         float drag = .48f; //speed reduction (need this)
 
         //Particle production
-        float particleFrequency = 0.075f;
+        float particleFrequency = 0.05f;
         float particleTimer;
         List<Particle> particles = new List<Particle>();
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
+        float walkingTimer = 0;
+        float walkFrameSpeed = 0.05f;
+        int walkFrame = 0;
+        int walkFramesTotal = 4;
 
         //Jumping
         bool isJumping;
@@ -107,6 +111,7 @@ namespace The_Bond_of_Stone {
             //Clear the jumping state
             isJumping = false;
 
+            //Spawn particles
             particleTimer += elapsed;
             if (particleTimer >= particleFrequency) {
                 bool canSpawnBottom = CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.X, Rect.Center.Y, 1, Rect.Height/2 + 1)) &&
@@ -174,7 +179,7 @@ namespace The_Bond_of_Stone {
                 jumpTime = 0.0f;
             }
 
-            GetAnimation();
+            GetAnimation(elapsed);
 
             //set the grounded-walled state
             if (Grounded || !Walled)
@@ -254,7 +259,7 @@ namespace The_Bond_of_Stone {
                 return false;
         }
 
-        void GetAnimation() {
+        void GetAnimation(float elapsed) {
             //Jump animation
             if (!Grounded && !Walled) {
                 if (velocity.Y > -450 && velocity.Y < -100)
@@ -268,8 +273,21 @@ namespace The_Bond_of_Stone {
                 else if (velocity.Y > -100 && velocity.Y < 450)
                     Texture = Graphics.PlayerTextures[6];
             }
-            else if (Grounded && !Walled) {
-                Texture = Graphics.PlayerTextures[0]; //REPLACE THIS WITH A CALL TO A METHOD WHICH RETURNS A WALK CYCLE FRAME
+            else if (Grounded && !Walled && velocity.X != 0) {
+                if(walkingTimer < walkFrameSpeed)
+                {
+                    walkingTimer += elapsed;
+                    if(walkingTimer >= walkFrameSpeed)
+                    {
+                        walkFrame = (walkFrame + 1) % walkFramesTotal;
+                        Texture = Graphics.PlayerWalkTextures[walkFrame];
+                        walkingTimer = 0f;
+                    }
+                }
+            }
+            else if(Grounded && !Walled && velocity.X == 0)
+            {
+                Texture = Graphics.PlayerTextures[0];
             }
             else if (!Grounded && Walled) {
                     Texture = Graphics.PlayerTextures[1];
