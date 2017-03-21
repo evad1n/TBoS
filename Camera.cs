@@ -83,6 +83,7 @@ namespace The_Bond_of_Stone {
         public void Reset() {
             Origin = Target.Position;
             LookAt(Origin);
+            Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
         }
     }
 }

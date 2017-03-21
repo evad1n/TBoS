@@ -26,6 +26,7 @@ namespace The_Bond_of_Stone {
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
+        public float cameraSpeed = 3f;
 
         public static int ScreenWidth { get; set; }
         public static int ScreenHeight { get; set; }
@@ -95,7 +96,7 @@ namespace The_Bond_of_Stone {
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
             PlayerStats = new PlayerStats(Player, 6);
             Interface = new UI(PlayerStats, GraphicsDevice.Viewport);
-            Camera = new Camera(GraphicsDevice, Player, 1f);
+            Camera = new Camera(GraphicsDevice, Player, cameraSpeed);
             Generator = new LevelGenerator(graphics, chunkStartPos);
 
             Generator.DoStarterGeneration();
@@ -162,7 +163,11 @@ namespace The_Bond_of_Stone {
             PlayerStats.Update(gameTime);
 
             if (!PlayerStats.IsAlive)
+            {
+                if(PlayerStats.Health <= 0)
+                    Player.KnockBack(new Vector2(-200f, -2000f));
                 State = GameState.GameOver;
+            }
 
             Camera.Update(gameTime);
 
@@ -177,6 +182,7 @@ namespace The_Bond_of_Stone {
             //Testing things
             if(keyboardState.IsKeyDown(Keys.H) && prevKeyboardState.IsKeyUp(Keys.H)) {
                 PlayerStats.TakeDamage(1);
+                Player.KnockBack(new Vector2(9000f, -3000f));
             }
 
             //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
