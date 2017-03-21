@@ -23,7 +23,7 @@ namespace The_Bond_of_Stone {
                     //Draw the player's score
                     spriteBatch.DrawString(
                         Graphics.Font_Main,
-                        "Score " + PlayerStats.Score,
+                        "Score " + PlayerStats.Score*7,
                         new Vector2(Game1.PIXEL_SCALE * 5, (Graphics.UI_Hearts[0].Height + 6) * Game1.PIXEL_SCALE),
                         Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
 
