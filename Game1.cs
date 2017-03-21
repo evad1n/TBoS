@@ -41,7 +41,7 @@ namespace The_Bond_of_Stone {
         public static UI Interface;
 
         Player Player;
-        PlayerStats PlayerStats;
+        public static PlayerStats PlayerStats;
 
         ParallaxLayer[] parallaxLayers;
 
@@ -95,7 +95,7 @@ namespace The_Bond_of_Stone {
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
             PlayerStats = new PlayerStats(Player, 6);
             Interface = new UI(PlayerStats, GraphicsDevice.Viewport);
-            Camera = new Camera(GraphicsDevice, Player, 2f);
+            Camera = new Camera(GraphicsDevice, Player, 1f);
             Generator = new LevelGenerator(graphics, chunkStartPos);
 
             Generator.DoStarterGeneration();
@@ -204,6 +204,7 @@ namespace The_Bond_of_Stone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateGameOver(GameTime gameTime) {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
+            Player.Update(gameTime, keyboardState, prevKeyboardState);
 
             //Reset on an ESC key press.
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))

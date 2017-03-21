@@ -36,6 +36,7 @@ namespace The_Bond_of_Stone {
         bool wallJumped;
         bool canStartJump;
 
+        public bool Alive;
         public bool Grounded;
         public bool Walled;
         bool walledRight;
@@ -70,7 +71,9 @@ namespace The_Bond_of_Stone {
         /// <param name="keyboardState">Provides a snapshot of inputs.</param>
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public void Update(GameTime gameTime, KeyboardState keyboardState, KeyboardState prevKeyboardState) {
-            
+
+            Alive = Game1.PlayerStats.IsAlive;
+
             //Check collision directions
             Grounded = CheckCardinalCollision(new Vector2(0, 3));
             walledLeft = CheckCardinalCollision(new Vector2(-3, 0));
@@ -95,6 +98,13 @@ namespace The_Bond_of_Stone {
                 prevKeyboardState.IsKeyDown(Keys.W) ||
                 prevKeyboardState.IsKeyDown(Keys.Up)) &&
                 !wallJumped;
+
+            if (!Alive)
+            {
+                Walled = false;
+                isJumping = false;
+                canStartJump = false;
+            }
 
             if (Walled && !wallJumped)
                 maxFallSpeed = 125;
@@ -142,11 +152,13 @@ namespace The_Bond_of_Stone {
         void ApplyPhysics(GameTime gameTime, KeyboardState keyboardState) {
             //Save the elapsed time
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float motion = 0f;
 
             //Save the previous position
-            Vector2 previousPosition = Position;
+            Vector2 previousPosition = Position;    
             //Save the horizontal motion
-            float motion = GetXMotionFromInput(keyboardState);
+            if(Alive)
+                motion = GetXMotionFromInput(keyboardState);
 
             //Set the X and Y components of the velocity separately.
             velocity.X += motion * acceleration * elapsed;
@@ -163,7 +175,7 @@ namespace The_Bond_of_Stone {
             Position += velocity * elapsed;
             Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
-            if (CurrentChunk != null)
+            if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
 
             //Reset the velocity vector.
