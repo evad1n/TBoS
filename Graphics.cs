@@ -21,6 +21,7 @@ namespace The_Bond_of_Stone {
 
         //ENTITIES
         public static Texture2D[] PlayerTextures;
+        public static Texture2D[] PlayerWalkTextures;
         public static Texture2D[] Effect_PlayerParticlesBottom;
         public static Texture2D[] Effect_PlayerParticlesLeft;
         public static Texture2D[] Effect_PlayerParticlesRight;
@@ -58,6 +59,7 @@ namespace The_Bond_of_Stone {
             ParallaxLayers = PopulateTextureArray("parallax", 2, @"graphics\misc\");
 
             PlayerTextures = PopulateTextureArray("player", 7, @"graphics\entities\");
+            PlayerWalkTextures = PopulateTextureArray("playerWalk", 4, @"graphics\entities\");
             Effect_PlayerParticlesBottom = PopulateTextureArray("playerParticles_0", 3, @"graphics\entities\");
             Effect_PlayerParticlesLeft = PopulateTextureArray("playerParticles_2", 3, @"graphics\entities\");
             Effect_PlayerParticlesRight = PopulateTextureArray("playerParticles_1", 3, @"graphics\entities\");
