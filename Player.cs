@@ -78,7 +78,7 @@ namespace The_Bond_of_Stone {
         /// <param name="keyboardState">Provides a snapshot of inputs.</param>
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public void Update(GameTime gameTime, KeyboardState keyboardState, KeyboardState prevKeyboardState) {
-           
+
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Alive = Game1.PlayerStats.IsAlive;
@@ -103,8 +103,8 @@ namespace The_Bond_of_Stone {
                 !wallJumped;
 
             if (!Alive) {
-                Walled = false;
-                canStartJump = false;
+                    Walled = false;
+                    canStartJump = false;
             }
 
             if (Walled && !wallJumped)
@@ -330,7 +330,7 @@ namespace The_Bond_of_Stone {
             }
             //Walled texture
             else if (!Grounded && Walled) {
-                Texture = Graphics.PlayerTextures[1];
+                    Texture = Graphics.PlayerTextures[1];
             }
         }
 
