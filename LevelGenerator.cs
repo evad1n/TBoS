@@ -76,5 +76,19 @@ namespace The_Bond_of_Stone {
             }
             return null;
         }
+
+        //Returns the chunk that a position is 'in,' AKA the "current level"
+        public Chunk GetEntityChunkID(Rectangle rect)
+        {
+            Vector2 r = new Vector2(rect.X, rect.Y);
+            foreach (Chunk c in Chunks)
+            {
+                if (r.X >= c.Rect.X && r.X <= c.Rect.X + c.Rect.Width)
+                {
+                    return c;
+                }
+            }
+            return null;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 namespace The_Bond_of_Stone {
 
@@ -44,6 +45,8 @@ namespace The_Bond_of_Stone {
         Player Player;
         public static PlayerStats PlayerStats;
 
+        public static List<Entity> enemies;
+
         ParallaxLayer[] parallaxLayers;
 
         public Game1() {
@@ -61,6 +64,7 @@ namespace The_Bond_of_Stone {
             State = GameState.Playing;
 
             parallaxLayers = new ParallaxLayer[2];
+            enemies = new List<Entity>();
 
             playerStartPos = new Vector2(64, 64);
             chunkStartPos = new Rectangle(
@@ -161,6 +165,13 @@ namespace The_Bond_of_Stone {
 
             Player.Update(gameTime, keyboardState, prevKeyboardState);
             PlayerStats.Update(gameTime);
+
+            //Update enemies
+            if (enemies.Count > 0)
+            {
+                foreach (GroundEnemy g in enemies)
+                    g.Update(gameTime);
+            }
 
             if (!PlayerStats.IsAlive)
             {
@@ -278,6 +289,13 @@ namespace The_Bond_of_Stone {
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
             foreach (Chunk map in Generator.Chunks)
                 map.Draw(spriteBatch, color); //Draw each active chunk
+            
+            //Draw enemies
+            if (enemies.Count > 0)
+            {
+                foreach (GroundEnemy g in enemies)
+                    g.Draw(spriteBatch);
+            }
 
             Player.Draw(spriteBatch);
             spriteBatch.End();

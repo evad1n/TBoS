@@ -11,6 +11,10 @@ namespace The_Bond_of_Stone {
 
         public int Health;
         public int MaxHealth;
+        //How long invulnerability lasts after getting hit
+        public float graceTime = 1f;
+        public float invulnerabilityTimer;
+        public bool invulnerable;
 
         public int Score = 0;
 		public int ScoreMultiTicks = 0;
@@ -52,6 +56,16 @@ namespace The_Bond_of_Stone {
 
             Time += elapsed;
 
+            if(invulnerable)
+            {
+                invulnerabilityTimer += elapsed;
+                if (invulnerabilityTimer > graceTime)
+                {
+                    invulnerable = false;
+                    invulnerabilityTimer = 0f;
+                }
+            }
+
 			if (ScoreMultiTicks >= 4 && ScoreMultiplier < 8) {
 				// Hard code here
 			}
@@ -71,7 +85,13 @@ namespace The_Bond_of_Stone {
 
         //removes health from the player. If the health is 0, kills the player.
         public void TakeDamage(int damage) {
-            Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
+            if(!invulnerable)
+            {
+                Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
+                Player.KnockBack(new Vector2(500f, -500f));
+                invulnerable = true;
+                invulnerabilityTimer = 0f;
+            }
 
             if (Health == 0)
                 Die();
