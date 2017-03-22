@@ -26,6 +26,8 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] Effect_PlayerParticlesLeft;
         public static Texture2D[] Effect_PlayerParticlesRight;
 
+        public static Texture2D[] PickupTexture_Coin;
+
         //UI
         public static Texture2D[] UI_Hearts;
         public static Texture2D[] UI_MultiplierIndicators;
@@ -63,6 +65,8 @@ namespace The_Bond_of_Stone {
             Effect_PlayerParticlesBottom = PopulateTextureArray("playerParticles_0", 3, @"graphics\entities\");
             Effect_PlayerParticlesLeft = PopulateTextureArray("playerParticles_2", 3, @"graphics\entities\");
             Effect_PlayerParticlesRight = PopulateTextureArray("playerParticles_1", 3, @"graphics\entities\");
+
+            PickupTexture_Coin = PopulateTextureArray("pickup_0", 4, @"graphics\entities\");
 
             EmptyTexture = Content.Load<Texture2D>(@"graphics\empty");
 

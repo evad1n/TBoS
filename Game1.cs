@@ -26,7 +26,7 @@ namespace The_Bond_of_Stone {
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
-        public float cameraSpeed = 3f;
+        public float cameraSpeed = 1.5f;
 
         public static int ScreenWidth { get; set; }
         public static int ScreenHeight { get; set; }
@@ -195,6 +195,9 @@ namespace The_Bond_of_Stone {
 
 			//TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
 			Generator.UpdateChunkGeneration();
+
+            foreach (Chunk map in Generator.Chunks)
+                map.Update(gameTime); //Update each active chunk
         }
 
         /// <summary>
