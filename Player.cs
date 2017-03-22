@@ -37,6 +37,9 @@ namespace The_Bond_of_Stone {
         float maxJumpTime = 0.45f; //how long can the player "sustain" a jump?
         float jumpControlPower = 0.14f;
 
+        bool countingAirTime;
+        float airTime;
+
         bool wallJumped;
         public bool canStartJump;
 
@@ -75,6 +78,8 @@ namespace The_Bond_of_Stone {
         /// <param name="keyboardState">Provides a snapshot of inputs.</param>
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public void Update(GameTime gameTime, KeyboardState keyboardState, KeyboardState prevKeyboardState) {
+           
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Alive = Game1.PlayerStats.IsAlive;
 
@@ -83,12 +88,6 @@ namespace The_Bond_of_Stone {
             walledLeft = CheckCardinalCollision(new Vector2(-3, 0));
             walledRight = CheckCardinalCollision(new Vector2(3, 0));
             Walled = walledLeft || walledRight;
-
-            if(Grounded && velocity.Y == 450)
-                Game1.Camera.ScreenShake(2, 0.1f);
-
-            //Create particles if necessary
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             //Determine canStartJump states (Yes, this is necessary)
             isJumping = (keyboardState.IsKeyDown(Keys.Space) || 
@@ -103,10 +102,9 @@ namespace The_Bond_of_Stone {
                 prevKeyboardState.IsKeyDown(Keys.Up)) &&
                 !wallJumped;
 
-            if (!Alive)
-            {
-                    Walled = false;
-                    canStartJump = false;
+            if (!Alive) {
+                Walled = false;
+                canStartJump = false;
             }
 
             if (Walled && !wallJumped)
@@ -120,22 +118,25 @@ namespace The_Bond_of_Stone {
             //Clear the jumping state
             isJumping = false;
 
-            //Spawn particles
+            //Create particles if necessary
             particleTimer += elapsed;
             if (particleTimer >= particleFrequency) {
-                bool canSpawnBottom = CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.X, Rect.Center.Y, 1, Rect.Height/2 + 1)) &&
+                bool canSpawnBottom = 
+                    CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.X, Rect.Center.Y, 1, Rect.Height/2 + 1)) &&
                     CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Right, Rect.Center.Y, 1, Rect.Height/2 + 1));
-                bool canSpawnLeft = CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X - (Rect.Width/2 + 1), Rect.Top, Rect.Width/2 + 1, 1)) &&
+                bool canSpawnLeft = 
+                    CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X - (Rect.Width/2 + 1), Rect.Top, Rect.Width/2 + 1, 1)) &&
                     CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X - (Rect.Width/2 + 1), Rect.Bottom, Rect.Width/2 + 1, 1));
-                bool canSpawnRight = CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X, Rect.Top, Rect.Width/2 + 1, 1)) &&
+                bool canSpawnRight = 
+                    CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X, Rect.Top, Rect.Width/2 + 1, 1)) &&
                     CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X, Rect.Bottom, Rect.Width/2 + 1, 1));
 
                 if (Grounded && canSpawnBottom && velocity.X != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 6), 0.25f + (float)Game1.RandomObject.NextDouble() * 0.25f));
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 6), 5f + (float)Game1.RandomObject.NextDouble() * 5f));
                 else if (walledLeft && canSpawnLeft && velocity.Y != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), 0.25f + (float)Game1.RandomObject.NextDouble() * 0.25f));
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), 5f + (float)Game1.RandomObject.NextDouble() * 5f));
                 else if (walledRight && canSpawnRight && velocity.Y != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesRight[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesRight.Length)], new Vector2(Position.X + Game1.PIXEL_SCALE * 4, Position.Y), 0.25f + (float)Game1.RandomObject.NextDouble() * 0.25f));
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesRight[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesRight.Length)], new Vector2(Position.X + Game1.PIXEL_SCALE * 4, Position.Y), 5f + (float)Game1.RandomObject.NextDouble() * 5f));
                 particleTimer = 0;
             }
             
@@ -145,6 +146,23 @@ namespace The_Bond_of_Stone {
 
                 if (!particles[i].Active)
                     particles.Remove(particles[i]);
+            }
+
+            if (Grounded && velocity.Y == maxFallSpeed) {
+                Game1.Camera.ScreenShake(airTime * 3, airTime);
+                airTime = 0;
+            }
+
+            if (!Grounded && !Walled)
+                airTime += elapsed;
+            else
+                airTime = 0;
+
+            if (CurrentChunk.Entities.Count > 0) {
+                foreach (CoinPickup gp in CurrentChunk.Entities) {
+                    if (gp != null && Rect.Intersects(gp.Rect))
+                        gp.Collect();
+                }
             }
         }
 
@@ -284,6 +302,7 @@ namespace The_Bond_of_Stone {
                 else if (velocity.Y > -100 && velocity.Y < 450)
                     Texture = Graphics.PlayerTextures[6];
             }
+            //Walk animation
             else if (Grounded && !Walled && velocity.X != 0) {
                 if(walkingTimer < walkFrameSpeed)
                 {
@@ -296,12 +315,13 @@ namespace The_Bond_of_Stone {
                     }
                 }
             }
-            else if(Grounded && !Walled && velocity.X == 0)
-            {
+            //Idle
+            else if(Grounded && !Walled && velocity.X == 0) {
                 Texture = Graphics.PlayerTextures[0];
             }
+            //Walled texture
             else if (!Grounded && Walled) {
-                    Texture = Graphics.PlayerTextures[1];
+                Texture = Graphics.PlayerTextures[1];
             }
         }
 

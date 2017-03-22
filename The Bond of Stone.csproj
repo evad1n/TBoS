@@ -43,6 +43,7 @@
     <Compile Include="CollisionHelper.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="CoinPickup.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="LevelGenerator.cs" />
     <Compile Include="MapReader.cs" />

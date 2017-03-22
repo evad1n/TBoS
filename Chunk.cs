@@ -14,6 +14,9 @@ namespace The_Bond_of_Stone {
         //Linear list of tile data.
         public List<Tile> Tiles = new List<Tile>();
 
+        //Linear list of entitiy data.
+        public List<Entity> Entities = new List<Entity>();
+
         //References to the start and end tiles of this chunk.
         public Tile StartTile { get; set; }
         public Tile EndTile { get; set; }
@@ -68,6 +71,16 @@ namespace The_Bond_of_Stone {
                     //Add the tile to the list, instantiate it
                     Tile tileToAdd = new Tile(atlas[y, x], new Rectangle(origin.X + (x * size + size), origin.Y + (y * size) - (yoffset * size), size, size));
 
+                    if (atlas[y, x] == 6) {
+                        tileToAdd.ID = 0;
+                        atlas[y, x] = 0;
+                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
+                    } else if (atlas[y, x] == 7) {
+                        tileToAdd.ID = 2;
+                        atlas[y, x] = 2;
+                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
+                    }
+
                     Tiles.Add(tileToAdd);
 
                     rect = new Rectangle(
@@ -86,6 +99,7 @@ namespace The_Bond_of_Stone {
             for (int x = 0; x < atlas.GetLength(1); x++) { //Execute for each tile
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     int thisID = Tiles[i].ID; //Current tile ID
+
                     //if this isn't an air tile (which we don't stitch)
                     if (thisID != 0) {
                         bool stitchOnlySameID = true; //For stitching background tiles into foreground tiles
@@ -155,11 +169,23 @@ namespace The_Bond_of_Stone {
             Generated = true;
         }
 
+        public void Update(GameTime gameTime) {
+            if (Entities.Count > 0) {
+                foreach (CoinPickup c in Entities)
+                    c.Update(gameTime);
+            }
+        }
+
         public void Draw(SpriteBatch sb, Color color) {
             //The tiles are sorted and drawn in ascending order of the DrawQueue property value
             List<Tile> sortedTiles = Tiles.OrderBy(o => o.DrawQueue).ToList();
             foreach (Tile tile in sortedTiles)
                 tile.Draw(sb, color);
+
+            if (Entities.Count > 0) {
+                foreach (Entity e in Entities)
+                    e.Draw(sb);
+            }
         }
     }
 }

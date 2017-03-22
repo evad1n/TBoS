@@ -58,8 +58,16 @@ namespace The_Bond_of_Stone {
                     tileID = 2; //Background tile
                     break;
 
-                case "255 205 000 255":
+                case "153 175 173 255":
                     tileID = 3; //stone tile
+                    break;
+
+                case "255 205 000 255":
+                    tileID = 6; //spawns a coin pickup on open air
+                    break;
+
+                case "255 174 012 255":
+                    tileID = 7; //spawns a coin pickup with a background tile behind it
                     break;
 
                 case "255 000 000 255":
