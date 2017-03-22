@@ -19,6 +19,21 @@ namespace The_Bond_of_Stone {
 
         public void Draw(SpriteBatch spriteBatch, GameState gameState) {
             switch (gameState) {
+                case GameState.MainMenu:
+                    spriteBatch.DrawString(
+                        Graphics.Font_Main,
+                        "This is the Main Menu",
+                        new Vector2(viewport.Width / 2 - Graphics.Font_Main.MeasureString("This is the Main Menu").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 - Graphics.Font_Main.MeasureString("This is the Main Menu").Y * Game1.PIXEL_SCALE / 2),
+                        Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
+
+                    spriteBatch.DrawString(
+                        Graphics.Font_Small,
+                        "Press Enter to start!",
+                        new Vector2(viewport.Width / 2 - Graphics.Font_Small.MeasureString("Press enter to start!").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 + 50),
+                        Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
+
+                    break;
+
                 case GameState.Playing:
 
 					//Draw the player's score

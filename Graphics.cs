@@ -33,11 +33,15 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] UI_MultiplierIndicators;
         public static Texture2D[] UI_Multipliers;
 
+        public static Texture2D Logo;
+        public static Texture2D[] SplashScreenGraphics;
+
         public static SpriteFont Font_Main;
         public static SpriteFont Font_Small;
 
         //OTHER
         public static Texture2D EmptyTexture;
+        public static Texture2D BlackTexture;
         public static Texture2D[] ParallaxLayers;
 
         /// <summary>
@@ -69,6 +73,7 @@ namespace The_Bond_of_Stone {
             PickupTexture_Coin = PopulateTextureArray("pickup_0", 4, @"graphics\entities\");
 
             EmptyTexture = Content.Load<Texture2D>(@"graphics\empty");
+            BlackTexture = Content.Load<Texture2D>(@"graphics\ui\black");
 
             UI_Hearts = PopulateTextureArray("heart", 3, @"graphics\ui\");
             UI_MultiplierIndicators = PopulateTextureArray("multiplierIndicator", 2, @"graphics\ui\");
@@ -76,6 +81,9 @@ namespace The_Bond_of_Stone {
 
             Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");
+
+            Logo = Content.Load<Texture2D>(@"graphics\ui\logo");
+            SplashScreenGraphics = PopulateTextureArray("splashscreen", 1, @"graphics\ui\");
         }
 
         /// <summary>
