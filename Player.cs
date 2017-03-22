@@ -78,7 +78,7 @@ namespace The_Bond_of_Stone {
         /// <param name="keyboardState">Provides a snapshot of inputs.</param>
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public void Update(GameTime gameTime, KeyboardState keyboardState, KeyboardState prevKeyboardState) {
-           
+
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Alive = Game1.PlayerStats.IsAlive;
@@ -103,8 +103,8 @@ namespace The_Bond_of_Stone {
                 !wallJumped;
 
             if (!Alive) {
-                Walled = false;
-                canStartJump = false;
+                    Walled = false;
+                    canStartJump = false;
             }
 
             if (Walled && !wallJumped)
@@ -132,7 +132,7 @@ namespace The_Bond_of_Stone {
                     CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X, Rect.Bottom, Rect.Width/2 + 1, 1));
 
                 if (Grounded && canSpawnBottom && velocity.X != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 6), 5f + (float)Game1.RandomObject.NextDouble() * 5f));
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 7), 5f + (float)Game1.RandomObject.NextDouble() * 5f));
                 else if (walledLeft && canSpawnLeft && velocity.Y != 0)
                     particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), 5f + (float)Game1.RandomObject.NextDouble() * 5f));
                 else if (walledRight && canSpawnRight && velocity.Y != 0)
@@ -316,12 +316,12 @@ namespace The_Bond_of_Stone {
                 }
             }
             //Idle
-            else if(Grounded && !Walled && velocity.X == 0) {
+            else if(Grounded && velocity.X == 0) {
                 Texture = Graphics.PlayerTextures[0];
             }
             //Walled texture
             else if (!Grounded && Walled) {
-                Texture = Graphics.PlayerTextures[1];
+                    Texture = Graphics.PlayerTextures[1];
             }
         }
 

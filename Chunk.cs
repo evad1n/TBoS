@@ -64,6 +64,8 @@ namespace The_Bond_of_Stone {
                 if (atlas[iter, 0] == 4) yoffset = iter;
                 //y offset equals the iterator
             }
+
+            int flatCount = 0;
             //Iterate through each value of the Atlas
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
@@ -79,6 +81,26 @@ namespace The_Bond_of_Stone {
                         tileToAdd.ID = 2;
                         atlas[y, x] = 2;
                         Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
+                    }
+
+                    //um stuff for enemies lol
+                    if (atlas[y,x] == 1)
+                    {
+                        flatCount++;
+                    }
+                    else
+                    {
+                        if(flatCount >= 6)
+                        {
+                            flatCount--;
+                            //Entities.Add(new GroundEnemy(texture, Vector2 leftBound, Vector2 rightBound, Vector2 position)
+                            //Entities.Add(new GroundEnemy(
+                            //texture, 
+                            //new Vector2(origin.X + ((x-flatCount) * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 
+                            //new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)),
+                            //new Vector2(origin.X + ((x - flatCount/2) * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)))
+                        }
+                        flatCount = 0;
                     }
 
                     Tiles.Add(tileToAdd);
