@@ -164,6 +164,15 @@ namespace The_Bond_of_Stone {
                         gp.Collect();
                 }
             }
+
+            if(Game1.enemies.Count > 0)
+            {
+                foreach (Entity e in Game1.enemies)
+                {
+                    if (e != null && Rect.Intersects(e.Rect))
+                        Game1.PlayerStats.TakeDamage(1);
+                }
+            }
         }
 
         /// <summary>
@@ -345,10 +354,10 @@ namespace The_Bond_of_Stone {
                 p.Draw(spriteBatch);
         }
 
-        public void KnockBack(Vector2 asdf)
+        public void KnockBack(Vector2 boom)
         {
-            velocity.X = asdf.X;
-            velocity.Y = asdf.Y;
+            velocity.X = boom.X;
+            velocity.Y = boom.Y;
             Game1.Camera.ScreenShake(4f, 0.3f);
         }
     }
