@@ -35,6 +35,8 @@ namespace The_Bond_of_Stone {
 
         public static Texture2D Logo;
         public static Texture2D[] SplashScreenGraphics;
+        public static Texture2D Title;
+        public static Texture2D[] MainMenuGraphics;
 
         public static SpriteFont Font_Main;
         public static SpriteFont Font_Small;
@@ -83,6 +85,7 @@ namespace The_Bond_of_Stone {
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");
 
             Logo = Content.Load<Texture2D>(@"graphics\ui\logo");
+            Title = Content.Load<Texture2D>(@"graphics\ui\title");
             SplashScreenGraphics = PopulateTextureArray("splashscreen", 1, @"graphics\ui\");
         }
 

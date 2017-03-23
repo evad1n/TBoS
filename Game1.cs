@@ -24,7 +24,7 @@ namespace The_Bond_of_Stone {
         public static int PIXEL_SCALE { get { return TILE_SIZE / TILE_PIXEL_SIZE; } }
         public static Vector2 GRAVITY = new Vector2(0, 2750f);
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
-        string[] DEVELOPER_NAMES = { "Noah Bock", "Chip Butler", "Will Dickinson", "Dom Liotti" };
+        string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
@@ -361,7 +361,7 @@ namespace The_Bond_of_Stone {
                         DEVELOPER_NAMES[i],
                         new Vector2(
                             GraphicsDevice.Viewport.Width / 2 - Graphics.Font_Small.MeasureString(DEVELOPER_NAMES[i]).X * 2 / 2,
-                            20 * i + Graphics.Font_Small.MeasureString(DEVELOPER_NAMES[i]).Y * 2 / 2
+                            GraphicsDevice.Viewport.Height - 30 - (20 * i + Graphics.Font_Small.MeasureString(DEVELOPER_NAMES[i]).Y * 2 / 2)
                             ),
                         Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 0);
                 }

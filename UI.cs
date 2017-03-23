@@ -20,6 +20,16 @@ namespace The_Bond_of_Stone {
         public void Draw(SpriteBatch spriteBatch, GameState gameState) {
             switch (gameState) {
                 case GameState.MainMenu:
+                    spriteBatch.Draw(
+                        Graphics.Title,
+                        new Rectangle(
+                            viewport.Width / 2 - Graphics.Title.Width * Game1.PIXEL_SCALE / 2,
+                            3 * Game1.PIXEL_SCALE,
+                            Graphics.Title.Width * Game1.PIXEL_SCALE,
+                            Graphics.Title.Height * Game1.PIXEL_SCALE
+                            ), 
+                        Color.White);
+
                     spriteBatch.DrawString(
                         Graphics.Font_Main,
                         "This is the Main Menu",
