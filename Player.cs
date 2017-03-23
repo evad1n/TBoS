@@ -20,7 +20,7 @@ namespace The_Bond_of_Stone {
 
         //Particle production
         float particleFrequency = 0.065f;
-		float particleLifetime = 0.5f;
+		float particleLifetime = 4.5f;
         float particleTimer;
         List<Particle> particles = new List<Particle>();
 
