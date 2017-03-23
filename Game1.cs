@@ -195,18 +195,20 @@ namespace The_Bond_of_Stone {
             Player.Update(gameTime, keyboardState, prevKeyboardState);
             PlayerStats.Update(gameTime);
 
+
+            List<Entity> garbageEntities = new List<Entity>();
             //Update enemies
-            if (enemies.Count > 0)
-            {
-                foreach (GroundEnemy g in enemies)
-                {
+            if (enemies.Count > 0) {
+                foreach (GroundEnemy g in enemies) {
                     g.Update(gameTime);
-                    //if (!g.Active)
-                    //{
-                    //    enemies.Remove(g);
-                    //}
+                    if (!g.Active) {
+                        garbageEntities.Add(g);
+                    }
                 }
             }
+
+            foreach (Entity e in garbageEntities)
+                enemies.Remove(e);
 
             if (!PlayerStats.IsAlive)
             {
