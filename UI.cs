@@ -141,6 +141,8 @@ namespace The_Bond_of_Stone {
 
 					DrawMultiplier(spriteBatch);
 
+
+
 					spriteBatch.DrawString(
                         Graphics.Font_Main,
                         "Game Over!",
@@ -189,12 +191,13 @@ namespace The_Bond_of_Stone {
 		}
 
 		private void DrawMultiplier(SpriteBatch spriteBatch) {
-				spriteBatch.Draw(Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1], destinationRectangle: new Rectangle(4 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 *Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE, 
-					Game1.PIXEL_SCALE * 14, 
-					 Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Width * Game1.PIXEL_SCALE, 
-					Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Height * Game1.PIXEL_SCALE), 
-					color: Color.White,
-					rotation: 5.8f);
+			spriteBatch.Draw(Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1], destinationRectangle: new Rectangle(13 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 *Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE, 
+				Game1.PIXEL_SCALE * 23, 
+				 Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Width * Game1.PIXEL_SCALE, 
+				Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Height * Game1.PIXEL_SCALE), 
+				color: Color.White,
+				rotation: 5.8f);
+			DrawMultiplierTicks(spriteBatch);
 			// Game1.PIXEL_SCALE * ~7 = one character
 		}
 
@@ -257,5 +260,28 @@ namespace The_Bond_of_Stone {
         {
             return state.LeftButton == ButtonState.Pressed && state.X >= button.X && state.X <= button.Right && state.Y >= button.Y && state.Y <= button.Bottom;
         }
-    }
+
+		private void DrawMultiplierTicks(SpriteBatch spriteBatch) {
+
+			for (int i = 0; i < 4; i++) {
+				if (i < Game1.PlayerStats.ScoreMultiTicks)
+					spriteBatch.Draw(Graphics.UI_MultiplierIndicators[0], new Rectangle((int)(Math.Floor(i / 2.0) * 10) + 55 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 * Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE,
+						Game1.PIXEL_SCALE * 20 + ((i % 2) * 10), Graphics.UI_MultiplierIndicators[0].Width, Graphics.UI_MultiplierIndicators[0].Height), Color.White);
+				if (i >= Game1.PlayerStats.ScoreMultiTicks)
+					spriteBatch.Draw(Graphics.UI_MultiplierIndicators[1], new Rectangle((int)(Math.Floor(i / 2.0) * 10) + 55 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 * Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE,
+						Game1.PIXEL_SCALE * 20 + ((i % 2) * 10), Graphics.UI_MultiplierIndicators[0].Width, Graphics.UI_MultiplierIndicators[0].Height), Color.White);
+			}
+
+
+
+
+
+
+
+
+
+
+
+		}
+	}
 }
