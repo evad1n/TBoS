@@ -10,21 +10,16 @@ namespace The_Bond_of_Stone
 {
     class GroundEnemy : Entity
     {
-        float speed = 1f;
-        int direction;
+        float speed = 50f;
+        int direction = -1;
 
         Chunk nextChunk;
         Rectangle gapRect;
         Rectangle wallRect;
 
-        Vector2 previousPosition;
-
         //PHYSICS
-        float acceleration = 13000f; //how fast the player picks up speed from rest
         float maxFallSpeed = 450f; //max effect of gravity
         float maxSpeed = 1200f; //maximum speed
-
-        float drag = .48f; //speed reduction (need this)
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
@@ -64,11 +59,10 @@ namespace The_Bond_of_Stone
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public void Update(GameTime gameTime)
         {
-            previousPosition = Position;
 
             //Update pathfinding colliders
-            gapRect = new Rectangle(Rect.X + Game1.TILE_SIZE, Rect.Y + Game1.TILE_SIZE, Game1.TILE_SIZE, Game1.TILE_SIZE);
-            wallRect = new Rectangle(Rect.X + Game1.TILE_SIZE, Rect.Y, Game1.TILE_SIZE, Game1.TILE_SIZE);
+            gapRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y + Game1.TILE_SIZE, Game1.TILE_SIZE, Game1.TILE_SIZE);
+            wallRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y, Game1.TILE_SIZE, Game1.TILE_SIZE);
             nextChunk = Game1.Generator.GetEntityChunkID(gapRect);
 
             //Check for pathfinding (gaps and walls)
@@ -77,15 +71,15 @@ namespace The_Bond_of_Stone
                 direction *= -1;
             }
 
-            //Move it
-            Position = Move(new Vector2(speed * direction, 0));
+            velocity.X = speed * direction;
 
-            if (CurrentChunk != null)
-                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+            if (Position.X < Game1.Camera.Rect.Left)
+            {
+                Active = false;
+            }
 
             //Check collision directions
             Grounded = CheckCardinalCollision(new Vector2(0, 3));
-
 
             //Apply the physics
             ApplyPhysics(gameTime);
@@ -102,39 +96,22 @@ namespace The_Bond_of_Stone
         {
             //Save the elapsed time
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            float motion = 0f;
 
             //Save the previous position
             Vector2 previousPosition = Position;
 
             //Set the X and Y components of the velocity separately.
-            velocity.X += motion * acceleration * elapsed;
             velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, -maxFallSpeed, maxFallSpeed);
-
-            //Apply tertiary forces
-            velocity.X *= drag;
-
-            //Clamp the velocity
-            velocity.X = MathHelper.Clamp(velocity.X, -maxSpeed, maxSpeed);
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
+            //Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
 
-            //Reset the velocity vector.
-            if (Position.X == previousPosition.X)
-                velocity.X = 0;
-
 
             GetAnimation(elapsed);
-        }
-
-        Vector2 Move(Vector2 motion)
-        {
-            return Position + motion;
         }
 
         /// <summary>
