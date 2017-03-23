@@ -67,7 +67,13 @@ namespace The_Bond_of_Stone {
             }
 
 			if (ScoreMultiTicks >= 4 && ScoreMultiplier < 8) {
-				// Hard code here
+				ScoreMultiTicks = 0;
+				if (ScoreMultiplier == 1)
+					ScoreMultiplier = 2;
+				else if (ScoreMultiplier == 2)
+					ScoreMultiplier = 4;
+				else if (ScoreMultiplier == 4)
+					ScoreMultiplier = 8;
 			}
 
             //Calculate whether the player died this update
@@ -125,6 +131,7 @@ namespace The_Bond_of_Stone {
         public void Reset() {
             Score = 0;
             ScoreMultiplier = 1;
+			ScoreMultiTicks = 0;
             distance = 0;
             lastDistance = distance;
             Time = 0;

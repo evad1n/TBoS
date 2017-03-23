@@ -41,9 +41,11 @@ namespace The_Bond_of_Stone {
         }
 
         public void Collect() {
-            Game1.PlayerStats.TickScore();
+			if (Active) {
+				Game1.PlayerStats.TickScore();
 
-            Active = false;
+				Active = false;
+			}
         }
     }
 }

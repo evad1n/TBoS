@@ -79,7 +79,7 @@ namespace The_Bond_of_Stone {
 
             UI_Hearts = PopulateTextureArray("heart", 3, @"graphics\ui\");
             UI_MultiplierIndicators = PopulateTextureArray("multiplierIndicator", 2, @"graphics\ui\");
-            UI_Multipliers = PopulateTextureArray("multiplier", 4, @"graphics\ui\");
+            UI_Multipliers = PopulateTextureArray("multiplier", 8, @"graphics\ui\");
 
             Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");
