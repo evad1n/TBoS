@@ -88,7 +88,6 @@ namespace The_Bond_of_Stone {
             if(!invulnerable)
             {
                 Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
-                Player.KnockBack(new Vector2(500f, -500f));
                 invulnerable = true;
                 invulnerabilityTimer = 0f;
             }
@@ -97,7 +96,24 @@ namespace The_Bond_of_Stone {
                 Die();
         }
 
-		public void TickScore() {
+        //Take damage from a source and get knockbacked away from the source
+        public void TakeDamage(int damage, Entity e)
+        {
+            Vector2 knockback;
+            if (!invulnerable)
+            {
+                Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
+                knockback = Player.Position - e.Position;
+                Player.KnockBack(knockback * 200);
+                invulnerable = true;
+                invulnerabilityTimer = 0f;
+            }
+
+            if (Health == 0)
+                Die();
+        }
+
+        public void TickScore() {
 			ScoreMultiTicks++;
 		}
 		//Just sets isAlive to false.

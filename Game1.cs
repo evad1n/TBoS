@@ -52,7 +52,7 @@ namespace The_Bond_of_Stone {
         List<Entity> GlobalEntities = new List<Entity>();
 
         //Splash screen stuff
-        public const bool SHOW_SPLASH_SCREEN = true;
+        public const bool SHOW_SPLASH_SCREEN = false;
 
         float splashScreenDuration = 10f;
         float fadeSpeed = 0.5f;
@@ -248,7 +248,8 @@ namespace The_Bond_of_Stone {
 
 			if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P)) {
 				PlayerStats.TickScore();
-			}
+                Game1.enemies.Add(new GroundEnemy(Graphics.UI_Hearts[0], new Vector2(Camera.Rect.Right, Camera.Rect.Top)));
+            }
 
 			//if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
 			//    Camera.ScreenShake(3, 0.25f);

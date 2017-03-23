@@ -65,7 +65,6 @@ namespace The_Bond_of_Stone {
                 //y offset equals the iterator
             }
 
-            int flatCount = 0;
             //Iterate through each value of the Atlas
             for (int x = 0; x < atlas.GetLength(1); x++) {
                 for (int y = 0; y < atlas.GetLength(0); y++) {
@@ -82,20 +81,9 @@ namespace The_Bond_of_Stone {
                         atlas[y, x] = 2;
                         Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
                     }
-
-                    //Determines if suitable terrain exists for ground enemies to be spawned and then spawns them
-                    if (atlas[y,x] == 1)
+                    else if(atlas[y, x] == 8)
                     {
-                        flatCount++;
-                    }
-                    else
-                    {
-                        if(flatCount >= 6)
-                        {
-                            Game1.enemies.Add(new GroundEnemy(Graphics.UI_Hearts[0],
-                            new Vector2(origin.X + ((x - flatCount / 2) * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
-                        }
-                        flatCount = 0;
+                        Game1.enemies.Add(new GroundEnemy(Graphics.UI_Hearts[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
 
                     Tiles.Add(tileToAdd);

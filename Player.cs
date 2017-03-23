@@ -170,7 +170,7 @@ namespace The_Bond_of_Stone {
                 foreach (Entity e in Game1.enemies)
                 {
                     if (e != null && Rect.Intersects(e.Rect))
-                        Game1.PlayerStats.TakeDamage(1);
+                        Game1.PlayerStats.TakeDamage(1, e);
                 }
             }
         }
