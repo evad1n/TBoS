@@ -204,7 +204,10 @@ namespace The_Bond_of_Stone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateMainMenu(GameTime gameTime) {
             if (KeyPressed(Keys.Enter))
+            {
                 State = GameState.Playing;
+                ResetGame();
+            }
         }
 
         /// <summary>
@@ -270,6 +273,16 @@ namespace The_Bond_of_Stone {
             //Resume the game if the escape key is pressed again
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
                 State = GameState.Playing;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Enter) && prevKeyboardState.IsKeyUp(Keys.Enter))
+            {
+                State = GameState.MainMenu;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R))
+            {
+                ResetGame();
             }
         }
 
@@ -431,6 +444,9 @@ namespace The_Bond_of_Stone {
         public void ResetGame() {
             //Generate a new level
             Generator.Restart();
+
+            //Clear Enemies
+            enemies.Clear();
 
             //Reset the player and camera
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
