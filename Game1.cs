@@ -199,7 +199,13 @@ namespace The_Bond_of_Stone {
             if (enemies.Count > 0)
             {
                 foreach (GroundEnemy g in enemies)
+                {
                     g.Update(gameTime);
+                    //if (!g.Active)
+                    //{
+                    //    enemies.Remove(g);
+                    //}
+                }
             }
 
             if (!PlayerStats.IsAlive)
@@ -227,7 +233,7 @@ namespace The_Bond_of_Stone {
 
 			if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P)) {
 				PlayerStats.TickScore();
-                Game1.enemies.Add(new GroundEnemy(Graphics.UI_Hearts[0], new Vector2(Camera.Rect.Right, Camera.Rect.Top)));
+                Game1.enemies.Add(new GroundEnemy(Graphics.PlayerTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
             }
 
 			//if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
