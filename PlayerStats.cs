@@ -48,7 +48,7 @@ namespace The_Bond_of_Stone {
 
             //Calculate scoring, time, and distance
             if (Player.Rect.Left > distance) {
-                Score += (int)((distance - lastDistance) * ScoreMultiplier);
+                Score = (int)((Math.Round(distance / Game1.TILE_SIZE, 1)) * ScoreMultiplier * 100);
 
                 lastDistance = distance;
                 distance = Player.Rect.Left;
@@ -122,6 +122,12 @@ namespace The_Bond_of_Stone {
         public void TickScore() {
 			ScoreMultiTicks++;
 		}
+
+		public void ResetMultiplier() {
+			ScoreMultiplier = 1;
+			ScoreMultiTicks = 0;
+		}
+
 		//Just sets isAlive to false.
 		public void Die() {
             isAlive = false;

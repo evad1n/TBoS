@@ -10,6 +10,7 @@ namespace The_Bond_of_Stone {
     class CoinPickup : Entity {
 
         int value;
+
         public int Value {
             get { return value; }
             set { this.value = value; }
@@ -38,6 +39,11 @@ namespace The_Bond_of_Stone {
                     animationTimer = 0f;
                 }
             }
+
+			if (Rect.X + Rect.Width < Game1.Camera.Rect.X && Active) {
+				Active = false;
+				Game1.PlayerStats.ResetMultiplier();
+			}
         }
 
         public void Collect() {
