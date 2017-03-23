@@ -10,7 +10,10 @@ namespace The_Bond_of_Stone {
         public Rectangle Rect { get; set; }
         Vector2 startPos;
 
+        float XSpeedUpBound = Game1.TILE_SIZE * 2;
+
         //Game-specific memebers
+        float initialSpeed;
         public float Speed { get; set; }
         public Entity Target { get; set; }
         float smoothing = 0.3f;
@@ -29,6 +32,8 @@ namespace The_Bond_of_Stone {
 
             Speed = 0f;
             Target = null;
+
+            initialSpeed = 0;
         }
         
         //Has a reference to an entity to "follow" on Y, doesn't move on X.
@@ -39,6 +44,8 @@ namespace The_Bond_of_Stone {
 
             Speed = 0f;
             Target = target;
+
+            initialSpeed = 0;
         }
 
         //Has a reference to a target entity and X speed.
@@ -49,6 +56,8 @@ namespace The_Bond_of_Stone {
 
             Speed = speed;
             Target = target;
+
+            initialSpeed = speed;
         }
 
         public void Update(GameTime gameTime) {
@@ -58,6 +67,11 @@ namespace The_Bond_of_Stone {
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
 
             LookAt(Origin);
+
+            if(Target != null && Target.Rect.X + Target.Rect.Width > Rect.Right - XSpeedUpBound)
+                Speed = initialSpeed * 2f;
+            else
+                Speed = initialSpeed;
 
             //Screen shake
             if (shakeTimer < duration) {

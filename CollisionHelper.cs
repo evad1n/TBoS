@@ -42,10 +42,6 @@ namespace The_Bond_of_Stone
         {
             Rectangle rect;
 
-            //If the rectangle is off the screen on the right, always return true.
-            if (toCheck.X + toCheck.Width > Game1.Camera.Rect.Right)
-                return true;
-
             if (chunk != null) {
 				//Check each tile in this chunk
 				foreach (Tile t in chunk.Tiles) {

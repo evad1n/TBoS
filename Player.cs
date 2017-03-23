@@ -132,11 +132,11 @@ namespace The_Bond_of_Stone {
                     CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X, Rect.Bottom, Rect.Width/2 + 1, 1));
 
                 if (Grounded && canSpawnBottom && velocity.X != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 7), 5f + (float)Game1.RandomObject.NextDouble() * 5f));
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 7), 0.25f + (float)Game1.RandomObject.NextDouble() * 0.25f));
                 else if (walledLeft && canSpawnLeft && velocity.Y != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), 5f + (float)Game1.RandomObject.NextDouble() * 5f));
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), 0.25f + (float)Game1.RandomObject.NextDouble() * 0.25f));
                 else if (walledRight && canSpawnRight && velocity.Y != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesRight[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesRight.Length)], new Vector2(Position.X + Game1.PIXEL_SCALE * 4, Position.Y), 5f + (float)Game1.RandomObject.NextDouble() * 5f));
+                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesRight[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesRight.Length)], new Vector2(Position.X + Game1.PIXEL_SCALE * 4, Position.Y), 0.25f + (float)Game1.RandomObject.NextDouble() * 0.25f));
                 particleTimer = 0;
             }
             
