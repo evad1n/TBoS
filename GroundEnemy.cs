@@ -11,15 +11,11 @@ namespace The_Bond_of_Stone
     class GroundEnemy : Entity
     {
         float speed = 50f;
-        int direction = -1;
+        int direction = 1;
 
         Chunk nextChunk;
         Rectangle gapRect;
         Rectangle wallRect;
-
-        //PHYSICS
-        float maxFallSpeed = 450f; //max effect of gravity
-        float maxSpeed = 1200f; //maximum speed
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
@@ -66,7 +62,7 @@ namespace The_Bond_of_Stone
             nextChunk = Game1.Generator.GetEntityChunkID(gapRect);
 
             //Check for pathfinding (gaps and walls)
-            if (CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) && !CollisionHelper.IsCollidingWithChunk(nextChunk, wallRect))
+            if (!CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) || CollisionHelper.IsCollidingWithChunk(nextChunk, wallRect))
             {
                 direction *= -1;
             }
@@ -101,11 +97,19 @@ namespace The_Bond_of_Stone
             Vector2 previousPosition = Position;
 
             //Set the X and Y components of the velocity separately.
-            velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, -maxFallSpeed, maxFallSpeed);
+            velocity.Y = velocity.Y + Game1.GRAVITY.Y * elapsed;
+
+            if(velocity.X > 0)
+            {
+                facing = SpriteEffects.None;
+            }
+            else
+            {
+                facing = SpriteEffects.FlipHorizontally;
+            }
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-            //Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
@@ -155,6 +159,10 @@ namespace The_Bond_of_Stone
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
         public override void Draw(SpriteBatch spriteBatch)
         {
+            //debug
+            spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.White);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], wallRect, Color.White);
+
             if (Active)
             {
                 if (LockToPixelGrid)

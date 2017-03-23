@@ -79,6 +79,14 @@ namespace The_Bond_of_Stone {
                     else
                         tileID = 1; //Otherwise, the red tile is extraneous and is treated as a regular grass tile
                     break;
+
+                case "255 000 255 255":
+                    tileID = 8; //spawns a ground enemy without a background tile
+                    break;
+
+                case "150 000 150 255":
+                    tileID = 9; //spawns a ground enemy with a background tile
+                    break;
             }
             return tileID;
         }

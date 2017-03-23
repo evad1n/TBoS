@@ -83,7 +83,15 @@ namespace The_Bond_of_Stone {
                     }
                     else if(atlas[y, x] == 8)
                     {
-                        Game1.enemies.Add(new GroundEnemy(Graphics.UI_Hearts[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        tileToAdd.ID = 0;
+                        atlas[y, x] = 0;
+                        Game1.enemies.Add(new GroundEnemy(Graphics.PlayerTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if(atlas[y, x] == 9)
+                    {
+                        tileToAdd.ID = 2;
+                        atlas[y, x] = 2;
+                        Game1.enemies.Add(new GroundEnemy(Graphics.PlayerTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
 
                     Tiles.Add(tileToAdd);

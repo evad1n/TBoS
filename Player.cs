@@ -168,10 +168,22 @@ namespace The_Bond_of_Stone {
 
             if(Game1.enemies.Count > 0)
             {
-                foreach (Entity e in Game1.enemies)
+                foreach (GroundEnemy e in Game1.enemies)
                 {
                     if (e != null && Rect.Intersects(e.Rect))
-                        Game1.PlayerStats.TakeDamage(1, e);
+                    {
+                        if(Active)
+                        {
+                            if (Position.Y < e.Position.Y && velocity.Y > 0)
+                            {
+                                e.Kill();
+                            }
+                            else
+                            {
+                                Game1.PlayerStats.TakeDamage(1, e);
+                            }
+                        }
+                    }
                 }
             }
         }
