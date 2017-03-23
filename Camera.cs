@@ -10,7 +10,7 @@ namespace The_Bond_of_Stone {
         public Rectangle Rect { get; set; }
         Vector2 startPos;
 
-        float XSpeedUpBound = Game1.TILE_SIZE * 2;
+        float XSpeedUpBound = Game1.TILE_SIZE * 4;
 
         //Game-specific memebers
         float initialSpeed;
