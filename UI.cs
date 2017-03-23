@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,62 @@ namespace The_Bond_of_Stone {
 
         public Viewport viewport;
 
+        //Splash screen stuff
+        float splashScreenDuration = 10f;
+        float fadeSpeed = 0.5f;
+        float ssTimer;
+
+        float alphaValue = 255;
+        float fadeIncrement;
+        bool fading;
+
+        public bool DoneWithSplashScreen = false;
+
         public UI(PlayerStats playerStats, Viewport viewport) {
             PlayerStats = playerStats;
             this.viewport = viewport;
+
+            fadeIncrement = -255 / fadeSpeed;
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameState gameState) {
+        public void Update(GameTime gameTime)
+        {
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (ssTimer < splashScreenDuration)
+            {
+                ssTimer += elapsed;
+                if (ssTimer >= splashScreenDuration)
+                {
+                    DoneWithSplashScreen = true;
+                }
+
+                if (ssTimer >= 0f && ssTimer < splashScreenDuration * 0.05f)
+                    fading = true;
+                else if (ssTimer >= splashScreenDuration * .05f && ssTimer < splashScreenDuration * .45f)
+                    fading = false;
+                else if (ssTimer >= splashScreenDuration * .45f && ssTimer < splashScreenDuration * .55f)
+                    fading = true;
+                else if (ssTimer >= splashScreenDuration * .55f && ssTimer < splashScreenDuration * .95f)
+                    fading = false;
+                else if (ssTimer >= splashScreenDuration * .95f && ssTimer < splashScreenDuration * 1.0)
+                    fading = true;
+            }
+
+            if (fading)
+            {
+                alphaValue += elapsed * fadeIncrement;
+
+                if (alphaValue >= 255 || alphaValue <= 0)
+                    fadeIncrement *= -1;
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime, GameState gameState) {
             switch (gameState) {
+                case GameState.SplashScreen:
+                    DrawSplashScreen(spriteBatch, gameTime, Color.White);
+                    break;
+
                 case GameState.MainMenu:
                     spriteBatch.Draw(
                         Graphics.Title,
@@ -147,5 +197,65 @@ namespace The_Bond_of_Stone {
 					rotation: 5.8f);
 			// Game1.PIXEL_SCALE * ~7 = one character
 		}
-	}
+
+        private void DrawSplashScreen(SpriteBatch spriteBatch, GameTime gameTime, Color white)
+        {
+
+            if (ssTimer < splashScreenDuration / 2)
+            { //draw powered by monogame
+                spriteBatch.DrawString(
+                    Graphics.Font_Small,
+                    "Powered By",
+                    new Vector2(
+                        viewport.Width / 2 - Graphics.Font_Small.MeasureString("Powered By").X * 2 / 2,
+                        viewport.Height / 2 - (Graphics.SplashScreenGraphics[0].Height * 2) / 2 - Graphics.SplashScreenGraphics[0].Height * 2),
+                    Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 0);
+
+                spriteBatch.Draw(
+                    Graphics.SplashScreenGraphics[0],
+                    new Rectangle(
+                        viewport.Width / 2 - (Graphics.SplashScreenGraphics[0].Width * 2) / 2,
+                        viewport.Height / 2 - (Graphics.SplashScreenGraphics[0].Height * 2) / 2,
+                        Graphics.SplashScreenGraphics[0].Width * 2,
+                        Graphics.SplashScreenGraphics[0].Height * 2),
+                    Color.White);
+            }
+            else
+            { //draw names/logo
+                spriteBatch.Draw(
+                    Graphics.Logo,
+                    new Rectangle(
+                        viewport.Width / 2 - (Graphics.Logo.Width * 2) / 2,
+                        viewport.Height / 2 - (Graphics.Logo.Height * 2) / 2,
+                        Graphics.Logo.Width * 2,
+                        Graphics.Logo.Height * 2),
+                    Color.White);
+
+                string credits = "";
+
+                for (int i = 0; i < Game1.DEVELOPER_NAMES.Length; i++) {
+                    if(i == Game1.DEVELOPER_NAMES.Length - 1)
+                        credits += Game1.DEVELOPER_NAMES[i];
+                    else
+                        credits += Game1.DEVELOPER_NAMES[i] + " ~ ";
+                }
+
+                spriteBatch.DrawString(
+                    Graphics.Font_Small, 
+                    credits,
+                    new Vector2(
+                        viewport.Width / 2 - Graphics.Font_Small.MeasureString(credits).X * 2 / 2,
+                        viewport.Height - (Graphics.Font_Small.MeasureString(credits).Y * 2 + 20)),
+                    Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 0);
+            }
+
+            //Draw the fading texture
+            spriteBatch.Draw(Graphics.BlackTexture, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(0, 0, 0, (int)MathHelper.Clamp(alphaValue, 0, 255)));
+        }
+
+        bool IsButtonPressed(Rectangle button, MouseState state)
+        {
+            return state.LeftButton == ButtonState.Pressed && state.X >= button.X && state.X <= button.Right && state.Y >= button.Y && state.Y <= button.Bottom;
+        }
+    }
 }

@@ -24,7 +24,7 @@ namespace The_Bond_of_Stone {
         public static int PIXEL_SCALE { get { return TILE_SIZE / TILE_PIXEL_SIZE; } }
         public static Vector2 GRAVITY = new Vector2(0, 2750f);
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
-        string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
+        public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
@@ -36,6 +36,8 @@ namespace The_Bond_of_Stone {
 
         public static KeyboardState keyboardState;
         public static KeyboardState prevKeyboardState;
+        public static MouseState mouseState;
+        public static MouseState prevMoueState;
 
         //CONTENT
         Graphics LoadedGraphics;
@@ -54,14 +56,6 @@ namespace The_Bond_of_Stone {
         //Splash screen stuff
         public const bool SHOW_SPLASH_SCREEN = true;
 
-        float splashScreenDuration = 10f;
-        float fadeSpeed = 0.5f;
-        float ssTimer;
-
-        float alphaValue = 255;
-        float fadeIncrement;
-        bool fading;
-
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -75,7 +69,6 @@ namespace The_Bond_of_Stone {
         /// </summary>
         protected override void Initialize() {
             State = GameState.SplashScreen;
-            fadeIncrement = -255 / fadeSpeed;
 
             parallaxLayers = new ParallaxLayer[2];
             enemies = new List<Entity>();
@@ -142,10 +135,17 @@ namespace The_Bond_of_Stone {
 
             //Update game and input states
             keyboardState = Keyboard.GetState();
+            mouseState = Mouse.GetState();
 
             switch (State) {
                 case GameState.SplashScreen:
-                    UpdateSplashScreen(gameTime);
+                    if (SHOW_SPLASH_SCREEN)
+                        UpdateSplashScreen(gameTime);
+                    else
+                        State = GameState.MainMenu;
+
+                    if (mouseState.LeftButton == ButtonState.Pressed)
+                        State = GameState.MainMenu;
                     break;
                 case GameState.MainMenu:
                     UpdateMainMenu(gameTime);
@@ -162,39 +162,15 @@ namespace The_Bond_of_Stone {
             }
 
             prevKeyboardState = keyboardState;
+            prevMoueState = mouseState;
+
+            Interface.Update(gameTime);
 
             base.Update(gameTime);
         }
 
         private void UpdateSplashScreen(GameTime gameTime) {
-            if (SHOW_SPLASH_SCREEN) {
-
-                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (ssTimer < splashScreenDuration) {
-                    ssTimer += elapsed;
-                    if (ssTimer >= splashScreenDuration) {
-                        State = GameState.MainMenu;
-                    }
-
-                    if (ssTimer >= 0f && ssTimer < splashScreenDuration * 0.05f)
-                        fading = true;
-                    else if (ssTimer >= splashScreenDuration * .05f && ssTimer < splashScreenDuration * .45f)
-                        fading = false;
-                    else if (ssTimer >= splashScreenDuration * .45f && ssTimer < splashScreenDuration * .55f)
-                        fading = true;
-                    else if (ssTimer >= splashScreenDuration * .55f && ssTimer < splashScreenDuration * .95f)
-                        fading = false;
-                    else if (ssTimer >= splashScreenDuration * .95f && ssTimer < splashScreenDuration * 1.0)
-                        fading = true;
-                }
-
-                if (fading) {
-                    alphaValue += elapsed * fadeIncrement;
-
-                    if (alphaValue >= 255 || alphaValue <= 0)
-                        fadeIncrement *= -1;
-                }
-            } else
+            if (Interface.DoneWithSplashScreen)
                 State = GameState.MainMenu;
         }
 
@@ -295,7 +271,7 @@ namespace The_Bond_of_Stone {
             //Organizational: Draw according to the current game state
             switch (State) {
                 case GameState.SplashScreen:
-                    DrawSplashScreen(gameTime, Color.White);
+                    GraphicsDevice.Clear(Color.Black);
                     break;
                 case GameState.MainMenu:
                     DrawMainMenu(gameTime);
@@ -313,64 +289,10 @@ namespace The_Bond_of_Stone {
 
             //Always draw the interface. It has its own state switch.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
-            Interface.Draw(spriteBatch, State);
+            Interface.Draw(spriteBatch, gameTime, State);
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        private void DrawSplashScreen(GameTime gameTime, Color white) {
-            GraphicsDevice.Clear(Color.Black);
-
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
-
-            if (ssTimer < splashScreenDuration / 2) { //draw powered by monogame
-                
-
-                spriteBatch.DrawString(
-                    Graphics.Font_Small,
-                    "Powered By",
-                    new Vector2(
-                        GraphicsDevice.Viewport.Width / 2 - Graphics.Font_Small.MeasureString("Powered By").X * 2 / 2,
-                        GraphicsDevice.Viewport.Height - Graphics.SplashScreenGraphics[0].Height * 2 - 40
-                        ),
-                    Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 0);
-
-                spriteBatch.Draw(
-                    Graphics.SplashScreenGraphics[0],
-                    new Rectangle(
-                        GraphicsDevice.Viewport.Width / 2 - (Graphics.SplashScreenGraphics[0].Width * 2) / 2,
-                        GraphicsDevice.Viewport.Height - Graphics.SplashScreenGraphics[0].Height * 2 - 20,
-                        Graphics.SplashScreenGraphics[0].Width * 2,
-                        Graphics.SplashScreenGraphics[0].Height * 2),
-                    Color.White);
-            } else { //draw names/logo
-                spriteBatch.Draw(
-                    Graphics.Logo,
-                    new Rectangle(
-                        GraphicsDevice.Viewport.Width / 2 - (Graphics.Logo.Width * 2) / 2,
-                        GraphicsDevice.Viewport.Height / 2 - (Graphics.Logo.Height * 2) / 2,
-                        Graphics.Logo.Width * 2,
-                        Graphics.Logo.Height * 2
-                        ),
-                    Color.White);
-
-                for(int i = 0; i < DEVELOPER_NAMES.Length; i++) {
-                    spriteBatch.DrawString(
-                        Graphics.Font_Small, 
-                        DEVELOPER_NAMES[i],
-                        new Vector2(
-                            GraphicsDevice.Viewport.Width / 2 - Graphics.Font_Small.MeasureString(DEVELOPER_NAMES[i]).X * 2 / 2,
-                            GraphicsDevice.Viewport.Height - 30 - (20 * i + Graphics.Font_Small.MeasureString(DEVELOPER_NAMES[i]).Y * 2 / 2)
-                            ),
-                        Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 0);
-                }
-            }
-
-            //Draw the fading texture
-            spriteBatch.Draw(Graphics.BlackTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), new Color(0, 0, 0, (int)MathHelper.Clamp(alphaValue, 0, 255)));
-
-            spriteBatch.End();
         }
 
         /// <summary>
