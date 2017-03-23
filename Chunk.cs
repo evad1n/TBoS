@@ -177,7 +177,9 @@ namespace The_Bond_of_Stone {
         public void Update(GameTime gameTime) {
             if (Entities.Count > 0) {
                 foreach (CoinPickup c in Entities)
+                {
                     c.Update(gameTime);
+                }
             }
         }
 
