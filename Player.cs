@@ -158,7 +158,7 @@ namespace The_Bond_of_Stone {
             else
                 airTime = 0;
 
-            if (CurrentChunk.Entities.Count > 0) {
+            if (CurrentChunk != null && CurrentChunk.Entities.Count > 0) {
                 foreach (CoinPickup gp in CurrentChunk.Entities) {
                     if (gp != null && Rect.Intersects(gp.Rect))
                         gp.Collect();
