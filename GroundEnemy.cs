@@ -62,14 +62,14 @@ namespace The_Bond_of_Stone
             nextChunk = Game1.Generator.GetEntityChunkID(gapRect);
 
             //Check for pathfinding (gaps and walls)
-            if (!CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) || CollisionHelper.IsCollidingWithChunk(nextChunk, wallRect))
+            if ((!CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) || CollisionHelper.IsCollidingWithChunk(nextChunk, wallRect)) && Grounded)
             {
                 direction *= -1;
             }
 
             velocity.X = speed * direction;
 
-            if (Position.X < Game1.Camera.Rect.Left)
+            if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
             {
                 Active = false;
             }
@@ -144,7 +144,7 @@ namespace The_Bond_of_Stone
                 if (walkingTimer >= walkFrameSpeed)
                 {
                     walkFrame = (walkFrame + 1) % walkFramesTotal;
-                    Texture = Graphics.PlayerWalkTextures[walkFrame];
+                    Texture = Graphics.EnemySlugTextures[walkFrame];
                     walkingTimer = 0f;
                 }
             }
@@ -152,7 +152,7 @@ namespace The_Bond_of_Stone
             //Idle
             else if (Grounded && velocity.X == 0)
             {
-                Texture = Graphics.PlayerTextures[0];
+                Texture = Graphics.EnemySlugTextures[0];
             }
         }
 
