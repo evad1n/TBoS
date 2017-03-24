@@ -75,7 +75,7 @@ namespace The_Bond_of_Stone {
             PlayerWalkTextures = PopulateTextureArray("playerWalk", 4, @"graphics\entities\");
 
             EnemySlugTextures = PopulateTextureArray("enemySlug", 5, @"graphics\entities\");
-            HazardTextures = PopulateTextureArray("hazard", 2, @"graphics\entities\");
+            HazardTextures = PopulateTextureArray("hazard", 1, @"graphics\entities\");
 
             Effect_PlayerParticlesBottom = PopulateTextureArray("playerParticles_0", 3, @"graphics\entities\");
             Effect_PlayerParticlesLeft = PopulateTextureArray("playerParticles_2", 3, @"graphics\entities\");

@@ -64,7 +64,7 @@ namespace The_Bond_of_Stone {
 
         public void Update(GameTime gameTime) {
             Chunk c = Game1.Generator.GetEntityChunkID(Origin);
-            gameOverPath = new Vector2(Origin.X + 250, gameOverPath.Y);
+            gameOverPath = new Vector2(Origin.X + 50, gameOverPath.Y);
             nextChunk = Game1.Generator.GetEntityChunkID(gameOverPath);
 
             gameOverPath += Move(gameOverPath, new Vector2(gameOverPath.X , nextChunk.Rect.Top), Speed);
