@@ -48,7 +48,7 @@ namespace The_Bond_of_Stone {
         Player Player;
         public static PlayerStats PlayerStats;
 
-        public static List<Entity> enemies;
+        public static List<Entity> dynamicEntities;
 
         ParallaxLayer[] parallaxLayers;
         List<Entity> GlobalEntities = new List<Entity>();
@@ -71,7 +71,7 @@ namespace The_Bond_of_Stone {
             State = GameState.SplashScreen;
 
             parallaxLayers = new ParallaxLayer[2];
-            enemies = new List<Entity>();
+            dynamicEntities = new List<Entity>();
 
             playerStartPos = new Vector2(64, 64);
             chunkStartPos = new Rectangle(
@@ -195,21 +195,6 @@ namespace The_Bond_of_Stone {
             Player.Update(gameTime, keyboardState, prevKeyboardState);
             PlayerStats.Update(gameTime);
 
-
-            List<Entity> garbageEntities = new List<Entity>();
-            //Update enemies
-            if (enemies.Count > 0) {
-                foreach (GroundEnemy g in enemies) {
-                    g.Update(gameTime);
-                    if (!g.Active) {
-                        garbageEntities.Add(g);
-                    }
-                }
-            }
-
-            foreach (Entity e in garbageEntities)
-                enemies.Remove(e);
-
             if (!PlayerStats.IsAlive)
             {
                 if(PlayerStats.Health <= 0)
@@ -235,15 +220,90 @@ namespace The_Bond_of_Stone {
 
 			if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P)) {
 				PlayerStats.TickScore();
-                Game1.enemies.Add(new GroundEnemy(Graphics.PlayerTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
             }
 
-			//if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
-			//    Camera.ScreenShake(3, 0.25f);
-			//}
+            if (keyboardState.IsKeyDown(Keys.G) && prevKeyboardState.IsKeyUp(Keys.G))
+            {
+                dynamicEntities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
+            }
 
-			//TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
-			Generator.UpdateChunkGeneration();
+            if (keyboardState.IsKeyDown(Keys.J) && prevKeyboardState.IsKeyUp(Keys.J))
+            {
+                dynamicEntities.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
+            }
+
+            //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
+            //    Camera.ScreenShake(3, 0.25f);
+            //}
+
+            List<Entity> garbageEntities = new List<Entity>();
+
+            //Update enemies
+            if (dynamicEntities.Count > 0)
+            {
+                foreach (Entity e in dynamicEntities)
+                {
+                    if (e is GroundEnemy)
+                    {
+                        GroundEnemy g = (GroundEnemy)e;
+                        g.Update(gameTime);
+                        if (!g.Active)
+                        {
+                            garbageEntities.Add(g);
+                        }
+
+                        //Collisions
+                        if (g != null && Player.Rect.Intersects(g.Rect))
+                        {
+                            if (g.Active)
+                            {
+                                if (Player.Position.Y < g.Position.Y && Player.velocity.Y > 0)
+                                {
+                                    g.Kill();
+                                    Player.KnockBack(new Vector2(0, -50000));
+                                }
+                                else
+                                {
+                                    PlayerStats.TakeDamage(1, g);
+                                }
+                            }
+                        }
+                    }
+                    else if (e is JumpingEnemy)
+                    {
+                        JumpingEnemy j = (JumpingEnemy)e;
+                        j.Update(gameTime);
+                        if (!j.Active)
+                        {
+                            garbageEntities.Add(j);
+                        }
+
+                        //Collisions
+                        if (j != null && Player.Rect.Intersects(j.Rect))
+                        {
+                            if (j.Active)
+                            {
+                                if (Player.Position.Y < j.Position.Y && Player.velocity.Y > 0)
+                                {
+                                    j.Kill();
+                                    Player.KnockBack(new Vector2(0, -50000));
+                                }
+                                else
+                                {
+                                    PlayerStats.TakeDamage(1, j);
+                                }
+                            }
+                        }
+                    }
+                    //Add more dynamic entities here
+                }
+
+                foreach (Entity e in garbageEntities)
+                    dynamicEntities.Remove(e);
+            }
+
+            //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
+            Generator.UpdateChunkGeneration();
 
             foreach (Chunk map in Generator.Chunks)
                 map.Update(gameTime); //Update each active chunk
@@ -342,9 +402,9 @@ namespace The_Bond_of_Stone {
                 map.Draw(spriteBatch, color); //Draw each active chunk
             
             //Draw enemies
-            if (enemies.Count > 0)
+            if (dynamicEntities.Count > 0)
             {
-                foreach (GroundEnemy g in enemies)
+                foreach (Entity g in dynamicEntities)
                     g.Draw(spriteBatch);
             }
 
@@ -376,7 +436,7 @@ namespace The_Bond_of_Stone {
             Generator.Restart();
 
             //Clear Enemies
-            enemies.Clear();
+            dynamicEntities.Clear();
 
             //Reset the player and camera
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);

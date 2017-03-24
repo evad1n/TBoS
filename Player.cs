@@ -165,27 +165,6 @@ namespace The_Bond_of_Stone {
                         gp.Collect();
                 }
             }
-
-            if(Game1.enemies.Count > 0)
-            {
-                foreach (GroundEnemy e in Game1.enemies)
-                {
-                    if (e != null && Rect.Intersects(e.Rect))
-                    {
-                        if(Active)
-                        {
-                            if (Position.Y < e.Position.Y && velocity.Y > 0)
-                            {
-                                e.Kill();
-                            }
-                            else
-                            {
-                                Game1.PlayerStats.TakeDamage(1, e);
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>
