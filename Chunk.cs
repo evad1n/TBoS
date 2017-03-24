@@ -97,8 +97,8 @@ namespace The_Bond_of_Stone {
                     Tiles.Add(tileToAdd);
 
                     rect = new Rectangle(
-                        origin.X,
-                        origin.Top,
+                        origin.X + (size / 2), 
+                        origin.Y + (size / 2) - (yoffset * size),
                         (x + 1) * size,
                         (y + 1) * size
                         );
@@ -209,6 +209,8 @@ namespace The_Bond_of_Stone {
                 foreach (Entity e in Entities)
                     e.Draw(sb, Color.White);
             }
+
+            sb.Draw(Graphics.Tiles_gold[0], rect, color);
         }
     }
 }
