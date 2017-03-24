@@ -11,11 +11,13 @@ namespace The_Bond_of_Stone
     class Spike : Entity
     {
         float rotation;
+        string rotString;
 
         public Spike(Texture2D texture, Vector2 position, string rotation) : base(texture, position) {
             Texture = texture;
             Position = position;
-            
+
+            rotString = rotation;
             FindTextureAndRotation(rotation);
         }
 
