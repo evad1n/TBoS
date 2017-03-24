@@ -372,7 +372,7 @@ namespace The_Bond_of_Stone {
                     DrawPlaying(gameTime, Color.White);
                     break;
                 case GameState.GameOver:
-                    DrawGameOver(gameTime, Color.Red);
+                    DrawGameOver(gameTime, Color.GhostWhite);
                     break;
                 case GameState.Pause:
                     DrawPause(gameTime, Color.Gray);
