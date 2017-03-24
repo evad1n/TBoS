@@ -257,7 +257,8 @@ namespace The_Bond_of_Stone {
                     e.Draw(sb, Color.White);
             }
 
-            sb.Draw(Graphics.DebugTexture, rect, color);
+            //Draw chunks
+            //sb.Draw(Graphics.DebugTexture, rect, color);
         }
     }
 }

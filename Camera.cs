@@ -8,7 +8,6 @@ namespace The_Bond_of_Stone {
     /// </summary>
     public class Camera : Camera2D {
         public Rectangle Rect { get; set; }
-        Vector2 startPos;
         Chunk nextChunk;
         Vector2 gameOverPath;
 
@@ -30,8 +29,6 @@ namespace The_Bond_of_Stone {
         public Camera(GraphicsDevice graphicsDevice) : base(graphicsDevice) {
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
 
-            startPos = new Vector2(Rect.X, Rect.Y);
-
             Speed = 0f;
             Target = null;
 
@@ -41,8 +38,6 @@ namespace The_Bond_of_Stone {
         //Has a reference to an entity to "follow" on Y, doesn't move on X.
         public Camera(GraphicsDevice graphicsDevice, Entity target) : base(graphicsDevice) {
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
-
-            startPos = new Vector2(Rect.X, Rect.Y);
 
             Speed = 0f;
             Target = target;
@@ -54,8 +49,6 @@ namespace The_Bond_of_Stone {
         public Camera(GraphicsDevice graphicsDevice, Entity target, float speed) : base(graphicsDevice) {
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
 
-            startPos = new Vector2(Rect.X, Rect.Y);
-
             Speed = speed;
             Target = target;
 
@@ -63,17 +56,20 @@ namespace The_Bond_of_Stone {
         }
 
         public void Update(GameTime gameTime) {
-            Chunk c = Game1.Generator.GetEntityChunkID(Origin);
-            gameOverPath = new Vector2(Origin.X + 50, gameOverPath.Y);
             nextChunk = Game1.Generator.GetEntityChunkID(gameOverPath);
-
-            gameOverPath += Move(gameOverPath, new Vector2(gameOverPath.X , nextChunk.Rect.Top), Speed);
+            gameOverPath = new Vector2(gameOverPath.X + Speed, gameOverPath.Y);
 
             //Entity follow code.
             if (Target != null)
+            {
                 Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, Target.Rect.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / smoothing));
+            }
+            //Game over pathfinding code
             else
-                Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, gameOverPath.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / 0.5f));
+            {
+                gameOverPath += Move(gameOverPath, new Vector2(gameOverPath.X, nextChunk.Rect.Top + nextChunk.Rect.Height / 3), Speed);
+                Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, gameOverPath.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / 1f));
+            }
 
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
 
@@ -109,6 +105,7 @@ namespace The_Bond_of_Stone {
             Origin = Target.Position;
             LookAt(Origin);
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
+            gameOverPath = new Vector2(Rect.Right - 50, Origin.Y);
         }
 
         public Vector2 Move(Vector2 start, Vector2 target, float speed)
@@ -121,10 +118,10 @@ namespace The_Bond_of_Stone {
             return v * speed;
         }
 
-        //For debugging
+        //For debugging THESE COORDINATES ARE RELATIVE TO CAMERA HAHAHAHAHAHAHAHHAHA
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(Graphics.DebugTexture, gameOverPath, Color.White);
+            //sb.Draw(Graphics.DebugTexture, gameOverPath, Color.White);
         }
     }
 }
