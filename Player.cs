@@ -38,7 +38,9 @@ namespace The_Bond_of_Stone {
         float maxJumpTime = 0.45f; //how long can the player "sustain" a jump?
         float jumpControlPower = 0.14f;
 
-        bool countingAirTime;
+        bool WalljumpGivesXVelocity = false;
+        float wallJumpXVelocity = 750;
+
         float airTime;
 
         bool wallJumped;
@@ -228,7 +230,16 @@ namespace The_Bond_of_Stone {
                 //If we're in the middle of a jump...
                 if ((!wasJumping && Grounded) || (Walled && !wallJumped) || jumpTime > 0f) {
                     if (jumpTime == 0f && !wallJumped && !Grounded)
+                    {
+                        if (WalljumpGivesXVelocity)
+                        {
+                            if (walledLeft)
+                                velocity.X = wallJumpXVelocity;
+                            else if (walledRight)
+                                velocity.X = -wallJumpXVelocity;
+                        }
                         wallJumped = true;
+                    }
 
                     //If we're just starting a jump or we're midair... 
                     if (jumpTime != 0f || canStartJump) {
@@ -290,8 +301,10 @@ namespace The_Bond_of_Stone {
         }
 
         void GetAnimation(float elapsed) {
+            if(!Alive)
+                Texture = Graphics.PlayerTextures[6];
             //Jump animation
-            if (!Grounded && !Walled) {
+            else if (!Grounded && !Walled) {
                 if (velocity.Y > -450 && velocity.Y < -100)
                     Texture = Graphics.PlayerTextures[2];
                 else if (velocity.Y > -100 && velocity.Y < -50)
@@ -327,7 +340,7 @@ namespace The_Bond_of_Stone {
         }
 
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
-        public override void Draw(SpriteBatch spriteBatch) {
+        public override void Draw(SpriteBatch spriteBatch, Color color) {
             if (Active) {
                 if (LockToPixelGrid) {
                     Rectangle drawRect = new Rectangle(
@@ -337,13 +350,13 @@ namespace The_Bond_of_Stone {
                         Texture.Height * Game1.PIXEL_SCALE
                         );
         
-                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: Color.White, effects: facing);
+                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, effects: facing);
                 } else
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: Color.White, effects: facing);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
             }
 
             foreach (Particle p in particles)
-                p.Draw(spriteBatch);
+                p.Draw(spriteBatch, Color.White);
         }
 
         public void KnockBack(Vector2 boom)

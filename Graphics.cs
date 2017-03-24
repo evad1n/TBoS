@@ -39,6 +39,7 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] SplashScreenGraphics;
         public static Texture2D Title;
         public static Texture2D[] MainMenuGraphics;
+        public static Texture2D[] Icons;
 
         public static SpriteFont Font_Main;
         public static SpriteFont Font_Small;
@@ -85,6 +86,8 @@ namespace The_Bond_of_Stone {
             UI_Hearts = PopulateTextureArray("heart", 3, @"graphics\ui\");
             UI_MultiplierIndicators = PopulateTextureArray("multiplierIndicator", 2, @"graphics\ui\");
             UI_Multipliers = PopulateTextureArray("multiplier", 8, @"graphics\ui\");
+
+            Icons = PopulateTextureArray("icons", 2, @"graphics\ui\");
 
             Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");

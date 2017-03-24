@@ -16,11 +16,17 @@ namespace The_Bond_of_Stone {
         public float invulnerabilityTimer;
         public bool invulnerable;
 
+        bool invulnIsFlashed = false;
+        float invulnFlashRate = 0.075f;
+        float flash;
+        public Color invulnColor = Color.White;
+
         public int Score = 0;
 		public int ScoreMultiTicks = 0;
 		public int ScoreMultiplier = 1;
 
 		float distance;
+
         public float Distance {
             get { return distance / Game1.TILE_SIZE; }
         }
@@ -46,26 +52,40 @@ namespace The_Bond_of_Stone {
         public void Update(GameTime gameTime) {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            if (!invulnIsFlashed)
+                invulnColor = Color.White;
+            else
+                invulnColor = new Color(1, 1, 1, 0f);
+
             //Calculate scoring, time, and distance
-            if (Player.Rect.Left > distance) {
-				Score = (int)((Math.Round(Distance, 1)) * ScoreMultiplier * 100);
+            if (Player.Rect.Right > distance) {
+				Score += (int)((Math.Round((distance - lastDistance) * elapsed, 1)) * ScoreMultiplier * 100);
 				
-				//	Score = (int)((Math.Round(distance / Game1.TILE_SIZE, 1)) * ScoreMultiplier * 100);
                 lastDistance = distance;
-                distance = Player.Rect.Left;
+                distance = Player.Rect.Right;
             }
 
             Time += elapsed;
 
-            if(invulnerable)
-            {
+            if (invulnerable) {
+
+                if (flash < invulnFlashRate) {
+                    flash += elapsed;
+
+                    if (flash >= invulnFlashRate) {
+                        flash = 0f;
+                        invulnIsFlashed = !invulnIsFlashed;
+                    }
+                }
+
                 invulnerabilityTimer += elapsed;
-                if (invulnerabilityTimer > graceTime)
-                {
+
+                if (invulnerabilityTimer > graceTime) {
                     invulnerable = false;
                     invulnerabilityTimer = 0f;
                 }
-            }
+            } else
+                invulnIsFlashed = false;
 
 			if (ScoreMultiTicks >= 4 && ScoreMultiplier < 8) {
 				ScoreMultiTicks = 0;

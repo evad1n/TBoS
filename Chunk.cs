@@ -207,7 +207,7 @@ namespace The_Bond_of_Stone {
 
             if (Entities.Count > 0) {
                 foreach (Entity e in Entities)
-                    e.Draw(sb);
+                    e.Draw(sb, Color.White);
             }
         }
     }

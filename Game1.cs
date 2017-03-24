@@ -54,7 +54,7 @@ namespace The_Bond_of_Stone {
         List<Entity> GlobalEntities = new List<Entity>();
 
         //Splash screen stuff
-        public const bool SHOW_SPLASH_SCREEN = false;
+        public const bool SHOW_SPLASH_SCREEN = true;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -184,6 +184,9 @@ namespace The_Bond_of_Stone {
                 State = GameState.Playing;
                 ResetGame();
             }
+
+            foreach (ParallaxLayer pl in parallaxLayers)
+                pl.Update(gameTime);
         }
 
         /// <summary>
@@ -382,7 +385,11 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawMainMenu(GameTime gameTime) {
-            
+            //Draw the parallax layers in the background.
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
+            foreach (ParallaxLayer pl in parallaxLayers)
+                pl.Draw(spriteBatch);
+            spriteBatch.End();
         }
 
         /// <summary>
@@ -405,10 +412,10 @@ namespace The_Bond_of_Stone {
             if (dynamicEntities.Count > 0)
             {
                 foreach (Entity g in dynamicEntities)
-                    g.Draw(spriteBatch);
+                    g.Draw(spriteBatch, Color.White);
             }
 
-            Player.Draw(spriteBatch);
+            Player.Draw(spriteBatch, PlayerStats.invulnColor);
             spriteBatch.End();
         }
 

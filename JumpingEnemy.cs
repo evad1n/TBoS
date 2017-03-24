@@ -158,7 +158,7 @@ namespace The_Bond_of_Stone
         }
 
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, Color color)
         {
             //debug
             spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.White);
@@ -175,10 +175,10 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: Color.White, effects: facing);
+                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, effects: facing);
                 }
                 else
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: Color.White, effects: facing);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
             }
 
         }

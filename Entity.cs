@@ -50,7 +50,7 @@ namespace The_Bond_of_Stone {
             Active = active;
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch) {
+        public virtual void Draw(SpriteBatch spriteBatch, Color color) {
             //If this is active, draw it.
             if (Active) {
                 //We can "lock" entities to the virtual pixel grid (looks pretty nice)
@@ -62,9 +62,9 @@ namespace The_Bond_of_Stone {
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, drawRect, Color.White);
+                    spriteBatch.Draw(Texture, drawRect, color);
                 } else
-                    spriteBatch.Draw(Texture, Rect, Color.White);
+                    spriteBatch.Draw(Texture, Rect, color);
             }
         }
 
