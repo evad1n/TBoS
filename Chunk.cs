@@ -101,7 +101,7 @@ namespace The_Bond_of_Stone {
                     Tiles.Add(tileToAdd);
 
                     rect = new Rectangle(
-                        origin.X + (size / 2), 
+                        origin.X, 
                         origin.Y + (size / 2) - (yoffset * size),
                         (x + 1) * size,
                         (y + 1) * size

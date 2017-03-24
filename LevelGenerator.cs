@@ -70,7 +70,8 @@ namespace The_Bond_of_Stone {
         public Chunk GetEntityChunkID(Entity obj) {
             Vector2 r = obj.Position;
             foreach(Chunk c in Chunks) {
-                if (r.X >= c.Rect.X && r.X <= c.Rect.X + c.Rect.Width) {
+                if (r.X >= c.Rect.Left && r.X <= c.Rect.Right)
+                {
                     return c;
                 }
             }
@@ -83,7 +84,7 @@ namespace The_Bond_of_Stone {
             Vector2 r = new Vector2(rect.X, rect.Y);
             foreach (Chunk c in Chunks)
             {
-                if (r.X >= c.Rect.X && r.X <= c.Rect.X + c.Rect.Width)
+                if (r.X >= c.Rect.Left && r.X <= c.Rect.Right)
                 {
                     return c;
                 }

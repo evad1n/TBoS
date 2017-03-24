@@ -162,8 +162,8 @@ namespace The_Bond_of_Stone
         public override void Draw(SpriteBatch spriteBatch, Color color)
         {
             //debug
-            spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.White);
-            spriteBatch.Draw(Graphics.Tiles_gold[0], wallRect, Color.White);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.White);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], wallRect, Color.White);
 
             if (Active)
             {
@@ -176,7 +176,7 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, effects: facing);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
                 }
                 else
                     spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
