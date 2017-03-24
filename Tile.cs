@@ -44,7 +44,7 @@ namespace The_Bond_of_Stone {
             protected set { rect = value; }
         }
 
-        //Has this tile undergone teh stitching process?
+        //Has this tile undergone the stitching process?
         bool stitched = false;
 
         //The ID of this tile.
