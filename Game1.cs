@@ -49,6 +49,7 @@ namespace The_Bond_of_Stone {
         public static PlayerStats PlayerStats;
 
         public static List<Entity> dynamicEntities;
+        public static float goombaForce = -1000;
 
         ParallaxLayer[] parallaxLayers;
         List<Entity> GlobalEntities = new List<Entity>();
@@ -200,6 +201,7 @@ namespace The_Bond_of_Stone {
                 if(PlayerStats.Health <= 0)
                     Player.KnockBack(new Vector2(-200f, -2000f));
                 State = GameState.GameOver;
+                Camera.Target = null;
             }
 
             Camera.Update(gameTime);
@@ -260,7 +262,7 @@ namespace The_Bond_of_Stone {
                                 if (Player.Position.Y < g.Position.Y && Player.velocity.Y > 0)
                                 {
                                     g.Kill();
-                                    Player.KnockBack(new Vector2(0, -50000));
+                                    Player.KnockBack(new Vector2(0, goombaForce));
                                 }
                                 else
                                 {
@@ -286,7 +288,7 @@ namespace The_Bond_of_Stone {
                                 if (Player.Position.Y < j.Position.Y && Player.velocity.Y > 0)
                                 {
                                     j.Kill();
-                                    Player.KnockBack(new Vector2(0, -50000));
+                                    Player.KnockBack(new Vector2(0, goombaForce));
                                 }
                                 else
                                 {
@@ -337,6 +339,14 @@ namespace The_Bond_of_Stone {
         void UpdateGameOver(GameTime gameTime) {
             //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
             Player.Update(gameTime, keyboardState, prevKeyboardState);
+            Camera.Update(gameTime);
+
+            foreach (ParallaxLayer pl in parallaxLayers)
+                pl.Update(gameTime);
+            Generator.UpdateChunkGeneration();
+
+            foreach (Chunk map in Generator.Chunks)
+                map.Update(gameTime); //Update each active chunk
 
             //Reset on an ESC key press.
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))

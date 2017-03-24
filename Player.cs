@@ -185,7 +185,7 @@ namespace The_Bond_of_Stone {
 
             //Set the X and Y components of the velocity separately.
             velocity.X += motion * acceleration * elapsed;
-            velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, -maxFallSpeed, maxFallSpeed);
+            velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, Game1.goombaForce, maxFallSpeed);
 
             //Apply tertiary forces
             velocity.Y = DoJump(velocity.Y, gameTime);
