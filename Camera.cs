@@ -57,11 +57,11 @@ namespace The_Bond_of_Stone {
 
         public void Update(GameTime gameTime) {
             nextChunk = Game1.Generator.GetEntityChunkID(gameOverPath);
-            gameOverPath = new Vector2(gameOverPath.X + Speed, gameOverPath.Y);
 
             //Entity follow code.
             if (Target != null)
             {
+                gameOverPath = new Vector2(gameOverPath.X + Speed, Origin.Y);
                 Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, Target.Rect.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / smoothing));
             }
             //Game over pathfinding code
