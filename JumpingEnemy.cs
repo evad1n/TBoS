@@ -16,6 +16,7 @@ namespace The_Bond_of_Stone
         Chunk nextChunk;
         Rectangle gapRect;
         Rectangle wallRect;
+        int yOffset;
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
@@ -32,9 +33,11 @@ namespace The_Bond_of_Stone
         {
             get
             {
+                yOffset = (Game1.TILE_PIXEL_SIZE - Graphics.EnemySlugTextures[0].Height) * 3;
+
                 return new Rectangle(
-                    (int)Position.X,
-                    (int)Position.Y,
+                    (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
+                    (int)Math.Round((Position.Y + Game1.PIXEL_SCALE) / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
                     Graphics.EnemySlugTextures[0].Width * Game1.PIXEL_SCALE,
                     Graphics.EnemySlugTextures[0].Height * Game1.PIXEL_SCALE
                     );
@@ -57,8 +60,8 @@ namespace The_Bond_of_Stone
         {
 
             //Update pathfinding colliders
-            gapRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y + Game1.TILE_SIZE, Game1.TILE_SIZE, Game1.TILE_SIZE);
-            wallRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y, Game1.TILE_SIZE, Game1.TILE_SIZE);
+            gapRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y - (yOffset) + Game1.TILE_SIZE, Game1.TILE_SIZE, Game1.TILE_SIZE);
+            wallRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y - yOffset, Game1.TILE_SIZE, Game1.TILE_SIZE);
             nextChunk = Game1.Generator.GetEntityChunkID(gapRect);
 
             //Check collision directions
@@ -102,11 +105,11 @@ namespace The_Bond_of_Stone
 
             if (velocity.X > 0)
             {
-                facing = SpriteEffects.None;
+                facing = SpriteEffects.FlipHorizontally;
             }
             else
             {
-                facing = SpriteEffects.FlipHorizontally;
+                facing = SpriteEffects.None;
             }
 
             //Move the player and correct for collisions
@@ -180,7 +183,6 @@ namespace The_Bond_of_Stone
                 else
                     spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
             }
-
         }
 
         public void KnockBack(Vector2 boom)

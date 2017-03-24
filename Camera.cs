@@ -9,6 +9,7 @@ namespace The_Bond_of_Stone {
     public class Camera : Camera2D {
         public Rectangle Rect { get; set; }
         Vector2 startPos;
+        Chunk currentChunk;
 
         float XSpeedUpBound = Game1.TILE_SIZE * 4;
 
@@ -61,9 +62,14 @@ namespace The_Bond_of_Stone {
         }
 
         public void Update(GameTime gameTime) {
+            currentChunk = Game1.Generator.GetEntityChunkID(Origin);
+
             //Entity follow code.
-            if(Target != null)
+            if (Target != null)
                 Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, Target.Rect.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / smoothing));
+            else
+                Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, currentChunk.Rect.Top, (float)gameTime.ElapsedGameTime.TotalSeconds / 2));
+
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
 
             LookAt(Origin);

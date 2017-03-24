@@ -90,5 +90,18 @@ namespace The_Bond_of_Stone {
             }
             return null;
         }
+
+        //Returns the chunk that a position is 'in,' AKA the "current level"
+        public Chunk GetEntityChunkID(Vector2 pos)
+        {
+            foreach (Chunk c in Chunks)
+            {
+                if (pos.X >= c.Rect.X && pos.X <= c.Rect.X + c.Rect.Width)
+                {
+                    return c;
+                }
+            }
+            return null;
+        }
     }
 }
