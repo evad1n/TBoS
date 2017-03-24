@@ -14,6 +14,12 @@ namespace The_Bond_of_Stone {
         public Viewport viewport;
 
         float multiplierScaleFactor = 0.1f;
+        float multiplierGrowTime = 0.15f;
+        float growTimer;
+
+        bool isGrowing;
+        float currentScale;
+
 
         //Splash screen stuff
         float splashScreenDuration = 10f;
@@ -92,7 +98,7 @@ namespace The_Bond_of_Stone {
 					//Draw the player's Health
 					DrawHealth(spriteBatch);
 
-					DrawMultiplier(spriteBatch);
+					DrawMultiplier(spriteBatch, gameTime);
 
 					break;
 
@@ -106,7 +112,7 @@ namespace The_Bond_of_Stone {
 					//Draw the player's Health
 					DrawHealth(spriteBatch);
 
-					DrawMultiplier(spriteBatch);
+					DrawMultiplier(spriteBatch, gameTime);
 
 					spriteBatch.DrawString(
                         Graphics.Font_Main,
@@ -126,7 +132,7 @@ namespace The_Bond_of_Stone {
 					//Draw the player's Health
 					DrawHealth(spriteBatch);
 
-					DrawMultiplier(spriteBatch);
+					DrawMultiplier(spriteBatch, gameTime);
                     
 					spriteBatch.DrawString(
                         Graphics.Font_Main,
@@ -193,16 +199,32 @@ namespace The_Bond_of_Stone {
                 Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
 		}
 
-		private void DrawMultiplier(SpriteBatch spriteBatch) {
+		private void DrawMultiplier(SpriteBatch spriteBatch, GameTime gameTime) {
             float scale = PlayerStats.ScoreMultiplier * 1.1f;
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-			spriteBatch.Draw(
+            if(growTimer < multiplierGrowTime) {
+                growTimer += elapsed;
+
+                if(growTimer >= multiplierGrowTime) {
+                    growTimer = 0f;
+                    isGrowing = !isGrowing;
+                }
+            }
+
+            if (isGrowing)
+                currentScale = MathHelper.Lerp(currentScale, 1 + PlayerStats.ScoreMultiplier * multiplierScaleFactor, multiplierGrowTime);
+            else
+                currentScale = MathHelper.Lerp(currentScale, 1, multiplierGrowTime);
+
+
+            spriteBatch.Draw(
                 Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1], 
                 destinationRectangle: new Rectangle(
                     (20 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7) * Game1.PIXEL_SCALE,
                     (8 + Graphics.UI_Hearts[0].Height) * Game1.PIXEL_SCALE, 
-				    (int)(Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Width * Game1.PIXEL_SCALE * multiplierScaleFactor), 
-				    (int)(Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Height * Game1.PIXEL_SCALE * multiplierScaleFactor)), 
+				    (int)(Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Width * Game1.PIXEL_SCALE * currentScale), 
+				    (int)(Graphics.UI_Multipliers[PlayerStats.ScoreMultiplier - 1].Height * Game1.PIXEL_SCALE * currentScale)), 
 				color: Color.White,
 				rotation: -0.3f);
 
