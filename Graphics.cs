@@ -29,6 +29,7 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] PickupTexture_Coin;
 
         public static Texture2D[] EnemySlugTextures;
+        public static Texture2D[] HazardTextures;
 
         //UI
         public static Texture2D[] UI_Hearts;
@@ -47,6 +48,7 @@ namespace The_Bond_of_Stone {
         //OTHER
         public static Texture2D EmptyTexture;
         public static Texture2D BlackTexture;
+        public static Texture2D DebugTexture;
         public static Texture2D[] ParallaxLayers;
 
         /// <summary>
@@ -73,6 +75,7 @@ namespace The_Bond_of_Stone {
             PlayerWalkTextures = PopulateTextureArray("playerWalk", 4, @"graphics\entities\");
 
             EnemySlugTextures = PopulateTextureArray("enemySlug", 5, @"graphics\entities\");
+            HazardTextures = PopulateTextureArray("hazard", 2, @"graphics\entities\");
 
             Effect_PlayerParticlesBottom = PopulateTextureArray("playerParticles_0", 3, @"graphics\entities\");
             Effect_PlayerParticlesLeft = PopulateTextureArray("playerParticles_2", 3, @"graphics\entities\");
@@ -82,6 +85,7 @@ namespace The_Bond_of_Stone {
 
             EmptyTexture = Content.Load<Texture2D>(@"graphics\empty");
             BlackTexture = Content.Load<Texture2D>(@"graphics\ui\black");
+            DebugTexture = Content.Load<Texture2D>(@"graphics\debug");
 
             UI_Hearts = PopulateTextureArray("heart", 3, @"graphics\ui\");
             UI_MultiplierIndicators = PopulateTextureArray("multiplierIndicator", 2, @"graphics\ui\");
