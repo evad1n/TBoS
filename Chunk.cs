@@ -257,7 +257,7 @@ namespace The_Bond_of_Stone {
                     e.Draw(sb, Color.White);
             }
 
-            sb.Draw(Graphics.Tiles_gold[0], rect, color);
+            sb.Draw(Graphics.DebugTexture, rect, color);
         }
     }
 }
