@@ -96,7 +96,7 @@ namespace The_Bond_of_Stone {
         {
             foreach (Chunk c in Chunks)
             {
-                if (pos.X >= c.Rect.X && pos.X <= c.Rect.X + c.Rect.Width)
+                if (pos.X >= c.Rect.Left && pos.X <= c.Rect.Right)
                 {
                     return c;
                 }

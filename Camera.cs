@@ -9,7 +9,8 @@ namespace The_Bond_of_Stone {
     public class Camera : Camera2D {
         public Rectangle Rect { get; set; }
         Vector2 startPos;
-        Chunk currentChunk;
+        Chunk nextChunk;
+        Vector2 gameOverPath;
 
         float XSpeedUpBound = Game1.TILE_SIZE * 4;
 
@@ -62,13 +63,17 @@ namespace The_Bond_of_Stone {
         }
 
         public void Update(GameTime gameTime) {
-            currentChunk = Game1.Generator.GetEntityChunkID(Origin);
+            Chunk c = Game1.Generator.GetEntityChunkID(Origin);
+            gameOverPath = new Vector2(Origin.X + 250, gameOverPath.Y);
+            nextChunk = Game1.Generator.GetEntityChunkID(gameOverPath);
+
+            gameOverPath += Move(gameOverPath, new Vector2(gameOverPath.X , nextChunk.Rect.Top), Speed);
 
             //Entity follow code.
             if (Target != null)
                 Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, Target.Rect.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / smoothing));
             else
-                Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, currentChunk.Rect.Top, (float)gameTime.ElapsedGameTime.TotalSeconds / 2));
+                Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, gameOverPath.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / 0.5f));
 
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
 
@@ -104,6 +109,16 @@ namespace The_Bond_of_Stone {
             Origin = Target.Position;
             LookAt(Origin);
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);
+        }
+
+        public Vector2 Move(Vector2 start, Vector2 target, float speed)
+        {
+            Vector2 v = target - start;
+            if(v.Length() != 0)
+            {
+                v.Normalize();
+            }
+            return v * speed;
         }
     }
 }
