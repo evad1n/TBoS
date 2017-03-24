@@ -1637,7 +1637,7 @@
 /processorParam:TextureFormat=Color
 /build:graphics/ui/icons_1.png
 
-#begin graphics/entities/spike.png
+#begin graphics/entities/hazard_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1647,5 +1647,17 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:graphics/entities/spike.png
+/build:graphics/entities/hazard_0.png
+
+#begin graphics/debug.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:graphics/debug.png
 
