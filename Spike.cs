@@ -72,7 +72,7 @@ namespace The_Bond_of_Stone
                     break;
                 case "upleft":
                     Texture = Graphics.HazardTextures[1];
-                    rotation = (float)(0);
+                    rotation = (float)(Math.PI / 2);
                     break;
                 case "upright":
                     Texture = Graphics.HazardTextures[1];
@@ -80,11 +80,11 @@ namespace The_Bond_of_Stone
                     break;
                 case "downleft":
                     Texture = Graphics.HazardTextures[1];
-                    rotation = 0f;
+                    rotation = (float)(Math.PI);
                     break;
                 case "downright":
                     Texture = Graphics.HazardTextures[1];
-                    rotation = (float)(Math.PI * 7 / 4);
+                    rotation = (float)(Math.PI * 3 / 2);
                     break;
                 default:
                     Texture = Graphics.HazardTextures[0];
