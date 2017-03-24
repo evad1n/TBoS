@@ -49,7 +49,6 @@ namespace The_Bond_of_Stone {
         public static PlayerStats PlayerStats;
 
         public static List<Entity> dynamicEntities;
-        public static float goombaForce = -1000;
 
         ParallaxLayer[] parallaxLayers;
         List<Entity> GlobalEntities = new List<Entity>();
@@ -256,23 +255,6 @@ namespace The_Bond_of_Stone {
                         {
                             garbageEntities.Add(g);
                         }
-
-                        //Collisions
-                        if (g != null && Player.Rect.Intersects(g.Rect))
-                        {
-                            if (g.Active)
-                            {
-                                if (Player.Position.Y < g.Position.Y && Player.velocity.Y > 0)
-                                {
-                                    g.Kill();
-                                    Player.KnockBack(new Vector2(0, goombaForce));
-                                }
-                                else
-                                {
-                                    PlayerStats.TakeDamage(1, g);
-                                }
-                            }
-                        }
                     }
                     else if (e is JumpingEnemy)
                     {
@@ -281,23 +263,6 @@ namespace The_Bond_of_Stone {
                         if (!j.Active)
                         {
                             garbageEntities.Add(j);
-                        }
-
-                        //Collisions
-                        if (j != null && Player.Rect.Intersects(j.Rect))
-                        {
-                            if (j.Active)
-                            {
-                                if (Player.Position.Y < j.Position.Y && Player.velocity.Y > 0)
-                                {
-                                    j.Kill();
-                                    Player.KnockBack(new Vector2(0, goombaForce));
-                                }
-                                else
-                                {
-                                    PlayerStats.TakeDamage(1, j);
-                                }
-                            }
                         }
                     }
                     //Add more dynamic entities here

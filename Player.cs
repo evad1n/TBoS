@@ -18,6 +18,8 @@ namespace The_Bond_of_Stone {
 
         float drag = .48f; //speed reduction (need this)
 
+        float goombaForce = -1000;
+
         //Particle production
         float particleFrequency = 0.065f;
 		float particleLifetime = 4.5f;
@@ -105,6 +107,8 @@ namespace The_Bond_of_Stone {
                 prevKeyboardState.IsKeyDown(Keys.Up)) &&
                 !wallJumped;
 
+            ResolveDynamicEntityCollisions();
+
             if (!Alive) {
                     Walled = false;
                     canStartJump = false;
@@ -169,6 +173,42 @@ namespace The_Bond_of_Stone {
             }
         }
 
+        public void ResolveDynamicEntityCollisions()
+        {
+            foreach (Entity e in Game1.dynamicEntities) {
+                //Collisions for Ground Enemies
+                if (e is GroundEnemy) {
+                    GroundEnemy g = (GroundEnemy)e;
+
+                    if (g != null && Rect.Intersects(g.Rect)) {
+                        if (g.Active) {
+                            if (Position.Y < g.Position.Y && velocity.Y > 0) {
+                                g.Kill();
+                                KnockBack(new Vector2(0, goombaForce));
+                            } else
+                                Game1.PlayerStats.TakeDamage(1, g);
+                        }
+                    }
+                } else if (e is JumpingEnemy) {
+                    JumpingEnemy j = (JumpingEnemy)e;
+
+                    if (j != null && Rect.Intersects(j.Rect))
+                    {
+                        if (j.Active)
+                        {
+                            if (Position.Y < j.Position.Y && velocity.Y > 0)
+                            {
+                                j.Kill();
+                                KnockBack(new Vector2(0, goombaForce));
+                            }
+                            else
+                                Game1.PlayerStats.TakeDamage(1, j);
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Applies all the physics (collisions, etc.) for the player.
         /// </summary>
@@ -187,7 +227,7 @@ namespace The_Bond_of_Stone {
 
             //Set the X and Y components of the velocity separately.
             velocity.X += motion * acceleration * elapsed;
-            velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, Game1.goombaForce, maxFallSpeed);
+            velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, goombaForce, maxFallSpeed);
 
             //Apply tertiary forces
             velocity.Y = DoJump(velocity.Y, gameTime);
