@@ -87,6 +87,14 @@ namespace The_Bond_of_Stone {
                 case "150 000 150 255":
                     tileID = 9; //spawns a ground enemy with a background tile
                     break;
+
+                case "255 076 000 255":
+                    tileID = 10; //spawns a spike tile
+                    break;
+
+                case "167 043 000 255":
+                    tileID = 11; //spawns a spike tile w/ bkd tile
+                    break;
             }
             return tileID;
         }

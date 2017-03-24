@@ -72,26 +72,30 @@ namespace The_Bond_of_Stone {
                     //Add the tile to the list, instantiate it
                     Tile tileToAdd = new Tile(atlas[y, x], new Rectangle(origin.X + (x * size + size), origin.Y + (y * size) - (yoffset * size), size, size));
 
+                    //ENTITY SPAWNING
                     if (atlas[y, x] == 6) {
-                        tileToAdd.ID = 0;
-                        atlas[y, x] = 0;
+                        tileToAdd.ID = atlas[y, x] = 0;
                         Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
                     } else if (atlas[y, x] == 7) {
-                        tileToAdd.ID = 2;
-                        atlas[y, x] = 2;
+                        tileToAdd.ID = atlas[y, x] = 2;
                         Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
-                    }
-                    else if(atlas[y, x] == 8)
-                    {
-                        tileToAdd.ID = 0;
-                        atlas[y, x] = 0;
+                    } else if(atlas[y, x] == 8) {
+                        tileToAdd.ID = atlas[y, x] = 0;
                         Game1.dynamicEntities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
-                    }
-                    else if(atlas[y, x] == 9)
-                    {
-                        tileToAdd.ID = 2;
-                        atlas[y, x] = 2;
+                    } else if(atlas[y, x] == 9) {
+                        tileToAdd.ID = atlas[y, x] = 2;
                         Game1.dynamicEntities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    } else if (atlas[y, x] == 10) {
+                        tileToAdd.ID = atlas[y, x] = 0;
+
+                        Entities.Add(new Spike(Graphics.HazardTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(x, y, atlas)));
+                    } else if (atlas[y, x] == 11) {
+                        tileToAdd.ID = atlas[y, x] = 2;
+
+                        float rotation;
+
+
+                        Entities.Add(new Spike(Graphics.HazardTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(x, y, atlas)));
                     }
 
                     Tiles.Add(tileToAdd);
@@ -180,6 +184,49 @@ namespace The_Bond_of_Stone {
             }
 
             Generated = true;
+        }
+
+        string GetSpikeRotation(int x, int y, int[,] atlas) {
+            bool[] adjacents = new bool[4];
+
+            if (atlas[y - 1, x] == 1 || atlas[y - 1, x] == 3 || atlas[y - 1, x] == 4 || atlas[y - 1, x] == 5)
+                adjacents[0] = true;
+            if (atlas[y, x - 1] == 1 || atlas[y, x - 1] == 3 || atlas[y, x - 1] == 4 || atlas[y, x - 1] == 5)
+                adjacents[1] = true;
+            if (atlas[y, x + 1] == 1 || atlas[y, x + 1] == 3 || atlas[y, x + 1] == 4 || atlas[y, x + 1] == 5)
+                adjacents[2] = true;
+            if (atlas[y + 1, x] == 1 || atlas[y + 1, x] == 3 || atlas[y + 1, x] == 4 || atlas[y + 1, x] == 5)
+                adjacents[3] = true;
+
+            string eval = "";
+
+            for(int i = 0; i < adjacents.Length; i++)
+            {
+                if (adjacents[i])
+                    eval += "1";
+                else
+                    eval += "0";
+            }
+
+            switch (eval)
+            {
+                case "1000":
+                    return "down";
+                case "0100":
+                    return "right";
+                case "0010":
+                    return "left";
+                case "1100":
+                    return "downright";
+                case "0011":
+                    return "upleft";
+                case "1010":
+                    return "downleft";
+                case "0101":
+                    return "upright";
+                default:
+                    return "";
+            }
         }
 
         public void Update(GameTime gameTime) {
