@@ -183,12 +183,20 @@ namespace The_Bond_of_Stone {
         }
 
         public void Update(GameTime gameTime) {
+            List<Entity> garbageEntities = new List<Entity>();
+            //Update static entities
             if (Entities.Count > 0) {
-                foreach (CoinPickup c in Entities)
-                {
+                foreach (CoinPickup c in Entities) {
                     c.Update(gameTime);
+
+                    if (!c.Active) {
+                        garbageEntities.Add(c);
+                    }
                 }
             }
+
+            foreach (Entity e in garbageEntities)
+                Entities.Remove(e);
         }
 
         public void Draw(SpriteBatch sb, Color color) {

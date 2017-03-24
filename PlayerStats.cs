@@ -20,7 +20,7 @@ namespace The_Bond_of_Stone {
 		public int ScoreMultiTicks = 0;
 		public int ScoreMultiplier = 1;
 
-        float distance;
+		float distance;
         public float Distance {
             get { return distance / Game1.TILE_SIZE; }
         }
@@ -48,8 +48,9 @@ namespace The_Bond_of_Stone {
 
             //Calculate scoring, time, and distance
             if (Player.Rect.Left > distance) {
-                Score = (int)((Math.Round(distance / Game1.TILE_SIZE, 1)) * ScoreMultiplier * 100);
-
+				Score = (int)((Math.Round(Distance, 1)) * ScoreMultiplier * 100);
+				
+				//	Score = (int)((Math.Round(distance / Game1.TILE_SIZE, 1)) * ScoreMultiplier * 100);
                 lastDistance = distance;
                 distance = Player.Rect.Left;
             }
