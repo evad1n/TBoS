@@ -411,6 +411,7 @@ namespace The_Bond_of_Stone {
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             foreach (ParallaxLayer pl in parallaxLayers)
                 pl.Draw(spriteBatch);
+            Camera.Draw(spriteBatch);
             spriteBatch.End();
 
             //Draw the foreground elements (Level, entities)

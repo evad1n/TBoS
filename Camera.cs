@@ -120,5 +120,11 @@ namespace The_Bond_of_Stone {
             }
             return v * speed;
         }
+
+        //For debugging
+        public void Draw(SpriteBatch sb)
+        {
+            sb.Draw(Graphics.DebugTexture, gameOverPath, Color.White);
+        }
     }
 }
