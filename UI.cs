@@ -265,23 +265,24 @@ namespace The_Bond_of_Stone {
 
 			for (int i = 0; i < 4; i++) {
 				if (i < Game1.PlayerStats.ScoreMultiTicks)
-					spriteBatch.Draw(Graphics.UI_MultiplierIndicators[0], new Rectangle((int)(Math.Floor(i / 2.0) * 10) + 55 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 * Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE,
-						Game1.PIXEL_SCALE * 20 + ((i % 2) * 10), Graphics.UI_MultiplierIndicators[0].Width, Graphics.UI_MultiplierIndicators[0].Height), Color.White);
+					spriteBatch.Draw(
+                        Graphics.UI_MultiplierIndicators[0], 
+                        new Rectangle(
+                            (int)(Math.Floor(i / 2.0) * (1 + Graphics.UI_MultiplierIndicators[0].Width) * Game1.PIXEL_SCALE) + 55 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 * Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE,
+						    Game1.PIXEL_SCALE * 20 + ((i % 2) * (1 + Graphics.UI_MultiplierIndicators[0].Height) * Game1.PIXEL_SCALE), 
+                            Graphics.UI_MultiplierIndicators[0].Width * Game1.PIXEL_SCALE, 
+                            Graphics.UI_MultiplierIndicators[0].Height * Game1.PIXEL_SCALE),
+                        Color.White);
 				if (i >= Game1.PlayerStats.ScoreMultiTicks)
-					spriteBatch.Draw(Graphics.UI_MultiplierIndicators[1], new Rectangle((int)(Math.Floor(i / 2.0) * 10) + 55 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 * Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE,
-						Game1.PIXEL_SCALE * 20 + ((i % 2) * 10), Graphics.UI_MultiplierIndicators[0].Width, Graphics.UI_MultiplierIndicators[0].Height), Color.White);
+					spriteBatch.Draw(
+                        Graphics.UI_MultiplierIndicators[1], 
+                        new Rectangle(
+                            (int)(Math.Floor(i / 2.0) * (1 + Graphics.UI_MultiplierIndicators[0].Width) * Game1.PIXEL_SCALE) + 55 + (int)(Math.Floor(Math.Log10(PlayerStats.Score)) + 1) * 7 * Game1.PIXEL_SCALE + (int)Graphics.Font_Main.MeasureString("Score ").X * Game1.PIXEL_SCALE,
+						    Game1.PIXEL_SCALE * 20 + ((i % 2) * (1 + Graphics.UI_MultiplierIndicators[0].Height) * Game1.PIXEL_SCALE), 
+                            Graphics.UI_MultiplierIndicators[0].Width * Game1.PIXEL_SCALE, 
+                            Graphics.UI_MultiplierIndicators[0].Height * Game1.PIXEL_SCALE), 
+                        Color.White);
 			}
-
-
-
-
-
-
-
-
-
-
-
 		}
 	}
 }
