@@ -43,6 +43,7 @@
     <Compile Include="Chunk.cs" />
     <Compile Include="CollisionHelper.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="FlyingEnemy.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="CoinPickup.cs" />
     <Compile Include="Graphics.cs" />

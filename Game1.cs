@@ -236,6 +236,11 @@ namespace The_Bond_of_Stone {
                 dynamicEntities.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
             }
 
+            if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.F))
+            {
+                dynamicEntities.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y - 50)));
+            }
+
             //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
             //    Camera.ScreenShake(3, 0.25f);
             //}
@@ -263,6 +268,15 @@ namespace The_Bond_of_Stone {
                         if (!j.Active)
                         {
                             garbageEntities.Add(j);
+                        }
+                    }
+                    else if (e is FlyingEnemy)
+                    {
+                        FlyingEnemy f = (FlyingEnemy)e;
+                        f.Update(gameTime);
+                        if (!f.Active)
+                        {
+                            garbageEntities.Add(f);
                         }
                     }
                     //Add more dynamic entities here

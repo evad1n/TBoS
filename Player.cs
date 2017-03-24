@@ -206,6 +206,24 @@ namespace The_Bond_of_Stone {
                         }
                     }
                 }
+                else if (e is FlyingEnemy)
+                {
+                    FlyingEnemy f = (FlyingEnemy)e;
+
+                    if (f != null && Rect.Intersects(f.Rect))
+                    {
+                        if (f.Active)
+                        {
+                            if (Position.Y < f.Position.Y && velocity.Y > 0)
+                            {
+                                f.Kill();
+                                KnockBack(new Vector2(0, goombaForce));
+                            }
+                            else
+                                Game1.PlayerStats.TakeDamage(1, f);
+                        }
+                    }
+                }
             }
         }
 
