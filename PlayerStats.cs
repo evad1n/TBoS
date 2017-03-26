@@ -162,6 +162,7 @@ namespace The_Bond_of_Stone {
             distance = 0;
             lastDistance = distance;
             Time = 0;
+            invulnerable = false;
 
             Health = MaxHealth;
             isAlive = true;
