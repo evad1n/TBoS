@@ -54,7 +54,7 @@ namespace The_Bond_of_Stone {
         List<Entity> GlobalEntities = new List<Entity>();
 
         //Splash screen stuff
-        public const bool SHOW_SPLASH_SCREEN = false;
+        public const bool SHOW_SPLASH_SCREEN = true;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
