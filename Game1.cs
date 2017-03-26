@@ -37,7 +37,7 @@ namespace The_Bond_of_Stone {
         public static KeyboardState keyboardState;
         public static KeyboardState prevKeyboardState;
         public static MouseState mouseState;
-        public static MouseState prevMoueState;
+        public static MouseState prevMouseState;
 
         //CONTENT
         Graphics LoadedGraphics;
@@ -162,7 +162,7 @@ namespace The_Bond_of_Stone {
             }
 
             prevKeyboardState = keyboardState;
-            prevMoueState = mouseState;
+            prevMouseState = mouseState;
 
             Interface.Update(gameTime);
 

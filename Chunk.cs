@@ -14,7 +14,15 @@ namespace The_Bond_of_Stone {
         //Linear list of tile data.
         public List<Tile> Tiles = new List<Tile>();
 
-        //Linear list of entitiy data.
+        //List of the tile IDs within the chunk, in a 2D array (for stitching and similar)
+        private int[,] atlas;
+
+        //Accessor for the list of tile IDs.
+        public int this [int x, int y] {
+            get { return atlas[x, y]; }
+        }
+
+        //Linear list of entity data.
         public List<Entity> Entities = new List<Entity>();
 
         //References to the start and end tiles of this chunk.
@@ -40,7 +48,7 @@ namespace The_Bond_of_Stone {
 
         //Starter generation
         public Chunk(string path, Rectangle origin) {
-            int[,] atlas = MapReader.ReadImage(path);
+            atlas = MapReader.ReadImage(path);
 
             this.origin = origin;
             Generate(atlas, Game1.TILE_SIZE);
