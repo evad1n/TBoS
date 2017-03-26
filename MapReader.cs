@@ -89,11 +89,19 @@ namespace The_Bond_of_Stone {
                     break;
 
                 case "255 076 000 255":
-                    tileID = 10; //spawns a spike tile
+                    tileID = 10; //spawns a vertical spike tile
                     break;
 
                 case "167 043 000 255":
-                    tileID = 11; //spawns a spike tile w/ bkd tile
+                    tileID = 11; //spawns a vertical spike tile w/ bkd tile
+                    break;
+
+                case "255 148 000 255":
+                    tileID = 12; //spawns a horizontal spike tile
+                    break;
+
+                case "167 090 000 255":
+                    tileID = 13; //spawns a horizontal spike tile w/ bkd tile
                     break;
             }
             return tileID;

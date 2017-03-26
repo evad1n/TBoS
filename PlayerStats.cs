@@ -21,6 +21,8 @@ namespace The_Bond_of_Stone {
         float flash;
         public Color invulnColor = Color.White;
 
+        float knockbackPower = 50f;
+
         public int Score = 0;
 		public int ScoreMultiTicks = 0;
 		public int ScoreMultiplier = 1;
@@ -131,7 +133,7 @@ namespace The_Bond_of_Stone {
             {
                 Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
                 knockback = Player.Position - e.Position;
-                Player.KnockBack(knockback * 200);
+                Player.KnockBack(knockback * knockbackPower);
                 invulnerable = true;
                 invulnerabilityTimer = 0f;
             }

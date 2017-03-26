@@ -52,6 +52,19 @@ namespace The_Bond_of_Stone
 					if (!IsPassable(t.ID) && rect.Intersects(toCheck))
 						return true;
 				}
+
+                //Check spikes in this chunk for collision as well
+                if (chunk.Entities.Count > 0) {
+                    foreach (Entity e in chunk.Entities) {
+                        if(e is Spike) {
+                            Spike s = (Spike)e;
+                            rect = s.Rect;
+
+                            if (rect.Intersects(toCheck))
+                                return true;
+                        }
+                    }
+                }
 			}
 
             //Otherwise, there is no collision.
@@ -134,6 +147,12 @@ namespace The_Bond_of_Stone
         /// <returns></returns>
         static Rectangle CreateDummyRectangle(Vector2 position, int width, int height) {
             return new Rectangle((int)position.X, (int)position.Y, width, height);
+        }
+
+        public static bool IsSolidTile(int id) {
+            if (solidIDs.Contains(id))
+                return true;
+            return false;
         }
     }
 }

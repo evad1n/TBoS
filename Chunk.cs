@@ -85,17 +85,20 @@ namespace The_Bond_of_Stone {
                     } else if(atlas[y, x] == 9) {
                         tileToAdd.ID = atlas[y, x] = 2;
                         Game1.dynamicEntities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
-                    } else if (atlas[y, x] == 10) {
+                    } else if (atlas[y, x] == 10 || atlas[y, x] == 12) {
+                        if (atlas[y, x] == 10) //adding a vertical spike
+                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
+                        else //adding a horizontal spike
+                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
+                        
                         tileToAdd.ID = atlas[y, x] = 0;
-
-                        Entities.Add(new Spike(Graphics.HazardTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(x, y, atlas)));
-                    } else if (atlas[y, x] == 11) {
+                    } else if (atlas[y, x] == 11 || atlas[y, x] == 13) {
+                        if (atlas[y, x] == 11) //adding a vertical spike
+                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
+                        else //adding a horizontal spike
+                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
+                        
                         tileToAdd.ID = atlas[y, x] = 2;
-
-                        float rotation;
-
-
-                        Entities.Add(new Spike(Graphics.HazardTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(x, y, atlas)));
                     }
 
                     Tiles.Add(tileToAdd);
@@ -186,59 +189,43 @@ namespace The_Bond_of_Stone {
             Generated = true;
         }
 
-        string GetSpikeRotation(int x, int y, int[,] atlas) {
+        FacingDirection GetSpikeRotation(bool horizontal, int x, int y, int[,] atlas) {
             bool[] adjacents = new bool[4];
 
-            if (atlas[y - 1, x] == 1 || atlas[y - 1, x] == 3 || atlas[y - 1, x] == 4 || atlas[y - 1, x] == 5)
+            if (y - 1 >= 0 && CollisionHelper.IsSolidTile(atlas[y - 1, x]))
                 adjacents[0] = true;
-            if (atlas[y, x - 1] == 1 || atlas[y, x - 1] == 3 || atlas[y, x - 1] == 4 || atlas[y, x - 1] == 5)
-                adjacents[1] = true;
-            if (atlas[y, x + 1] == 1 || atlas[y, x + 1] == 3 || atlas[y, x + 1] == 4 || atlas[y, x + 1] == 5)
+            if (x - 1 >= 0 && CollisionHelper.IsSolidTile(atlas[y, x - 1]))
                 adjacents[2] = true;
-            if (atlas[y + 1, x] == 1 || atlas[y + 1, x] == 3 || atlas[y + 1, x] == 4 || atlas[y + 1, x] == 5)
+            if (x + 1 < atlas.GetLength(1) && CollisionHelper.IsSolidTile(atlas[y, x + 1]))
+                adjacents[1] = true;
+            if (y + 1 < atlas.GetLength(0) && CollisionHelper.IsSolidTile(atlas[y + 1, x]))
                 adjacents[3] = true;
 
-            string eval = "";
-
-            for(int i = 0; i < adjacents.Length; i++)
-            {
-                if (adjacents[i])
-                    eval += "1";
-                else
-                    eval += "0";
-            }
-
-            switch (eval)
-            {
-                case "1000":
-                    return "down";
-                case "0100":
-                    return "right";
-                case "0010":
-                    return "left";
-                case "1100":
-                    return "downright";
-                case "0011":
-                    return "upleft";
-                case "1010":
-                    return "downleft";
-                case "0101":
-                    return "upright";
-                default:
-                    return "";
+            if (horizontal) {
+                if (adjacents[2])
+                    return FacingDirection.Right;
+                else if (adjacents[1])
+                    return FacingDirection.Left;
+                return 0;
+            } else {
+                if (adjacents[0])
+                    return FacingDirection.Down;
+                else if (adjacents[3])
+                    return FacingDirection.Up;
+                return FacingDirection.Up;
             }
         }
 
         public void Update(GameTime gameTime) {
             List<Entity> garbageEntities = new List<Entity>();
             //Update static entities
-            if (Entities.Count > 0) {
-                foreach (CoinPickup c in Entities) {
-                    c.Update(gameTime);
+            foreach(Entity e in Entities) {
+                if (!e.Active)
+                    garbageEntities.Add(e);
 
-                    if (!c.Active) {
-                        garbageEntities.Add(c);
-                    }
+                if(e is CoinPickup) {
+                    CoinPickup c = (CoinPickup)e;
+                    c.Update(gameTime);
                 }
             }
 

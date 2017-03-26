@@ -248,38 +248,26 @@ namespace The_Bond_of_Stone {
             List<Entity> garbageEntities = new List<Entity>();
 
             //Update enemies
-            if (dynamicEntities.Count > 0)
-            {
-                foreach (Entity e in dynamicEntities)
-                {
-                    if (e is GroundEnemy)
-                    {
+            if (dynamicEntities.Count > 0) {
+                foreach (Entity e in dynamicEntities) {
+                    if (e is GroundEnemy) {
                         GroundEnemy g = (GroundEnemy)e;
                         g.Update(gameTime);
-                        if (!g.Active)
-                        {
-                            garbageEntities.Add(g);
-                        }
-                    }
-                    else if (e is JumpingEnemy)
-                    {
+                        
+                    } else if (e is JumpingEnemy) {
                         JumpingEnemy j = (JumpingEnemy)e;
                         j.Update(gameTime);
-                        if (!j.Active)
-                        {
-                            garbageEntities.Add(j);
-                        }
-                    }
-                    else if (e is FlyingEnemy)
-                    {
+
+                    } else if (e is FlyingEnemy) {
                         FlyingEnemy f = (FlyingEnemy)e;
                         f.Update(gameTime);
-                        if (!f.Active)
-                        {
-                            garbageEntities.Add(f);
-                        }
+
                     }
                     //Add more dynamic entities here
+
+                    if (!e.Active) {
+                        garbageEntities.Add(e);
+                    }
                 }
 
                 foreach (Entity e in garbageEntities)

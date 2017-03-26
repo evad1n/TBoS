@@ -29,7 +29,10 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] PickupTexture_Coin;
 
         public static Texture2D[] EnemySlugTextures;
-        public static Texture2D[] HazardTextures;
+        public static Texture2D[] Spike_Up;
+        public static Texture2D[] Spike_Down;
+        public static Texture2D[] Spike_Left;
+        public static Texture2D[] Spike_Right;
 
         //UI
         public static Texture2D[] UI_Hearts;
@@ -75,7 +78,10 @@ namespace The_Bond_of_Stone {
             PlayerWalkTextures = PopulateTextureArray("playerWalk", 4, @"graphics\entities\");
 
             EnemySlugTextures = PopulateTextureArray("enemySlug", 5, @"graphics\entities\");
-            HazardTextures = PopulateTextureArray("hazard", 2, @"graphics\entities\");
+            Spike_Up = PopulateTextureArray("spike_0", 3, @"graphics\entities\");
+            Spike_Down = PopulateTextureArray("spike_2", 3, @"graphics\entities\");
+            Spike_Left = PopulateTextureArray("spike_1", 3, @"graphics\entities\");
+            Spike_Right = PopulateTextureArray("spike_3", 3, @"graphics\entities\");
 
             Effect_PlayerParticlesBottom = PopulateTextureArray("playerParticles_0", 3, @"graphics\entities\");
             Effect_PlayerParticlesLeft = PopulateTextureArray("playerParticles_2", 3, @"graphics\entities\");

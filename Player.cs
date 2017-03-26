@@ -165,10 +165,29 @@ namespace The_Bond_of_Stone {
             else
                 airTime = 0;
 
+            //Collect coins if necessary
             if (CurrentChunk != null && CurrentChunk.Entities.Count > 0) {
-                foreach (CoinPickup gp in CurrentChunk.Entities) {
-                    if (gp != null && Rect.Intersects(gp.Rect))
-                        gp.Collect();
+                foreach (Entity e in CurrentChunk.Entities) {
+                    if(e is CoinPickup) {
+                        CoinPickup c = (CoinPickup)e;
+
+                        if (c != null && Rect.Intersects(c.Rect))
+                            c.Collect();
+                    }else if(e is Spike) {
+                        Spike s = (Spike)e;
+
+                        //If the player is touching this spike...
+                        if (s != null && Rect.Intersects(s.HitRect)) {
+                            //Check if the player should be hurt by this spike based on its facing direction
+                            if ((s.Facing == FacingDirection.Up && Rect.Bottom <= s.Rect.Top) ||
+                               (s.Facing == FacingDirection.Left && Rect.Right <= s.Rect.Left) ||
+                               (s.Facing == FacingDirection.Down && Rect.Top >= s.Rect.Bottom) ||
+                               (s.Facing == FacingDirection.Right && Rect.Left >= s.Rect.Right)) {
+                                Game1.PlayerStats.TakeDamage(1, s);
+                                Console.WriteLine(s.Facing.ToString());
+                            }
+                        }
+                    }
                 }
             }
         }
