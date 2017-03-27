@@ -8,6 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// The player class. Allows the player to move throughout the world and interprets collisions and entity interactions.
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     public class Player : Entity {
 
         //PHYSICS

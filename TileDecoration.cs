@@ -7,6 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Represents the vines, grasses, rocks, and other decorations that appear randomly on tiles.
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     public class TileDecoration {
         private Texture2D texture;
         public Texture2D Texture {

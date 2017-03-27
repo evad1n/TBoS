@@ -9,7 +9,10 @@ namespace The_Bond_of_Stone {
     public enum GameState { SplashScreen, MainMenu, Playing, Pause, GameOver };
 
     /// <summary>
-    /// This is the main type for your game.
+    /// Main type. Handles drawing, initialization, and updates based on the State parameter, and also holds various static
+    /// members that are intermittently referenced throughout the code.
+    /// 
+    /// By Dom Liotti, Noah Bock, and Will Dickinson
     /// </summary>
     public class Game1 : Game {
         //BASIC

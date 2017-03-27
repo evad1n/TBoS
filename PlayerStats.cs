@@ -6,6 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Holds meta-information about the player not directly related to its motor functions.
+    /// 
+    /// By Noah Bock and Dom Liotti
+    /// </summary>
     public class PlayerStats {
         public Player Player;
 

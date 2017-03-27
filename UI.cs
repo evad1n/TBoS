@@ -8,6 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// UI class draws UI (static) elements to the screen given a gamestate from Game1.
+    /// 
+    /// By Noah Bock and Dom Liotti
+    /// </summary>
     public class UI {
         public PlayerStats PlayerStats;
 

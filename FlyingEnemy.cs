@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
+    /// <summary>
+    /// A hostile entity that roves in a vertical column, and switches direction when it hits a wall. (WIP)
+    /// 
+    /// By Will Dickinson
+    /// </summary>
     class FlyingEnemy : Entity
     {
         float speed = 100f;

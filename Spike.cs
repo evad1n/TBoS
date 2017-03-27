@@ -10,6 +10,11 @@ namespace The_Bond_of_Stone
 {
     public enum FacingDirection { Up, Left, Down, Right };
 
+    /// <summary>
+    /// A static hazard which hurts the player if it comes in contact with the "business end"
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     class Spike : Entity
     {
         public FacingDirection Facing;

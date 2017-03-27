@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
+    /// <summary>
+    /// A hostile entity that walks along a flat surface, and switches direction when it hits a wall or gap. (WIP)
+    /// 
+    /// By Will Dickinson
+    /// </summary>
     class GroundEnemy : Entity
     {
         float speed = 50f;

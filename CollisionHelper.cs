@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
+    /// <summary>
+    /// Very important class with static methods which help us determine where collisions occur
+    /// and how they should be resolved.
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     public static class CollisionHelper
     {
         /// <summary>

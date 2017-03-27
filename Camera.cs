@@ -4,7 +4,9 @@ using MonoGame.Extended;
 
 namespace The_Bond_of_Stone {
     /// <summary>
-    /// Camera is a library-free implementation of MonogameExtended's Camera2D.
+    /// Extension of monogame2D's Camera2D. Has extra functionality for following the player and other goodies.
+    /// 
+    /// By Will Dickinson
     /// </summary>
     public class Camera : Camera2D {
         public Rectangle Rect { get; set; }

@@ -7,6 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Basic extendable "not-a-tile" class. Draws a texture and has a rectangle.
+    /// 
+    /// By Dom Liotti and Will Dickinson
+    /// </summary>
     public class Entity {
 
         //The entity's texture

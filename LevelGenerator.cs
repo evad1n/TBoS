@@ -7,6 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Main engine for the world generation. Manages chunks and generation data.
+    /// 
+    /// By Dom Liotti and Will Dickinson
+    /// </summary>
     public class LevelGenerator {
         Camera Camera;
 

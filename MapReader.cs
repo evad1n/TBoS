@@ -7,6 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Reads and interprets image map files for passing between the chunk generator and the chunk itself.
+    /// 
+    /// By Dom Liotti and Will Dickinson
+    /// </summary>
     public static class MapReader {
 
         /// <summary>

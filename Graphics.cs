@@ -3,6 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Loads in ALL of the game's graphics in a static context for lightweight reference from anywhere in the codebase.
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     class Graphics {
         //BASIC
         ContentManager Content;

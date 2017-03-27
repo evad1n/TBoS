@@ -7,6 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// A tile in the world. 
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     public class Tile {
         //The order of precedence of this tile when drawing.
         public int DrawQueue { get; set; }

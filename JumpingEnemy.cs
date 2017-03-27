@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
+    /// <summary>
+    /// A hostile entity that acts just like the ground enemy, but hops (koopa troopa) instead of walking (WIP).
+    /// 
+    /// By Will Dickinson
+    /// </summary>
     class JumpingEnemy : Entity
     {
         float speed = 100f;

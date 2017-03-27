@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
     /// <summary>
-    /// Represents a chunk's tile data.
+    /// Represents a chunk's tile data, and is capable of drawing and generating a chunk from image data.
+    /// 
+    /// By Dom Liotti and Chip Butler
     /// </summary>
     public class Chunk {
         //Linear list of tile data.
