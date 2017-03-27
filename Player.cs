@@ -183,14 +183,8 @@ namespace The_Bond_of_Stone {
 
                         //If the player is touching this spike...
                         if (s != null && Rect.Intersects(s.HitRect)) {
-                            //Check if the player should be hurt by this spike based on its facing direction
-                            if ((s.Facing == FacingDirection.Up && Rect.Bottom <= s.Rect.Top) ||
-                               (s.Facing == FacingDirection.Left && Rect.Right <= s.Rect.Left) ||
-                               (s.Facing == FacingDirection.Down && Rect.Top >= s.Rect.Bottom) ||
-                               (s.Facing == FacingDirection.Right && Rect.Left >= s.Rect.Right)) {
-                                Game1.PlayerStats.TakeDamage(1, s);
-                                Console.WriteLine(s.Facing.ToString());
-                            }
+                            //Take damage
+                            Game1.PlayerStats.TakeDamage(1, s);
                         }
                     }
                 }
