@@ -47,12 +47,14 @@ namespace The_Bond_of_Stone {
 
         public static SpriteFont Font_Main;
         public static SpriteFont Font_Small;
+        public static SpriteFont Font_Outlined;
 
         //OTHER
         public static Texture2D EmptyTexture;
         public static Texture2D BlackTexture;
         public static Texture2D DebugTexture;
         public static Texture2D[] ParallaxLayers;
+        public static Texture2D Overlay;
 
         /// <summary>
         /// Loads all of the game's graphical content into static memory for
@@ -92,6 +94,7 @@ namespace The_Bond_of_Stone {
             EmptyTexture = Content.Load<Texture2D>(@"graphics\empty");
             BlackTexture = Content.Load<Texture2D>(@"graphics\ui\black");
             DebugTexture = Content.Load<Texture2D>(@"graphics\debug");
+            Overlay = Content.Load<Texture2D>(@"graphics\overlay");
 
             UI_Hearts = PopulateTextureArray("heart", 3, @"graphics\ui\");
             UI_MultiplierIndicators = PopulateTextureArray("multiplierIndicator", 2, @"graphics\ui\");
@@ -101,6 +104,7 @@ namespace The_Bond_of_Stone {
 
             Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");
+            Font_Outlined = Content.Load<SpriteFont>(@"graphics\ui\font_outlined");
 
             Logo = Content.Load<Texture2D>(@"graphics\ui\logo");
             Title = Content.Load<Texture2D>(@"graphics\ui\title");

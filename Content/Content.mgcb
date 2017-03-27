@@ -1793,3 +1793,23 @@
 /processorParam:TextureFormat=Color
 /build:graphics/entities/spike_3_2.png
 
+#begin graphics/ui/font_outlined.png
+/importer:TextureImporter
+/processor:FontTextureProcessor
+/processorParam:FirstCharacter= 
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Color
+/build:graphics/ui/font_outlined.png
+
+#begin graphics/overlay.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:graphics/overlay.png
+

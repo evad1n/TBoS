@@ -216,6 +216,7 @@ namespace The_Bond_of_Stone {
             }
 
 
+            /*
             //Testing things
             if(keyboardState.IsKeyDown(Keys.H) && prevKeyboardState.IsKeyUp(Keys.H)) {
                 PlayerStats.TakeDamage(1);
@@ -240,6 +241,7 @@ namespace The_Bond_of_Stone {
             {
                 dynamicEntities.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y - 50)));
             }
+            */
 
             //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
             //    Camera.ScreenShake(3, 0.25f);
@@ -402,7 +404,7 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPause(GameTime gameTime, Color color) {
-            DrawPlaying(gameTime, color);
+            DrawPlaying(gameTime, Color.White);
         }
 
         /// <summary>
@@ -410,7 +412,7 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawGameOver(GameTime gameTime, Color color) {
-            DrawPlaying(gameTime, color);
+            DrawPlaying(gameTime, Color.White);
         }
 
         /// <summary>

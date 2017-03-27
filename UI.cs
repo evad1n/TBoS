@@ -20,6 +20,16 @@ namespace The_Bond_of_Stone {
         bool isGrowing;
         float currentScale;
 
+        string instructions = 
+            "                              Press Enter to Start the game.\n\n" +
+            "                 Use A and D or the left and right arrow keys to move.\n" + 
+            "              Use the W or Up arrow key to jump. Hold it to jump higher.\n" +
+            "           When touching a wall, press W or the Up arrow key to jump again.\n\n" + 
+            "                     Increase your score multiplier by collecting coins.\n" + 
+            "                      If you miss a coin, your multiplier returns to 1.\n\n" + 
+            "Press Escape in-game to pause. While paused, press Enter to return to this menu.\n" +
+            "                     Press Escape to restart the game when you die.";
+
 
         //Splash screen stuff
         float splashScreenDuration = 10f;
@@ -85,6 +95,11 @@ namespace The_Bond_of_Stone {
                             ), 
                         Color.White);
 
+                    spriteBatch.DrawString(Graphics.Font_Outlined,
+                        instructions,
+                        new Vector2(viewport.Width / 2 - Graphics.Font_Outlined.MeasureString(instructions).X, viewport.Height / 2),
+                        Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 0);
+
                     break;
 
                 case GameState.Playing:
@@ -103,8 +118,10 @@ namespace The_Bond_of_Stone {
 					break;
 
                 case GameState.Pause:
-					//Draw the player's score
-					DrawScore(spriteBatch);
+                    spriteBatch.Draw(Graphics.Overlay, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
+
+                    //Draw the player's score
+                    DrawScore(spriteBatch);
 
 					//Draw the player's time and distance
 					DrawTechnicalScores(spriteBatch);
@@ -114,7 +131,7 @@ namespace The_Bond_of_Stone {
 
 					DrawMultiplier(spriteBatch, gameTime);
 
-					spriteBatch.DrawString(
+                    spriteBatch.DrawString(
                         Graphics.Font_Main,
                         "PAUSED",
                         new Vector2(viewport.Width / 2 - Graphics.Font_Main.MeasureString("Game Over").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 - Graphics.Font_Main.MeasureString("Game Over").Y * Game1.PIXEL_SCALE / 2),
@@ -173,10 +190,13 @@ namespace The_Bond_of_Stone {
 		}
 
 		private void DrawTechnicalScores(SpriteBatch spriteBatch) {
-			spriteBatch.DrawString(
-			Graphics.Font_Small,
-			"Time " + PlayerStats.Time.ToString("0.0") + " Dist " + PlayerStats.Distance.ToString("0.0"),
-			new Vector2(Game1.PIXEL_SCALE * 5, (Graphics.UI_Hearts[0].Height + Graphics.Font_Main.LineSpacing + 7) * Game1.PIXEL_SCALE),
+            string s = "Time " + PlayerStats.Time.ToString("0.0") + " Dist " + PlayerStats.Distance.ToString("0.0");
+
+
+            spriteBatch.DrawString(
+            Graphics.Font_Small,
+            s,
+            new Vector2(viewport.Width / 2 - Graphics.Font_Small.MeasureString(s).X * Game1.PIXEL_SCALE / 2, viewport.Height - (Graphics.Font_Small.MeasureString(s).Y / 2 + 20)),
 			Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
 		}
 
