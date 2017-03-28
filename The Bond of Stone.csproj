@@ -39,6 +39,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Button.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="CollisionHelper.cs" />
