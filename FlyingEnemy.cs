@@ -66,7 +66,14 @@ namespace The_Bond_of_Stone
             wallRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y - yOffset, Game1.TILE_SIZE, Game1.TILE_SIZE);
             nextChunk = Game1.Generator.GetEntityChunkID(gapRect);
 
-            velocity = Move(Position, Game1.PlayerStats.Player.Position, speed);
+            if (Game1.PlayerStats.IsAlive)
+            {
+                velocity = Move(Position, Game1.PlayerStats.Player.Position, speed);
+            }
+            else
+            {
+                velocity = Move(Position, Game1.Camera.Origin, speed);
+            }
 
             //Check for pathfinding (gaps and walls)
             if ((!CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) || CollisionHelper.IsCollidingWithChunk(nextChunk, wallRect)))
@@ -115,7 +122,7 @@ namespace The_Bond_of_Stone
             //Move the player and correct for collisions
             Position += velocity * elapsed;
 
-            if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
+            if (CurrentChunk != null)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
 
 

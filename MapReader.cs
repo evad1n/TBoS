@@ -108,6 +108,22 @@ namespace The_Bond_of_Stone {
                 case "167 090 000 255":
                     tileID = 13; //spawns a horizontal spike tile w/ bkd tile
                     break;
+
+                case "000 239 207 255":
+                    tileID = 14; //spawns a jumping enemy without a background tile
+                    break;
+
+                case "000 155 134 255":
+                    tileID = 15; //spawns a jumping enemy with a background tile
+                    break;
+
+                case "102 000 255 255":
+                    tileID = 16; //spawns a flying enemy without a background tile
+                    break;
+
+                case "060 000 150 255":
+                    tileID = 17; //spawns a flying enemy with a background tile
+                    break;
             }
             return tileID;
         }

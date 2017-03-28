@@ -47,12 +47,11 @@ namespace The_Bond_of_Stone {
         public static LevelGenerator Generator;
         public static Camera Camera;
         public static UI Interface;
+        public static EntityManager Entities;
         public static ScoreManager Score;
 
         Player Player;
         public static PlayerStats PlayerStats;
-
-        public static List<Entity> dynamicEntities;
 
         ParallaxLayer[] parallaxLayers;
         List<Entity> GlobalEntities = new List<Entity>();
@@ -75,7 +74,6 @@ namespace The_Bond_of_Stone {
             State = GameState.SplashScreen;
 
             parallaxLayers = new ParallaxLayer[2];
-            dynamicEntities = new List<Entity>();
 
             playerStartPos = new Vector2(64, 64);
             chunkStartPos = new Rectangle(
@@ -114,6 +112,7 @@ namespace The_Bond_of_Stone {
             Camera = new Camera(GraphicsDevice, Player, cameraSpeed);
             Generator = new LevelGenerator(graphics, chunkStartPos);
             Score = new ScoreManager();
+            Entities = new EntityManager(Camera);
 
             Generator.DoStarterGeneration();
             Camera.Reset();
@@ -258,34 +257,7 @@ namespace The_Bond_of_Stone {
             //    Camera.ScreenShake(3, 0.25f);
             //}
 
-            List<Entity> garbageEntities = new List<Entity>();
-
-            //Update enemies
-            if (dynamicEntities.Count > 0) {
-                foreach (Entity e in dynamicEntities) {
-                    if (e is GroundEnemy) {
-                        GroundEnemy g = (GroundEnemy)e;
-                        g.Update(gameTime);
-                        
-                    } else if (e is JumpingEnemy) {
-                        JumpingEnemy j = (JumpingEnemy)e;
-                        j.Update(gameTime);
-
-                    } else if (e is FlyingEnemy) {
-                        FlyingEnemy f = (FlyingEnemy)e;
-                        f.Update(gameTime);
-
-                    }
-                    //Add more dynamic entities here
-
-                    if (!e.Active) {
-                        garbageEntities.Add(e);
-                    }
-                }
-
-                foreach (Entity e in garbageEntities)
-                    dynamicEntities.Remove(e);
-            }
+            Entities.Update(gameTime, State);
 
             //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
             Generator.UpdateChunkGeneration();
@@ -330,6 +302,8 @@ namespace The_Bond_of_Stone {
 
             foreach (Chunk map in Generator.Chunks)
                 map.Update(gameTime); //Update each active chunk
+
+            Entities.Update(gameTime, State);
 
             //Reset on an ESC key press.
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
@@ -398,13 +372,9 @@ namespace The_Bond_of_Stone {
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
             foreach (Chunk map in Generator.Chunks)
                 map.Draw(spriteBatch, color); //Draw each active chunk
-            
+
             //Draw enemies
-            if (dynamicEntities.Count > 0)
-            {
-                foreach (Entity g in dynamicEntities)
-                    g.Draw(spriteBatch, Color.White);
-            }
+            Entities.Draw(spriteBatch, State);
 
             Player.Draw(spriteBatch, PlayerStats.invulnColor);
             spriteBatch.End();
@@ -434,7 +404,7 @@ namespace The_Bond_of_Stone {
             Generator.Restart();
 
             //Clear Enemies
-            dynamicEntities.Clear();
+            Entities.entities.Clear();
 
             //Reset the player and camera
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);

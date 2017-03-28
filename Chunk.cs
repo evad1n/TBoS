@@ -83,31 +83,62 @@ namespace The_Bond_of_Stone {
                     Tile tileToAdd = new Tile(atlas[y, x], new Rectangle(origin.X + (x * size + size), origin.Y + (y * size) - (yoffset * size), size, size));
 
                     //ENTITY SPAWNING
-                    if (atlas[y, x] == 6) {
+                    if (atlas[y, x] == 6)
+                    {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
-                    } else if (atlas[y, x] == 7) {
+                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
+                    }
+                    else if (atlas[y, x] == 7)
+                    {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
-                    } else if(atlas[y, x] == 8) {
+                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
+                    }
+                    else if (atlas[y, x] == 8)
+                    {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.dynamicEntities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
-                    } else if(atlas[y, x] == 9) {
+                        Game1.Entities.entities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 9)
+                    {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.dynamicEntities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
-                    } else if (atlas[y, x] == 10 || atlas[y, x] == 12) {
+                        Game1.Entities.entities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 14)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 0;
+                        Game1.Entities.entities.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 15)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.entities.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 16)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 0;
+                        Game1.Entities.entities.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 17)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.entities.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 10 || atlas[y, x] == 12)
+                    {
                         if (atlas[y, x] == 10) //adding a vertical spike
                             Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
                         else //adding a horizontal spike
                             Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
-                        
+
                         tileToAdd.ID = atlas[y, x] = 0;
-                    } else if (atlas[y, x] == 11 || atlas[y, x] == 13) {
+                    }
+                    else if (atlas[y, x] == 11 || atlas[y, x] == 13)
+                    {
                         if (atlas[y, x] == 11) //adding a vertical spike
                             Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
                         else //adding a horizontal spike
                             Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
-                        
+
                         tileToAdd.ID = atlas[y, x] = 2;
                     }
 

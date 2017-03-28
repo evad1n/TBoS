@@ -193,7 +193,7 @@ namespace The_Bond_of_Stone {
 
         public void ResolveDynamicEntityCollisions()
         {
-            foreach (Entity e in Game1.dynamicEntities) {
+            foreach (Entity e in Game1.Entities.entities) {
                 //Collisions for Ground Enemies
                 if (e is GroundEnemy) {
                     GroundEnemy g = (GroundEnemy)e;
