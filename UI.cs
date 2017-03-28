@@ -13,10 +13,15 @@ namespace The_Bond_of_Stone {
     /// 
     /// By Noah Bock and Dom Liotti
     /// </summary>
+    /// 
+
+    public enum MenuState { None, HighScore };
     public class UI {
         public PlayerStats PlayerStats;
 
         public Viewport viewport;
+
+        MenuState MainMenuState = MenuState.None;
 
         float multiplierScaleFactor = 0.1f;
         float multiplierGrowTime = 0.15f;
@@ -24,17 +29,6 @@ namespace The_Bond_of_Stone {
 
         bool isGrowing;
         float currentScale;
-
-        string instructions = 
-            "                              Press Enter to Start the game.\n\n" +
-            "                 Use A and D or the left and right arrow keys to move.\n" + 
-            "              Use the W or Up arrow key to jump. Hold it to jump higher.\n" +
-            "           When touching a wall, press W or the Up arrow key to jump again.\n\n" + 
-            "                     Increase your score multiplier by collecting coins.\n" + 
-            "                      If you miss a coin, your multiplier returns to 1.\n\n" + 
-            "Press Escape in-game to pause. While paused, press Enter to return to this menu.\n" +
-            "                     Press Escape to restart the game when you die.";
-
 
         //Splash screen stuff
         float splashScreenDuration = 10f;
@@ -54,7 +48,7 @@ namespace The_Bond_of_Stone {
             fadeIncrement = -255 / fadeSpeed;
         }
 
-        public void Update(GameTime gameTime) {
+        public void Update(GameTime gameTime, GameState state) {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (ssTimer < splashScreenDuration) {
 
@@ -75,6 +69,7 @@ namespace The_Bond_of_Stone {
                     fading = true;
             }
 
+
             if (fading) {
                 alphaValue += elapsed * fadeIncrement;
 
@@ -90,20 +85,73 @@ namespace The_Bond_of_Stone {
                     break;
 
                 case GameState.MainMenu:
-                    spriteBatch.Draw(
-                        Graphics.Title,
-                        new Rectangle(
-                            viewport.Width / 2 - Graphics.Title.Width * Game1.PIXEL_SCALE / 2,
-                            3 * Game1.PIXEL_SCALE,
-                            Graphics.Title.Width * Game1.PIXEL_SCALE,
-                            Graphics.Title.Height * Game1.PIXEL_SCALE
-                            ), 
-                        Color.White);
+                    switch (MainMenuState)
+                    {
+                        case MenuState.None:
+                            spriteBatch.Draw(
+                                Graphics.Title,
+                                new Rectangle(
+                                    viewport.Width / 2 - Graphics.Title.Width * Game1.PIXEL_SCALE / 2,
+                                    3 * Game1.PIXEL_SCALE,
+                                    Graphics.Title.Width * Game1.PIXEL_SCALE,
+                                    Graphics.Title.Height * Game1.PIXEL_SCALE
+                                ),
+                                Color.White);
+                            break;
 
-                    spriteBatch.DrawString(Graphics.Font_Outlined,
-                        instructions,
-                        new Vector2(viewport.Width / 2 - Graphics.Font_Outlined.MeasureString(instructions).X, viewport.Height / 2),
-                        Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 0);
+                        case MenuState.HighScore:
+                            spriteBatch.Draw(
+                                Graphics.HighScoreTextures[0],
+                                new Rectangle(
+                                    viewport.Width / 2 - Graphics.HighScoreTextures[0].Width * Game1.PIXEL_SCALE / 2,
+                                    3 * Game1.PIXEL_SCALE,
+                                    Graphics.HighScoreTextures[0].Width * Game1.PIXEL_SCALE,
+                                    Graphics.HighScoreTextures[0].Height * Game1.PIXEL_SCALE
+                                    ),
+                                Color.White);
+
+                            Rectangle firstRect = new Rectangle();
+
+                            for (int i = 0; i < Game1.Score.Score.Count; i++)
+                            {
+
+                                Rectangle rect = new Rectangle(
+                                        viewport.Width / 2 - Graphics.HighScoreTextures[0].Width * Game1.PIXEL_SCALE / 2,
+                                        (15 * Game1.PIXEL_SCALE + Graphics.HighScoreTextures[0].Height * Game1.PIXEL_SCALE) + (i * ((int)Graphics.Font_Main.MeasureString(" ").Y + 3) * Game1.PIXEL_SCALE),
+                                        Graphics.HighScoreTextures[0].Width * Game1.PIXEL_SCALE,
+                                        ((int)Graphics.Font_Main.MeasureString(" ").Y + 1) * Game1.PIXEL_SCALE + Game1.PIXEL_SCALE
+                                        );
+                                if (i == 0)
+                                    firstRect = rect;
+
+                                //Draw a background and the highscore
+                                spriteBatch.Draw(
+                                    Graphics.MenuBackground,
+                                    rect,
+                                    Color.White);
+
+                                string s = string.Format("{0:#,###0}", Game1.Score.Score[i]);
+                                Vector2 mSize = Graphics.Font_Main.MeasureString(s);
+                                Vector2 sSize = Graphics.Font_Small.MeasureString((i + 1) + ". " + s);
+
+                                if (i == 0)
+                                {
+                                    spriteBatch.DrawString(Graphics.Font_Main, s, new Vector2(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2, rect.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+                                    firstRect.X = (int)(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2);
+                                }
+                                else
+                                    spriteBatch.DrawString(Graphics.Font_Small, (i + 1) + ". " + s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+                            }
+
+                            spriteBatch.Draw(
+                                texture: Graphics.HighScoreTextures[1],
+                                destinationRectangle: new Rectangle(firstRect.X - Graphics.HighScoreTextures[1].Width - 3 * Game1.PIXEL_SCALE, firstRect.Y - ((Graphics.HighScoreTextures[1].Height - 4) * Game1.PIXEL_SCALE), Graphics.HighScoreTextures[1].Width * Game1.PIXEL_SCALE, Graphics.HighScoreTextures[1].Height * Game1.PIXEL_SCALE),
+                                color: Color.White,
+                                rotation: -0.2f);
+
+                            break;
+                    }
+                    
 
                     break;
 

@@ -47,6 +47,7 @@ namespace The_Bond_of_Stone {
         public static LevelGenerator Generator;
         public static Camera Camera;
         public static UI Interface;
+        public static ScoreManager Score;
 
         Player Player;
         public static PlayerStats PlayerStats;
@@ -112,6 +113,7 @@ namespace The_Bond_of_Stone {
             Interface = new UI(PlayerStats, GraphicsDevice.Viewport);
             Camera = new Camera(GraphicsDevice, Player, cameraSpeed);
             Generator = new LevelGenerator(graphics, chunkStartPos);
+            Score = new ScoreManager();
 
             Generator.DoStarterGeneration();
             Camera.Reset();
@@ -127,6 +129,12 @@ namespace The_Bond_of_Stone {
         /// </summary>
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
+        }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            Score.RewriteFile();
+            base.OnExiting(sender, args);
         }
 
         /// <summary>
@@ -167,7 +175,7 @@ namespace The_Bond_of_Stone {
             prevKeyboardState = keyboardState;
             prevMouseState = mouseState;
 
-            Interface.Update(gameTime);
+            Interface.Update(gameTime, State);
 
             base.Update(gameTime);
         }

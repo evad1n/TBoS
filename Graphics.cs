@@ -48,7 +48,10 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] SplashScreenGraphics;
         public static Texture2D Title;
         public static Texture2D[] MainMenuGraphics;
+        public static Texture2D MenuBackground;
         public static Texture2D[] Icons;
+
+        public static Texture2D[] HighScoreTextures;
 
         public static SpriteFont Font_Main;
         public static SpriteFont Font_Small;
@@ -114,6 +117,8 @@ namespace The_Bond_of_Stone {
             Logo = Content.Load<Texture2D>(@"graphics\ui\logo");
             Title = Content.Load<Texture2D>(@"graphics\ui\title");
             SplashScreenGraphics = PopulateTextureArray("splashscreen", 1, @"graphics\ui\");
+            HighScoreTextures = PopulateTextureArray("highscore", 2, @"graphics\ui\");
+            MenuBackground = Content.Load<Texture2D>(@"graphics\ui\menuBackground");
         }
 
         /// <summary>
