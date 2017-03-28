@@ -158,9 +158,14 @@ namespace The_Bond_of_Stone {
 
 		//Just sets isAlive to false.
 		public void Die() {
-            isAlive = false;
 
-            Game1.Score.AddScore(Score);
+			if (isAlive) {
+				Game1.Score.mostRecentScore = Score;
+				Game1.Score.AddScore(Score);
+			}
+
+			isAlive = false;
+			
         }
 
         //Resets this object to its default values.

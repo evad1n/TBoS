@@ -12,6 +12,8 @@ namespace The_Bond_of_Stone
         public List<int> Score = new List<int>();
         int numHighScores = 10;
 
+		public int mostRecentScore;
+
         public ScoreManager() {
             //Read from the hs.dat file and populate the highscore list
             using(BinaryReader reader = new BinaryReader(File.Open("hs.dat", FileMode.OpenOrCreate))) {

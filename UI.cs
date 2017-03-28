@@ -21,7 +21,7 @@ namespace The_Bond_of_Stone {
 
         public Viewport viewport;
 
-        MenuState MainMenuState = MenuState.None;
+        MenuState MainMenuState = MenuState.HighScore;
 
         float multiplierScaleFactor = 0.1f;
         float multiplierGrowTime = 0.15f;
@@ -40,6 +40,8 @@ namespace The_Bond_of_Stone {
         bool fading;
 
         public bool DoneWithSplashScreen = false;
+
+		bool firstScoreDraw = true;
 
         public UI(PlayerStats playerStats, Viewport viewport) {
             PlayerStats = playerStats;
@@ -100,6 +102,7 @@ namespace The_Bond_of_Stone {
                             break;
 
                         case MenuState.HighScore:
+							firstScoreDraw = true;
                             spriteBatch.Draw(
                                 Graphics.HighScoreTextures[0],
                                 new Rectangle(
@@ -134,14 +137,25 @@ namespace The_Bond_of_Stone {
                                 Vector2 mSize = Graphics.Font_Main.MeasureString(s);
                                 Vector2 sSize = Graphics.Font_Small.MeasureString((i + 1) + ". " + s);
 
-                                if (i == 0)
-                                {
-                                    spriteBatch.DrawString(Graphics.Font_Main, s, new Vector2(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2, rect.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
-                                    firstRect.X = (int)(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2);
-                                }
-                                else
-                                    spriteBatch.DrawString(Graphics.Font_Small, (i + 1) + ". " + s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
-                            }
+								if (s.Equals(string.Format("{0:#,###0}", Game1.Score.mostRecentScore)) && firstScoreDraw)
+									if (i == 0) {
+										spriteBatch.DrawString(Graphics.Font_Main, s, new Vector2(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2, rect.Y), new Color(255, 174, 12, 255), 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+										firstRect.X = (int)(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2);
+										firstScoreDraw = false;
+									}
+									else {
+										spriteBatch.DrawString(Graphics.Font_Small, (i + 1) + ". " + s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), new Color(255, 174, 12, 255), 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+										firstScoreDraw = false;
+									}
+								else {
+									if (i == 0) {
+										spriteBatch.DrawString(Graphics.Font_Main, s, new Vector2(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2, rect.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+										firstRect.X = (int)(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2);
+									}
+									else
+										spriteBatch.DrawString(Graphics.Font_Small, (i + 1) + ". " + s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+								}
+							}
 
                             spriteBatch.Draw(
                                 texture: Graphics.HighScoreTextures[1],
