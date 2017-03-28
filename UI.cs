@@ -21,7 +21,7 @@ namespace The_Bond_of_Stone {
 
         public Viewport viewport;
 
-        MenuState MainMenuState = MenuState.None;
+        MenuState MainMenuState = MenuState.HighScore;
 
         float multiplierScaleFactor = 0.1f;
         float multiplierGrowTime = 0.15f;
