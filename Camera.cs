@@ -61,7 +61,7 @@ namespace The_Bond_of_Stone {
             nextChunk = Game1.Generator.GetEntityChunkID(gameOverPath);
             gameOverPath = new Vector2(gameOverPath.X + Speed, gameOverPath.Y);
 
-            //Entity follow code.
+            //Player follow code.
             if (Target != null)
             {
                 gameOverPath = new Vector2(gameOverPath.X, Origin.Y);

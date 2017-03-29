@@ -23,7 +23,7 @@ namespace The_Bond_of_Stone {
 
         float drag = .48f; //speed reduction (need this)
 
-        float goombaForce = -1000;
+        float goombaForce = -600;
 
         //Particle production
         float particleFrequency = 0.065f;
@@ -52,6 +52,10 @@ namespace The_Bond_of_Stone {
 
         bool wallJumped;
         public bool canStartJump;
+
+        //Powerups
+        public bool bounce = false;
+        float bounceDuration = 0;
 
         public bool Alive;
         public bool Grounded;
@@ -165,10 +169,27 @@ namespace The_Bond_of_Stone {
                 airTime = 0;
             }
 
+            if(bounce)
+            {
+                bounceDuration += elapsed;
+                if (bounceDuration > 5f)
+                {
+                    bounce = false;
+                    bounceDuration = 0;
+                }
+            }
+
             if (!Grounded && !Walled)
                 airTime += elapsed;
             else
+            //Once you hit the ground
+            {
+                if(bounce)
+                {
+                    velocity = new Vector2(velocity.X, -velocity.Y);
+                }
                 airTime = 0;
+            }
 
             //Collect coins if necessary
             if (CurrentChunk != null && CurrentChunk.Entities.Count > 0) {

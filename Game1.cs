@@ -225,6 +225,10 @@ namespace The_Bond_of_Stone {
                 State = GameState.Pause;
             }
 
+            if (keyboardState.IsKeyDown(Keys.B) && prevKeyboardState.IsKeyUp(Keys.B))
+            {
+                Player.bounce = true;
+            }
 
             /*
             //Testing things
@@ -232,6 +236,7 @@ namespace The_Bond_of_Stone {
                 PlayerStats.TakeDamage(1);
                 Player.KnockBack(new Vector2(9000f, -3000f));
             }
+
 
 			if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P)) {
 				PlayerStats.TickScore();
