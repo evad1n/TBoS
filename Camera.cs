@@ -71,7 +71,7 @@ namespace The_Bond_of_Stone {
             else
             {
                 gameOverPath += Move(gameOverPath, new Vector2(gameOverPath.X, nextChunk.Rect.Top + nextChunk.Rect.Height / 2), Speed);
-                Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, gameOverPath.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / 1f));
+                Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, gameOverPath.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / 0.5f));
             }
 
             Rect = new Rectangle((int)(Origin.X - Game1.ScreenWidth / 2), ((int)Origin.Y - Game1.ScreenHeight / 2), Game1.ScreenWidth, Game1.ScreenHeight);

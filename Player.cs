@@ -64,6 +64,7 @@ namespace The_Bond_of_Stone {
         bool walledLeft;
 
         public Vector2 velocity;
+        Vector2 previousVelocity;
 
         public new Rectangle Rect
         {
@@ -92,7 +93,6 @@ namespace The_Bond_of_Stone {
         /// <param name="keyboardState">Provides a snapshot of inputs.</param>
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public void Update(GameTime gameTime, KeyboardState keyboardState, KeyboardState prevKeyboardState) {
-
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Alive = Game1.PlayerStats.IsAlive;
@@ -169,6 +169,12 @@ namespace The_Bond_of_Stone {
                 airTime = 0;
             }
 
+            //Bounce
+            if (CheckCardinalCollision(new Vector2(0, 2)) && velocity.Y > 0)
+            {
+                previousVelocity = velocity;
+            }
+
             if(bounce)
             {
                 bounceDuration += elapsed;
@@ -186,7 +192,7 @@ namespace The_Bond_of_Stone {
             {
                 if(bounce)
                 {
-                    velocity = new Vector2(velocity.X, -velocity.Y);
+                    velocity = new Vector2(previousVelocity.X, -previousVelocity.Y*1000);
                 }
                 airTime = 0;
             }
@@ -204,7 +210,7 @@ namespace The_Bond_of_Stone {
 
                         //If the player is touching this spike...
                         if (s != null && Rect.Intersects(s.HitRect)) {
-                            //Take damage
+                            //Take damage 
                             Game1.PlayerStats.TakeDamage(1, s);
                         }
                     }

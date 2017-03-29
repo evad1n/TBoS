@@ -163,8 +163,8 @@ namespace The_Bond_of_Stone {
 				Game1.Score.mostRecentScore = Score;
 				Game1.Score.AddScore(Score);
 			}
-
-			isAlive = false;
+            invulnColor = Color.White;
+            isAlive = false;
 			
         }
 
