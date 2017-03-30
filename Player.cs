@@ -23,7 +23,7 @@ namespace The_Bond_of_Stone {
 
         float drag = .48f; //speed reduction (need this)
 
-        float goombaForce = -600;
+        float goombaForce = -800;
 
         //Particle production
         float particleFrequency = 0.065f;
@@ -220,53 +220,32 @@ namespace The_Bond_of_Stone {
 
         public void ResolveDynamicEntityCollisions()
         {
-            foreach (Entity e in Game1.Entities.entities) {
-                //Collisions for Ground Enemies
-                if (e is GroundEnemy) {
-                    GroundEnemy g = (GroundEnemy)e;
-
-                    if (g != null && Rect.Intersects(g.Rect)) {
-                        if (g.Active) {
-                            if (Position.Y < g.Position.Y && velocity.Y > 0) {
-                                g.Kill();
-                                KnockBack(new Vector2(0, goombaForce));
-                            } else
-                                Game1.PlayerStats.TakeDamage(1, g);
-                        }
-                    }
-                } else if (e is JumpingEnemy) {
-                    JumpingEnemy j = (JumpingEnemy)e;
-
-                    if (j != null && Rect.Intersects(j.Rect))
+            foreach (Enemy e in Game1.Entities.enemies)
+            {
+                if (e != null && Rect.Intersects(e.Rect))
+                {
+                    if (e.Active)
                     {
-                        if (j.Active)
+                        if (Position.Y < e.Position.Y && velocity.Y > 0)
                         {
-                            if (Position.Y < j.Position.Y && velocity.Y > 0)
-                            {
-                                j.Kill();
-                                KnockBack(new Vector2(0, goombaForce));
-                            }
-                            else
-                                Game1.PlayerStats.TakeDamage(1, j);
+                            e.Kill();
+                            KnockBack(new Vector2(0, goombaForce));
                         }
+                        else
+                            Game1.PlayerStats.TakeDamage(1, e);
                     }
                 }
-                else if (e is FlyingEnemy)
-                {
-                    FlyingEnemy f = (FlyingEnemy)e;
+            }
 
-                    if (f != null && Rect.Intersects(f.Rect))
+            foreach(Bullet b in Game1.Entities.projectiles)
+            {
+
+                if (b != null && Rect.Intersects(b.Rect))
+                {
+                    if (b.Active)
                     {
-                        if (f.Active)
-                        {
-                            if (Position.Y < f.Position.Y && velocity.Y > 0)
-                            {
-                                f.Kill();
-                                KnockBack(new Vector2(0, goombaForce));
-                            }
-                            else
-                                Game1.PlayerStats.TakeDamage(1, f);
-                        }
+                        b.Kill();
+                        Game1.PlayerStats.TakeDamage(1, b);
                     }
                 }
             }

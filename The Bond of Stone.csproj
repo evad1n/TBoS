@@ -39,10 +39,12 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Bullet.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="CollisionHelper.cs" />
+    <Compile Include="Enemy.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityManager.cs" />
     <Compile Include="FlyingEnemy.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Spike.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TileDecoration.cs" />
+    <Compile Include="TurretEnemy.cs" />
     <Compile Include="UI.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -96,32 +96,32 @@ namespace The_Bond_of_Stone {
                     else if (atlas[y, x] == 8)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.entities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 9)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.entities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 14)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.entities.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 15)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.entities.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 16)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.entities.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 17)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.entities.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 10 || atlas[y, x] == 12)
                     {

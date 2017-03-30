@@ -230,6 +230,11 @@ namespace The_Bond_of_Stone {
                 Player.bounce = true;
             }
 
+            if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
+            {
+                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(Player.Position.X + 200, Player.Position.Y - 200)));
+            }
+
             /*
             //Testing things
             if(keyboardState.IsKeyDown(Keys.H) && prevKeyboardState.IsKeyUp(Keys.H)) {
@@ -409,7 +414,8 @@ namespace The_Bond_of_Stone {
             Generator.Restart();
 
             //Clear Enemies
-            Entities.entities.Clear();
+            Entities.enemies.Clear();
+            Entities.projectiles.Clear();
 
             //Reset the player and camera
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);

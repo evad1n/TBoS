@@ -13,7 +13,7 @@ namespace The_Bond_of_Stone
     /// 
     /// By Will Dickinson
     /// </summary>
-    class FlyingEnemy : Entity
+    class FlyingEnemy : Enemy
     {
         float speed = 100f;
         int direction = 1;
@@ -29,8 +29,6 @@ namespace The_Bond_of_Stone
         float walkFrameSpeed = 0.05f;
         int walkFrame = 0;
         int walkFramesTotal = 4;
-
-        public Vector2 velocity;
 
         public new Rectangle Rect
         {
@@ -59,7 +57,7 @@ namespace The_Bond_of_Stone
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         /// <param name="keyboardState">Provides a snapshot of inputs.</param>
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             //Update pathfinding colliders
             gapRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y - (yOffset) + Game1.TILE_SIZE, Game1.TILE_SIZE, Game1.TILE_SIZE);
@@ -129,23 +127,6 @@ namespace The_Bond_of_Stone
             GetAnimation(elapsed);
         }
 
-        /// <summary>
-        /// checks whether the player is "next to" a collidable surface.
-        /// </summary>
-        /// <param name="offset">The direction of the check.</param>
-        /// <returns>Boolean is true when the player's rect offset by "offset" is colliding with the level.</returns>
-        public bool CheckCardinalCollision(Vector2 offset)
-        {
-            if (CurrentChunk != null)
-            {
-                Rectangle check = Rect;
-                check.Offset(offset);
-                return CollisionHelper.IsCollidingWithChunk(CurrentChunk, check);
-            }
-            else
-                return false;
-        }
-
         void GetAnimation(float elapsed)
         {
             ////Walk animation
@@ -190,31 +171,6 @@ namespace The_Bond_of_Stone
                 else
                     spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
             }
-        }
-
-        public void KnockBack(Vector2 boom)
-        {
-            velocity.X = boom.X;
-            velocity.Y = boom.Y;
-            Game1.Camera.ScreenShake(4f, 0.3f);
-        }
-
-        //This will do something eventually
-        public void Kill()
-        {
-            //Death animation
-
-            Active = false;
-        }
-
-        public Vector2 Move(Vector2 start, Vector2 target, float speed)
-        {
-            Vector2 v = target - start;
-            if (v.Length() != 0)
-            {
-                v.Normalize();
-            }
-            return v * speed;
         }
     }
 }
