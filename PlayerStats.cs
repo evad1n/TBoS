@@ -180,6 +180,8 @@ namespace The_Bond_of_Stone {
 
             Health = MaxHealth;
             isAlive = true;
+
+
         }
     }
 }
