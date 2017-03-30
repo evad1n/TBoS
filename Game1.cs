@@ -8,13 +8,13 @@ namespace The_Bond_of_Stone {
 
     public enum GameState { SplashScreen, MainMenu, Playing, Pause, GameOver };
 
-    /// <summary>
-    /// Main type. Handles drawing, initialization, and updates based on the State parameter, and also holds various static
-    /// members that are intermittently referenced throughout the code.
-    /// 
-    /// By Dom Liotti, Noah Bock, and Will Dickinson
-    /// </summary>
-    public class Game1 : Game {
+	/// <summary>
+	/// Main type. Handles drawing, initialization, and updates based on the State parameter, and also holds various static
+	/// members that are intermittently referenced throughout the code.
+	/// 
+	/// By Dom Liotti, Noah Bock, and Will Dickinson
+	/// </summary>
+	public class Game1 : Game {
         //BASIC
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -59,7 +59,7 @@ namespace The_Bond_of_Stone {
         //Splash screen stuff
         public const bool SHOW_SPLASH_SCREEN = true;
 
-        public Game1() {
+		public Game1() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
@@ -91,7 +91,7 @@ namespace The_Bond_of_Stone {
             IsMouseVisible = true;
             graphics.ApplyChanges();
 
-            base.Initialize();
+			base.Initialize();
         }
 
         /// <summary>
@@ -117,8 +117,7 @@ namespace The_Bond_of_Stone {
             Generator.DoStarterGeneration();
             Camera.Reset();
 
-
-            parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
+			parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
             parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(2f, 0f), GraphicsDevice.Viewport);
         }
 
@@ -339,7 +338,7 @@ namespace The_Bond_of_Stone {
                     DrawPlaying(gameTime, Color.White);
                     break;
                 case GameState.GameOver:
-                    DrawGameOver(gameTime, Color.GhostWhite);
+					DrawGameOver(gameTime, Color.GhostWhite);
                     break;
                 case GameState.Pause:
                     DrawPause(gameTime, Color.Gray);
@@ -376,7 +375,9 @@ namespace The_Bond_of_Stone {
             foreach (ParallaxLayer pl in parallaxLayers)
                 pl.Draw(spriteBatch);
             Camera.Draw(spriteBatch);
-            spriteBatch.End();
+
+
+			spriteBatch.End();
 
             //Draw the foreground elements (Level, entities)
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
@@ -386,9 +387,10 @@ namespace The_Bond_of_Stone {
             //Draw enemies
             Entities.Draw(spriteBatch, State);
 
-            Player.Draw(spriteBatch, PlayerStats.invulnColor);
-            spriteBatch.End();
-        }
+			Player.Draw(spriteBatch, PlayerStats.invulnColor);
+
+			spriteBatch.End();
+		}
 
         /// <summary>
         /// Draw the paused screen (Same as the game screen elements, but with a special overlay).
@@ -428,6 +430,8 @@ namespace The_Bond_of_Stone {
 
             //Reset the game state
             State = GameState.Playing;
+
+			Interface.Reset();
         }
 
         public static bool KeyPressed(Keys key) {
