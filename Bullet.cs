@@ -16,8 +16,15 @@ namespace The_Bond_of_Stone
         TurretEnemy parent;
         bool bounce;
         Vector2 direction;
+        float airTime = 0f;
+
+        public bool Grounded;
+        public bool Walled;
+        bool walledRight;
+        bool walledLeft;
 
         public Vector2 velocity;
+        public Vector2 previousVelocity;
 
         public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, bool bounce = false, int spread = 0) : base(texture, position)
         {
@@ -41,58 +48,59 @@ namespace The_Bond_of_Stone
         public void Update(GameTime gameTime)
         {
 
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
             {
                 Active = false;
             }
 
+            //Check collision directions
+            Grounded = CheckCardinalCollision(new Vector2(0, 3));
+            walledLeft = CheckCardinalCollision(new Vector2(-3, 0));
+            walledRight = CheckCardinalCollision(new Vector2(3, 0));
+            Walled = walledLeft || walledRight;
+
             velocity = direction;
 
-            //if (Grounded && velocity.Y == maxFallSpeed)
-            //{
-            //    Game1.Camera.ScreenShake(airTime * 3, airTime);
-            //    airTime = 0;
-            //}
+            if (Grounded && velocity.Y > 0)
+            {
+                Game1.Camera.ScreenShake(airTime * 3, airTime);
+                airTime = 0;
+            }
 
-            ////Bounce
-            //if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
-            //{
-            //    airTime = 0;
-            //}
+            //Bounce
+            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
+            {
+                airTime = 0;
+            }
 
-            //if (bounce)
-            //{
-            //    bounceDuration += elapsed;
-            //    if (bounceDuration > 5f)
-            //    {
-            //        bounce = false;
-            //        bounceDuration = 0;
-            //    }
-            //}
 
-            //if (!Grounded && !Walled)
-            //    airTime += elapsed;
-            //else if (Grounded && !Walled)
-            //{
-            //    //Once you hit the ground
-            //    if (bounce)
-            //    {
-            //        bounceForce = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
-            //        velocity = bounceForce;
-            //    }
-            //    airTime = 0;
-            //}
-            //else
-            //{
-            //    airTime = 0;
-            //}
+            if (!Grounded && !Walled)
+                airTime += elapsed;
+            else if (Grounded && !Walled)
+            {
+                //Once you hit the ground
+                if (bounce)
+                {
+                    velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
+                }
+                airTime = 0;
+            }
+            else
+            {
+                airTime = 0;
+            }
 
             if (bounce)
             {
-                //Check for collisions with level geometry
-                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
+                if (CheckCardinalCollision(new Vector2(2, 0)) && velocity.X > 0)
                 {
-                    //bounce();
+                    velocity = new Vector2(-velocity.X, velocity.Y);
+                }
+                else if (CheckCardinalCollision(new Vector2(-2, 0)) && velocity.X < 0)
+                {
+                    velocity = new Vector2(-velocity.X, velocity.Y);
                 }
 
                 //Check for collisions with enemies
@@ -101,7 +109,6 @@ namespace The_Bond_of_Stone
                 if (e != null && e != parent)
                 {
                     e.Kill();
-                    Kill();
                 }
             }
             else
@@ -138,6 +145,9 @@ namespace The_Bond_of_Stone
         {
             //Save the elapsed time
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            //Save the previous velocity
+            previousVelocity = velocity;
 
             //Save the previous position
             Vector2 previousPosition = Position;
