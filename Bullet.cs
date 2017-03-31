@@ -14,22 +14,28 @@ namespace The_Bond_of_Stone
         Vector2 target;
         float rotation;
         TurretEnemy parent;
+        bool bounce;
+        Vector2 direction;
 
         public Vector2 velocity;
 
-        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position) : base(texture, position)
+        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, bool bounce = false) : base(texture, position)
         {
             this.target = target;
             this.speed = speed;
             this.parent = parent;
             Texture = texture;
             Position = position;
+            this.bounce = bounce;
+
+            //Calculate direction;
+            direction = Move(Position, target, speed);
 
             //Calculate bullet rotation
             Vector2 dir = target - position;
             rotation = (float)Math.Atan2(dir.Y, dir.X);
         }
-
+        
         public void Update(GameTime gameTime)
         {
 
@@ -38,7 +44,7 @@ namespace The_Bond_of_Stone
                 Active = false;
             }
 
-            velocity = Move(Position, target, speed);
+            velocity = direction;
 
             //Check for collisions with level geometry
             if(CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))

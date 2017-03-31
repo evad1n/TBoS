@@ -15,7 +15,7 @@ namespace The_Bond_of_Stone
 
         Player player;
         int yOffset;
-        Texture2D bulletTexture = Graphics.BlackTexture;
+        Texture2D bulletTexture = Graphics.Spike_Right[0];
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
@@ -54,7 +54,7 @@ namespace The_Bond_of_Stone
 
             //Shoot timer
             shootTimer += elapsed;
-            if(shootTimer > 2 && Game1.PlayerStats.IsAlive)
+            if(shootTimer > 1 && Game1.PlayerStats.IsAlive)
             {
                 Shoot();
                 shootTimer = 0;
@@ -75,10 +75,10 @@ namespace The_Bond_of_Stone
 
         public void Shoot()
         {
-            //float dist = Vector2.Distance(player.Position, Position);
-            //Vector2 target = ((dist / bulletSpeed) * player.velocity) + player.Position;
+            float dist = Vector2.Distance(player.Position, Position);
+            Vector2 target = ((dist / bulletSpeed) * player.velocity) + player.Position;
 
-            Vector2 target = player.Position;
+            //Vector2 target = player.Position;
             Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, bulletTexture, Position));
         }
 

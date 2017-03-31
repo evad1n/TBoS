@@ -54,7 +54,7 @@ namespace The_Bond_of_Stone {
         public bool canStartJump;
 
         //Powerups
-        public bool bounce = true;
+        public bool bounce = false;
         float bounceDuration = 0;
         Vector2 bounceForce;
 
