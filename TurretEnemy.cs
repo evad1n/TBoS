@@ -54,7 +54,7 @@ namespace The_Bond_of_Stone
 
             //Shoot timer
             shootTimer += elapsed;
-            if(shootTimer > 1 && Game1.PlayerStats.IsAlive)
+            if(shootTimer > 0.1f && Game1.PlayerStats.IsAlive)
             {
                 Shoot();
                 shootTimer = 0;
@@ -79,7 +79,7 @@ namespace The_Bond_of_Stone
             Vector2 target = ((dist / bulletSpeed) * player.velocity) + player.Position;
 
             //Vector2 target = player.Position;
-            Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, bulletTexture, Position));
+            Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, bulletTexture, Position, true, 50));
         }
 
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.

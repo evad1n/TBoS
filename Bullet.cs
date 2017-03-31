@@ -19,14 +19,16 @@ namespace The_Bond_of_Stone
 
         public Vector2 velocity;
 
-        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, bool bounce = false) : base(texture, position)
+        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, bool bounce = false, int spread = 0) : base(texture, position)
         {
-            this.target = target;
             this.speed = speed;
             this.parent = parent;
             Texture = texture;
             Position = position;
             this.bounce = bounce;
+
+            //Account for spread
+            target += new Vector2(Game1.RandomObject.Next(spread));
 
             //Calculate direction;
             direction = Move(Position, target, speed);
@@ -46,19 +48,78 @@ namespace The_Bond_of_Stone
 
             velocity = direction;
 
-            //Check for collisions with level geometry
-            if(CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
+            //if (Grounded && velocity.Y == maxFallSpeed)
+            //{
+            //    Game1.Camera.ScreenShake(airTime * 3, airTime);
+            //    airTime = 0;
+            //}
+
+            ////Bounce
+            //if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
+            //{
+            //    airTime = 0;
+            //}
+
+            //if (bounce)
+            //{
+            //    bounceDuration += elapsed;
+            //    if (bounceDuration > 5f)
+            //    {
+            //        bounce = false;
+            //        bounceDuration = 0;
+            //    }
+            //}
+
+            //if (!Grounded && !Walled)
+            //    airTime += elapsed;
+            //else if (Grounded && !Walled)
+            //{
+            //    //Once you hit the ground
+            //    if (bounce)
+            //    {
+            //        bounceForce = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
+            //        velocity = bounceForce;
+            //    }
+            //    airTime = 0;
+            //}
+            //else
+            //{
+            //    airTime = 0;
+            //}
+
+            if (bounce)
             {
-                Active = false;
+                //Check for collisions with level geometry
+                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
+                {
+                    //bounce();
+                }
+
+                //Check for collisions with enemies
+                Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
+
+                if (e != null && e != parent)
+                {
+                    e.Kill();
+                    Kill();
+                }
             }
-
-            //Check for collisions with enemies
-            Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
-
-            if(e != null && e != parent)
+            else
             {
-                e.Kill();
-                Kill();
+                //Check for collisions with level geometry
+                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
+                {
+                    Active = false;
+                }
+
+                //Check for collisions with enemies
+                Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
+
+                if (e != null && e != parent)
+                {
+                    e.Kill();
+                    Kill();
+                }
             }
             
 
