@@ -18,7 +18,7 @@ namespace The_Bond_of_Stone {
         //PHYSICS
         float speedJump = -1500f; //Speed of the player's initial jump
         float acceleration = 13000f; //how fast the player picks up speed from rest
-        float maxFallSpeed = 450f; //max effect of gravity
+        float maxFallSpeed = 2000f; //max effect of gravity
         float maxSpeed = 1200f; //maximum speed
 
         float drag = .48f; //speed reduction (need this)
@@ -54,8 +54,9 @@ namespace The_Bond_of_Stone {
         public bool canStartJump;
 
         //Powerups
-        public bool bounce = false;
+        public bool bounce = true;
         float bounceDuration = 0;
+        Vector2 bounceForce;
 
         public bool Alive;
         public bool Grounded;
@@ -126,7 +127,46 @@ namespace The_Bond_of_Stone {
             if (Walled && !wallJumped)
                 maxFallSpeed = 125;
             else
-                maxFallSpeed = 450;
+                maxFallSpeed = 2000;
+
+            if (Grounded && velocity.Y == maxFallSpeed)
+            {
+                Game1.Camera.ScreenShake(airTime * 3, airTime);
+                airTime = 0;
+            }
+
+            //Bounce
+            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
+            {
+                airTime = 0;
+            }
+
+            if (bounce)
+            {
+                bounceDuration += elapsed;
+                if (bounceDuration > 5f)
+                {
+                    bounce = false;
+                    bounceDuration = 0;
+                }
+            }
+
+            if (!Grounded && !Walled)
+                airTime += elapsed;
+            else if (Grounded && !Walled)
+            {
+                //Once you hit the ground
+                if (bounce)
+                {
+                    bounceForce = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
+                    velocity = bounceForce;
+                }
+                airTime = 0;
+            }
+            else
+            {
+                airTime = 0;
+            }
 
             //Apply the physics
             ApplyPhysics(gameTime, keyboardState);
@@ -164,38 +204,6 @@ namespace The_Bond_of_Stone {
                     particles.Remove(particles[i]);
             }
 
-            if (Grounded && velocity.Y == maxFallSpeed) {
-                Game1.Camera.ScreenShake(airTime * 3, airTime);
-                airTime = 0;
-            }
-
-            //Bounce
-            if (CheckCardinalCollision(new Vector2(0, 2)) && velocity.Y > 0)
-            {
-                previousVelocity = velocity;
-            }
-
-            if(bounce)
-            {
-                bounceDuration += elapsed;
-                if (bounceDuration > 5f)
-                {
-                    bounce = false;
-                    bounceDuration = 0;
-                }
-            }
-
-            if (!Grounded && !Walled)
-                airTime += elapsed;
-            else
-            //Once you hit the ground
-            {
-                if(bounce)
-                {
-                    velocity = new Vector2(previousVelocity.X, -previousVelocity.Y*1000);
-                }
-                airTime = 0;
-            }
 
             //Collect coins if necessary
             if (CurrentChunk != null && CurrentChunk.Entities.Count > 0) {
@@ -261,6 +269,9 @@ namespace The_Bond_of_Stone {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             float motion = 0f;
 
+            //Save the previous velocity
+            previousVelocity = velocity;
+
             //Save the previous position
             Vector2 previousPosition = Position;    
             //Save the horizontal motion
@@ -269,7 +280,7 @@ namespace The_Bond_of_Stone {
 
             //Set the X and Y components of the velocity separately.
             velocity.X += motion * acceleration * elapsed;
-            velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, goombaForce, maxFallSpeed);
+            velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, -maxFallSpeed, maxFallSpeed);
 
             //Apply tertiary forces
             velocity.Y = DoJump(velocity.Y, gameTime);
@@ -280,7 +291,8 @@ namespace The_Bond_of_Stone {
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
+
+            //Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
@@ -292,6 +304,7 @@ namespace The_Bond_of_Stone {
                 velocity.Y = 0;
                 jumpTime = 0.0f;
             }
+
 
             GetAnimation(elapsed);
 
