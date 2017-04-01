@@ -83,7 +83,7 @@ namespace The_Bond_of_Stone
         }
 
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
-        public override void Draw(SpriteBatch spriteBatch, Color color)
+        public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
 
             if (Active)

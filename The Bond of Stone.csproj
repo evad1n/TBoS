@@ -65,6 +65,8 @@
     <Compile Include="Spike.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TileDecoration.cs" />
+    <Compile Include="Titan.cs" />
+    <Compile Include="TitanManager.cs" />
     <Compile Include="TurretEnemy.cs" />
     <Compile Include="UI.cs" />
   </ItemGroup>

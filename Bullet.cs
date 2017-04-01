@@ -80,7 +80,7 @@ namespace The_Bond_of_Stone
 
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Color color)
+        public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
             //If this is active, draw it.
             if (Active)

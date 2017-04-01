@@ -29,6 +29,8 @@ namespace The_Bond_of_Stone {
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
+        public static int TITAN_SPAWN_RATE = 50;
+
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
         public float cameraSpeed = 1.5f;
@@ -49,6 +51,7 @@ namespace The_Bond_of_Stone {
         public static UI Interface;
         public static EntityManager Entities;
         public static ScoreManager Score;
+        public TitanManager Titans;
 
         Player Player;
         public static PlayerStats PlayerStats;
@@ -113,6 +116,7 @@ namespace The_Bond_of_Stone {
             Generator = new LevelGenerator(graphics, chunkStartPos);
             Score = new ScoreManager();
             Entities = new EntityManager(Camera);
+            Titans = new TitanManager(GraphicsDevice.Viewport);
 
             Generator.DoStarterGeneration();
             Camera.Reset();
@@ -129,8 +133,7 @@ namespace The_Bond_of_Stone {
             // TODO: Unload any non ContentManager content here
         }
 
-        protected override void OnExiting(object sender, EventArgs args)
-        {
+        protected override void OnExiting(object sender, EventArgs args) {
             Score.RewriteFile();
             base.OnExiting(sender, args);
         }
@@ -153,7 +156,7 @@ namespace The_Bond_of_Stone {
                     else
                         State = GameState.MainMenu;
 
-                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    if (mouseState.LeftButton == ButtonState.Pressed || keyboardState.GetPressedKeys().Length > 0)
                         State = GameState.MainMenu;
                     break;
                 case GameState.MainMenu:
@@ -216,6 +219,8 @@ namespace The_Bond_of_Stone {
             }
 
             Camera.Update(gameTime);
+
+            Titans.Update(gameTime);
 
             foreach (ParallaxLayer pl in parallaxLayers)
                 pl.Update(gameTime);
@@ -370,12 +375,19 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPlaying(GameTime gameTime, Color color) {
+            //Draw titans if necessary
+            if (Titans.HasTitan) {
+                spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
+                Titans.Draw(spriteBatch);
+                spriteBatch.End();
+            }
+
             //Draw the parallax layers in the background.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             foreach (ParallaxLayer pl in parallaxLayers)
                 pl.Draw(spriteBatch);
-            Camera.Draw(spriteBatch);
 
+            Camera.Draw(spriteBatch);
 
 			spriteBatch.End();
 
@@ -418,6 +430,8 @@ namespace The_Bond_of_Stone {
             //Clear Enemies
             Entities.enemies.Clear();
             Entities.projectiles.Clear();
+
+            Titans.Reset();
 
             //Reset the player and camera
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);

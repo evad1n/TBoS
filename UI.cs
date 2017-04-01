@@ -42,21 +42,11 @@ namespace The_Bond_of_Stone {
         public bool DoneWithSplashScreen = false;
 
 		bool firstScoreDraw = true;
-
-
+        
 		private const float HighScorePopUpDelay = 5;
 		private float currentHSPopDelay = HighScorePopUpDelay;
 		//private bool drawHSOverlay = false;
-
-
-
-
-
-
-
-
-
-
+        
 		public UI(PlayerStats playerStats, Viewport viewport) {
             PlayerStats = playerStats;
             this.viewport = viewport;
