@@ -23,7 +23,7 @@ namespace The_Bond_of_Stone {
 
         float drag = .48f; //speed reduction (need this)
 
-        float goombaForce = -800;
+        float goombaForce = -650;
 
         //Particle production
         float particleFrequency = 0.065f;
@@ -54,7 +54,7 @@ namespace The_Bond_of_Stone {
         public bool canStartJump;
 
         //Powerups
-        public bool bounce = true;
+        public bool bounce = false;
         float bounceDuration = 0;
         Vector2 bounceForce;
 

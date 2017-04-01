@@ -14,45 +14,119 @@ namespace The_Bond_of_Stone
         Vector2 target;
         float rotation;
         TurretEnemy parent;
+        bool bounce;
+        Vector2 direction;
+        float airTime = 0f;
+
+        public bool Grounded;
+        public bool Walled;
+        bool walledRight;
+        bool walledLeft;
 
         public Vector2 velocity;
+        public Vector2 previousVelocity;
 
-        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position) : base(texture, position)
+        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, bool bounce = false, int spread = 0) : base(texture, position)
         {
-            this.target = target;
             this.speed = speed;
             this.parent = parent;
             Texture = texture;
             Position = position;
+            this.bounce = bounce;
+
+            //Account for spread
+            target += new Vector2(Game1.RandomObject.Next(spread));
+
+            //Calculate direction;
+            direction = Move(Position, target, speed);
 
             //Calculate bullet rotation
             Vector2 dir = target - position;
             rotation = (float)Math.Atan2(dir.Y, dir.X);
         }
-
+        
         public void Update(GameTime gameTime)
         {
+
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
             {
                 Active = false;
             }
 
-            velocity = Move(Position, target, speed);
+            //Check collision directions
+            Grounded = CheckCardinalCollision(new Vector2(0, 3));
+            walledLeft = CheckCardinalCollision(new Vector2(-3, 0));
+            walledRight = CheckCardinalCollision(new Vector2(3, 0));
+            Walled = walledLeft || walledRight;
 
-            //Check for collisions with level geometry
-            if(CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
+            velocity = direction;
+
+            if (Grounded && velocity.Y > 0)
             {
-                Active = false;
+                Game1.Camera.ScreenShake(airTime * 3, airTime);
+                airTime = 0;
             }
 
-            //Check for collisions with enemies
-            Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
-
-            if(e != null && e != parent)
+            //Bounce
+            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
             {
-                e.Kill();
-                Kill();
+                airTime = 0;
+            }
+
+
+            if (!Grounded && !Walled)
+                airTime += elapsed;
+            else if (Grounded && !Walled)
+            {
+                //Once you hit the ground
+                if (bounce)
+                {
+                    velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
+                }
+                airTime = 0;
+            }
+            else
+            {
+                airTime = 0;
+            }
+
+            if (bounce)
+            {
+                if (CheckCardinalCollision(new Vector2(2, 0)) && velocity.X > 0)
+                {
+                    velocity = new Vector2(-velocity.X, velocity.Y);
+                }
+                else if (CheckCardinalCollision(new Vector2(-2, 0)) && velocity.X < 0)
+                {
+                    velocity = new Vector2(-velocity.X, velocity.Y);
+                }
+
+                //Check for collisions with enemies
+                Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
+
+                if (e != null && e != parent)
+                {
+                    e.Kill();
+                }
+            }
+            else
+            {
+                //Check for collisions with level geometry
+                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
+                {
+                    Active = false;
+                }
+
+                //Check for collisions with enemies
+                Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
+
+                if (e != null && e != parent)
+                {
+                    e.Kill();
+                    Kill();
+                }
             }
             
 
@@ -71,6 +145,9 @@ namespace The_Bond_of_Stone
         {
             //Save the elapsed time
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            //Save the previous velocity
+            previousVelocity = velocity;
 
             //Save the previous position
             Vector2 previousPosition = Position;
