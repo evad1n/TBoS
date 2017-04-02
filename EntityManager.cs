@@ -8,90 +8,84 @@ namespace The_Bond_of_Stone
 {
     public class EntityManager
     {
-        public List<Entity> entities;
+        public List<Enemy> enemies;
+        public List<Bullet> projectiles;
         List<Entity> garbageEntities;
+        List<Bullet> garbageProjectiles;
 
         Camera camera;
 
         public EntityManager(Camera camera)
         {
             this.camera = camera;
-            entities = new List<Entity>();
+            enemies = new List<Enemy>();
+            projectiles = new List<Bullet>();
         }
 
         public void Update(GameTime gametime, GameState state)
         {
             garbageEntities = new List<Entity>();
+            garbageProjectiles = new List<Bullet>();
+
             switch (state)
             {
                 case GameState.Playing:
 
                     //Update enemies
-                    if (entities.Count > 0)
+                    foreach (Enemy e in enemies)
                     {
-                        foreach (GroundEnemy e in entities.Where(s => s is GroundEnemy))
+                        e.Update(gametime);
+                        if (!e.Active)
                         {
-                            e.Update(gametime);
-                            if (!e.Active)
-                            {
-                                garbageEntities.Add(e);
-                            }
+                            garbageEntities.Add(e);
                         }
-                        foreach (JumpingEnemy e in entities.Where(s => s is JumpingEnemy))
-                        {
-                            e.Update(gametime);
-                            if (!e.Active)
-                            {
-                                garbageEntities.Add(e);
-                            }
-                        }
-                        foreach (FlyingEnemy e in entities.Where(s => s is FlyingEnemy))
-                        {
-                            e.Update(gametime);
-                            if (!e.Active)
-                            {
-                                garbageEntities.Add(e);
-                            }
-                        }
-
-                        foreach (Entity e in garbageEntities)
-                            entities.Remove(e);
                     }
+
+                    //Update projectiles
+                    foreach (Bullet e in projectiles)
+                    {
+                        e.Update(gametime);
+                        if (!e.Active)
+                        {
+                            garbageProjectiles.Add(e);
+                        }
+                    }
+
+                    foreach (Enemy e in garbageEntities)
+                        enemies.Remove(e);
+
+                    foreach (Bullet e in garbageProjectiles)
+                        projectiles.Remove(e);
 
                     break;
                 case GameState.GameOver:
 
                     //Update enemies
-                    if (entities.Count > 0)
+                    foreach (Enemy e in enemies)
                     {
-                        foreach (GroundEnemy e in entities.Where(s => s is GroundEnemy))
+                        e.Update(gametime);
+                        if (!e.Active)
                         {
-                            e.Update(gametime);
-                            if (!e.Active)
-                            {
-                                garbageEntities.Add(e);
-                            }
+                            garbageEntities.Add(e);
                         }
-                        foreach (JumpingEnemy e in entities.Where(s => s is JumpingEnemy))
-                        {
-                            e.Update(gametime);
-                            if (!e.Active)
-                            {
-                                garbageEntities.Add(e);
-                            }
-                        }
-                        foreach (FlyingEnemy e in entities.Where(s => s is FlyingEnemy))
-                        {
-                            e.Update(gametime);
-                            if (!e.Active)
-                            {
-                                garbageEntities.Add(e);
-                            }
-                        }
-
-                        foreach (Entity e in garbageEntities)
-                            entities.Remove(e);
                     }
+
+                    //Update projectiles
+                    foreach (Bullet e in projectiles)
+                    {
+                        e.Update(gametime);
+                        if (!e.Active)
+                        {
+                            garbageProjectiles.Add(e);
+                        }
+                    }
+
+                    foreach (Enemy e in garbageEntities)
+                        enemies.Remove(e);
+
+                    foreach (Bullet e in garbageProjectiles)
+                        projectiles.Remove(e);
+
                     break;
                 case GameState.Pause:
 
@@ -105,26 +99,47 @@ namespace The_Bond_of_Stone
             {
                 case GameState.Playing:
                     //Draw enemies
-                    if (entities.Count > 0)
+                    if (enemies.Count > 0)
                     {
-                        foreach (Entity g in entities)
+                        foreach (Entity g in enemies)
                             g.Draw(sb, Color.White);
+                    }
+
+                    //Draw projectiles
+                    if (enemies.Count > 0)
+                    {
+                        foreach (Bullet b in projectiles)
+                            b.Draw(sb, Color.White);
                     }
                     break;
                 case GameState.GameOver:
                     //Draw enemies
-                    if (entities.Count > 0)
+                    if (enemies.Count > 0)
                     {
-                        foreach (Entity g in entities)
+                        foreach (Entity g in enemies)
                             g.Draw(sb, Color.White);
+                    }
+
+                    //Draw projectiles
+                    if (enemies.Count > 0)
+                    {
+                        foreach (Bullet b in projectiles)
+                            b.Draw(sb, Color.White);
                     }
                     break;
                 case GameState.Pause:
                     //Draw enemies
-                    if (entities.Count > 0)
+                    if (enemies.Count > 0)
                     {
-                        foreach (Entity g in entities)
+                        foreach (Entity g in enemies)
                             g.Draw(sb, Color.White);
+                    }
+
+                    //Draw projectiles
+                    if (enemies.Count > 0)
+                    {
+                        foreach (Bullet b in projectiles)
+                            b.Draw(sb, Color.White);
                     }
                     break;
             }
