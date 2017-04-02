@@ -8,21 +8,45 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
+    public enum FacingDirection { Up, Left, Down, Right };
+
+    /// <summary>
+    /// A static hazard which hurts the player if it comes in contact with the "business end"
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     class Spike : Entity
     {
-        float rotation;
-        string rotString;
+        public FacingDirection Facing;
+        public Rectangle HitRect;
 
-        public Spike(Texture2D texture, Vector2 position, string rotation) : base(texture, position) {
+        public Spike(Texture2D texture, Vector2 position, FacingDirection direction) : base(texture, position) {
             Texture = texture;
             Position = position;
 
-            rotString = rotation;
-            FindTextureAndRotation(rotation);
+            Facing = direction;
+
+            if (Facing == FacingDirection.Up) {
+                Texture = Graphics.Spike_Up[Game1.RandomObject.Next(0, Graphics.Spike_Up.Length)];
+                Position = new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE);
+                HitRect = new Rectangle(Rect.X + Game1.PIXEL_SCALE, Rect.Y - 2 * Game1.PIXEL_SCALE, Rect.Width - Game1.PIXEL_SCALE, Rect.Height + 2 * Game1.PIXEL_SCALE + 1);
+            } else if (Facing == FacingDirection.Left) {
+                Texture = Graphics.Spike_Left[Game1.RandomObject.Next(0, Graphics.Spike_Left.Length)];
+                Position = new Vector2(Position.X + Game1.PIXEL_SCALE, Position.Y);
+                HitRect = new Rectangle(Rect.X - Game1.PIXEL_SCALE, Rect.Y + Game1.PIXEL_SCALE, Rect.Width + Game1.PIXEL_SCALE, Rect.Height - Game1.PIXEL_SCALE);
+            } else if (Facing == FacingDirection.Down) {
+                Texture = Graphics.Spike_Down[Game1.RandomObject.Next(0, Graphics.Spike_Down.Length)];
+                Position = new Vector2(Position.X, Position.Y - Game1.PIXEL_SCALE);
+                HitRect = new Rectangle(Rect.X + Game1.PIXEL_SCALE, Rect.Y, Rect.Width - Game1.PIXEL_SCALE, Rect.Height + Game1.PIXEL_SCALE);
+            } else if (Facing == FacingDirection.Right) {
+                Texture = Graphics.Spike_Right[Game1.RandomObject.Next(0, Graphics.Spike_Right.Length)];
+                Position = new Vector2(Position.X - Game1.PIXEL_SCALE, Position.Y);
+                HitRect = new Rectangle(Rect.X, Rect.Y + Game1.PIXEL_SCALE, Rect.Width + Game1.PIXEL_SCALE, Rect.Height - Game1.PIXEL_SCALE);
+            }
         }
 
         //Overloaded to draw with rotation
-        public override void Draw(SpriteBatch spriteBatch, Color color)
+        public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
             //If this is active, draw it.
             if (Active)
@@ -39,59 +63,13 @@ namespace The_Bond_of_Stone
                     spriteBatch.Draw(
                         texture: Texture, 
                         destinationRectangle: drawRect, 
-                        color: color,
-                        rotation: rotation);
+                        color: color);
                 }
                 else
                     spriteBatch.Draw(
                         texture: Texture,
                         destinationRectangle: Rect,
-                        color: color,
-                        rotation: rotation);
-            }
-        }
-
-        //Get the correct texture based on the rotation
-        void FindTextureAndRotation(string param)
-        {
-            switch (param)
-            {
-                case "up":
-                    Texture = Graphics.HazardTextures[0];
-                    rotation = 0f;
-                    break;
-                case "down":
-                    Texture = Graphics.HazardTextures[0];
-                    rotation = (float)(Math.PI);
-                    break;
-                case "left":
-                    Texture = Graphics.HazardTextures[0];
-                    rotation = (float)(Math.PI / 2);
-                    break;
-                case "right":
-                    Texture = Graphics.HazardTextures[0];
-                    rotation = (float)(Math.PI * 3 / 2);
-                    break;
-                case "upleft":
-                    Texture = Graphics.HazardTextures[1];
-                    rotation = (float)(Math.PI / 2);
-                    break;
-                case "upright":
-                    Texture = Graphics.HazardTextures[1];
-                    rotation = 0f;
-                    break;
-                case "downleft":
-                    Texture = Graphics.HazardTextures[1];
-                    rotation = (float)(Math.PI);
-                    break;
-                case "downright":
-                    Texture = Graphics.HazardTextures[1];
-                    rotation = (float)(Math.PI * 3 / 2);
-                    break;
-                default:
-                    Texture = Graphics.HazardTextures[0];
-                    rotation = 0f;
-                    break;
+                        color: color);
             }
         }
     }

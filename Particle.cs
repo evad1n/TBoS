@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
+    /// <summary>
+    /// A static entity which represents one particle of an effect.
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     class Particle : Entity {
 
         float timer;

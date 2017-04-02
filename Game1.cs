@@ -8,10 +8,13 @@ namespace The_Bond_of_Stone {
 
     public enum GameState { SplashScreen, MainMenu, Playing, Pause, GameOver };
 
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
-    public class Game1 : Game {
+	/// <summary>
+	/// Main type. Handles drawing, initialization, and updates based on the State parameter, and also holds various static
+	/// members that are intermittently referenced throughout the code.
+	/// 
+	/// By Dom Liotti, Noah Bock, and Will Dickinson
+	/// </summary>
+	public class Game1 : Game {
         //BASIC
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -22,9 +25,11 @@ namespace The_Bond_of_Stone {
         public const int TILE_SIZE = 24;
         public const int TILE_PIXEL_SIZE = 8;
         public static int PIXEL_SCALE { get { return TILE_SIZE / TILE_PIXEL_SIZE; } }
-        public static Vector2 GRAVITY = new Vector2(0, 2750f);
+        public static Vector2 GRAVITY = new Vector2(0, 1500f);
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
+
+        public static int TITAN_SPAWN_RATE = 50;
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
@@ -37,26 +42,27 @@ namespace The_Bond_of_Stone {
         public static KeyboardState keyboardState;
         public static KeyboardState prevKeyboardState;
         public static MouseState mouseState;
-        public static MouseState prevMoueState;
+        public static MouseState prevMouseState;
 
         //CONTENT
         Graphics LoadedGraphics;
         public static LevelGenerator Generator;
         public static Camera Camera;
         public static UI Interface;
+        public static EntityManager Entities;
+        public static ScoreManager Score;
+        public TitanManager Titans;
 
         Player Player;
         public static PlayerStats PlayerStats;
-
-        public static List<Entity> dynamicEntities;
 
         ParallaxLayer[] parallaxLayers;
         List<Entity> GlobalEntities = new List<Entity>();
 
         //Splash screen stuff
-        public const bool SHOW_SPLASH_SCREEN = false;
+        public const bool SHOW_SPLASH_SCREEN = true;
 
-        public Game1() {
+		public Game1() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
@@ -71,7 +77,6 @@ namespace The_Bond_of_Stone {
             State = GameState.SplashScreen;
 
             parallaxLayers = new ParallaxLayer[2];
-            dynamicEntities = new List<Entity>();
 
             playerStartPos = new Vector2(64, 64);
             chunkStartPos = new Rectangle(
@@ -89,7 +94,7 @@ namespace The_Bond_of_Stone {
             IsMouseVisible = true;
             graphics.ApplyChanges();
 
-            base.Initialize();
+			base.Initialize();
         }
 
         /// <summary>
@@ -109,12 +114,14 @@ namespace The_Bond_of_Stone {
             Interface = new UI(PlayerStats, GraphicsDevice.Viewport);
             Camera = new Camera(GraphicsDevice, Player, cameraSpeed);
             Generator = new LevelGenerator(graphics, chunkStartPos);
+            Score = new ScoreManager();
+            Entities = new EntityManager(Camera);
+            Titans = new TitanManager(GraphicsDevice.Viewport);
 
             Generator.DoStarterGeneration();
             Camera.Reset();
 
-
-            parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
+			parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
             parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(2f, 0f), GraphicsDevice.Viewport);
         }
 
@@ -124,6 +131,11 @@ namespace The_Bond_of_Stone {
         /// </summary>
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
+        }
+
+        protected override void OnExiting(object sender, EventArgs args) {
+            Score.RewriteFile();
+            base.OnExiting(sender, args);
         }
 
         /// <summary>
@@ -144,7 +156,7 @@ namespace The_Bond_of_Stone {
                     else
                         State = GameState.MainMenu;
 
-                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    if (mouseState.LeftButton == ButtonState.Pressed || keyboardState.GetPressedKeys().Length > 0)
                         State = GameState.MainMenu;
                     break;
                 case GameState.MainMenu:
@@ -162,9 +174,9 @@ namespace The_Bond_of_Stone {
             }
 
             prevKeyboardState = keyboardState;
-            prevMoueState = mouseState;
+            prevMouseState = mouseState;
 
-            Interface.Update(gameTime);
+            Interface.Update(gameTime, State);
 
             base.Update(gameTime);
         }
@@ -208,6 +220,8 @@ namespace The_Bond_of_Stone {
 
             Camera.Update(gameTime);
 
+            Titans.Update(gameTime);
+
             foreach (ParallaxLayer pl in parallaxLayers)
                 pl.Update(gameTime);
 
@@ -215,12 +229,23 @@ namespace The_Bond_of_Stone {
                 State = GameState.Pause;
             }
 
+            if (keyboardState.IsKeyDown(Keys.B) && prevKeyboardState.IsKeyUp(Keys.B))
+            {
+                Player.bounce = true;
+            }
 
+            if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
+            {
+                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(Player.Position.X + 200, Player.Position.Y - 200)));
+            }
+
+            /*
             //Testing things
             if(keyboardState.IsKeyDown(Keys.H) && prevKeyboardState.IsKeyUp(Keys.H)) {
                 PlayerStats.TakeDamage(1);
                 Player.KnockBack(new Vector2(9000f, -3000f));
             }
+
 
 			if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P)) {
 				PlayerStats.TickScore();
@@ -240,51 +265,13 @@ namespace The_Bond_of_Stone {
             {
                 dynamicEntities.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y - 50)));
             }
+            */
 
             //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
             //    Camera.ScreenShake(3, 0.25f);
             //}
 
-            List<Entity> garbageEntities = new List<Entity>();
-
-            //Update enemies
-            if (dynamicEntities.Count > 0)
-            {
-                foreach (Entity e in dynamicEntities)
-                {
-                    if (e is GroundEnemy)
-                    {
-                        GroundEnemy g = (GroundEnemy)e;
-                        g.Update(gameTime);
-                        if (!g.Active)
-                        {
-                            garbageEntities.Add(g);
-                        }
-                    }
-                    else if (e is JumpingEnemy)
-                    {
-                        JumpingEnemy j = (JumpingEnemy)e;
-                        j.Update(gameTime);
-                        if (!j.Active)
-                        {
-                            garbageEntities.Add(j);
-                        }
-                    }
-                    else if (e is FlyingEnemy)
-                    {
-                        FlyingEnemy f = (FlyingEnemy)e;
-                        f.Update(gameTime);
-                        if (!f.Active)
-                        {
-                            garbageEntities.Add(f);
-                        }
-                    }
-                    //Add more dynamic entities here
-                }
-
-                foreach (Entity e in garbageEntities)
-                    dynamicEntities.Remove(e);
-            }
+            Entities.Update(gameTime, State);
 
             //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
             Generator.UpdateChunkGeneration();
@@ -330,6 +317,8 @@ namespace The_Bond_of_Stone {
             foreach (Chunk map in Generator.Chunks)
                 map.Update(gameTime); //Update each active chunk
 
+            Entities.Update(gameTime, State);
+
             //Reset on an ESC key press.
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
                 ResetGame();
@@ -354,7 +343,7 @@ namespace The_Bond_of_Stone {
                     DrawPlaying(gameTime, Color.White);
                     break;
                 case GameState.GameOver:
-                    DrawGameOver(gameTime, Color.GhostWhite);
+					DrawGameOver(gameTime, Color.GhostWhite);
                     break;
                 case GameState.Pause:
                     DrawPause(gameTime, Color.Gray);
@@ -386,35 +375,41 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPlaying(GameTime gameTime, Color color) {
+            //Draw titans if necessary
+            if (Titans.HasTitan) {
+                spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
+                Titans.Draw(spriteBatch);
+                spriteBatch.End();
+            }
+
             //Draw the parallax layers in the background.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             foreach (ParallaxLayer pl in parallaxLayers)
                 pl.Draw(spriteBatch);
+
             Camera.Draw(spriteBatch);
-            spriteBatch.End();
+
+			spriteBatch.End();
 
             //Draw the foreground elements (Level, entities)
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
             foreach (Chunk map in Generator.Chunks)
                 map.Draw(spriteBatch, color); //Draw each active chunk
-            
-            //Draw enemies
-            if (dynamicEntities.Count > 0)
-            {
-                foreach (Entity g in dynamicEntities)
-                    g.Draw(spriteBatch, Color.White);
-            }
 
-            Player.Draw(spriteBatch, PlayerStats.invulnColor);
-            spriteBatch.End();
-        }
+            //Draw enemies
+            Entities.Draw(spriteBatch, State);
+
+			Player.Draw(spriteBatch, PlayerStats.invulnColor);
+
+			spriteBatch.End();
+		}
 
         /// <summary>
         /// Draw the paused screen (Same as the game screen elements, but with a special overlay).
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPause(GameTime gameTime, Color color) {
-            DrawPlaying(gameTime, color);
+            DrawPlaying(gameTime, Color.White);
         }
 
         /// <summary>
@@ -422,7 +417,7 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawGameOver(GameTime gameTime, Color color) {
-            DrawPlaying(gameTime, color);
+            DrawPlaying(gameTime, Color.White);
         }
 
         /// <summary>
@@ -433,7 +428,10 @@ namespace The_Bond_of_Stone {
             Generator.Restart();
 
             //Clear Enemies
-            dynamicEntities.Clear();
+            Entities.enemies.Clear();
+            Entities.projectiles.Clear();
+
+            Titans.Reset();
 
             //Reset the player and camera
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
@@ -446,6 +444,8 @@ namespace The_Bond_of_Stone {
 
             //Reset the game state
             State = GameState.Playing;
+
+			Interface.Reset();
         }
 
         public static bool KeyPressed(Keys key) {

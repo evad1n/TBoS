@@ -3,6 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Loads in ALL of the game's graphics in a static context for lightweight reference from anywhere in the codebase.
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     class Graphics {
         //BASIC
         ContentManager Content;
@@ -29,7 +34,13 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] PickupTexture_Coin;
 
         public static Texture2D[] EnemySlugTextures;
-        public static Texture2D[] HazardTextures;
+        public static Texture2D[] Spike_Up;
+        public static Texture2D[] Spike_Down;
+        public static Texture2D[] Spike_Left;
+        public static Texture2D[] Spike_Right;
+
+        public static Texture2D[] Titan_Tyche;
+        public static Texture2D[] Titan_Nemesis;
 
         //UI
         public static Texture2D[] UI_Hearts;
@@ -40,16 +51,21 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] SplashScreenGraphics;
         public static Texture2D Title;
         public static Texture2D[] MainMenuGraphics;
+        public static Texture2D MenuBackground;
         public static Texture2D[] Icons;
+
+        public static Texture2D[] HighScoreTextures;
 
         public static SpriteFont Font_Main;
         public static SpriteFont Font_Small;
+        public static SpriteFont Font_Outlined;
 
         //OTHER
         public static Texture2D EmptyTexture;
         public static Texture2D BlackTexture;
         public static Texture2D DebugTexture;
         public static Texture2D[] ParallaxLayers;
+        public static Texture2D Overlay;
 
         /// <summary>
         /// Loads all of the game's graphical content into static memory for
@@ -75,17 +91,23 @@ namespace The_Bond_of_Stone {
             PlayerWalkTextures = PopulateTextureArray("playerWalk", 4, @"graphics\entities\");
 
             EnemySlugTextures = PopulateTextureArray("enemySlug", 5, @"graphics\entities\");
-            HazardTextures = PopulateTextureArray("hazard", 2, @"graphics\entities\");
+            Spike_Up = PopulateTextureArray("spike_0", 3, @"graphics\entities\");
+            Spike_Down = PopulateTextureArray("spike_2", 3, @"graphics\entities\");
+            Spike_Left = PopulateTextureArray("spike_1", 3, @"graphics\entities\");
+            Spike_Right = PopulateTextureArray("spike_3", 3, @"graphics\entities\");
 
             Effect_PlayerParticlesBottom = PopulateTextureArray("playerParticles_0", 3, @"graphics\entities\");
             Effect_PlayerParticlesLeft = PopulateTextureArray("playerParticles_2", 3, @"graphics\entities\");
             Effect_PlayerParticlesRight = PopulateTextureArray("playerParticles_1", 3, @"graphics\entities\");
+
+            Titan_Tyche = PopulateTextureArray("titan_0", 12, @"graphics\misc\");
 
             PickupTexture_Coin = PopulateTextureArray("pickup_0", 4, @"graphics\entities\");
 
             EmptyTexture = Content.Load<Texture2D>(@"graphics\empty");
             BlackTexture = Content.Load<Texture2D>(@"graphics\ui\black");
             DebugTexture = Content.Load<Texture2D>(@"graphics\debug");
+            Overlay = Content.Load<Texture2D>(@"graphics\overlay");
 
             UI_Hearts = PopulateTextureArray("heart", 3, @"graphics\ui\");
             UI_MultiplierIndicators = PopulateTextureArray("multiplierIndicator", 2, @"graphics\ui\");
@@ -95,10 +117,13 @@ namespace The_Bond_of_Stone {
 
             Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");
+            Font_Outlined = Content.Load<SpriteFont>(@"graphics\ui\font_outlined");
 
             Logo = Content.Load<Texture2D>(@"graphics\ui\logo");
             Title = Content.Load<Texture2D>(@"graphics\ui\title");
             SplashScreenGraphics = PopulateTextureArray("splashscreen", 1, @"graphics\ui\");
+            HighScoreTextures = PopulateTextureArray("highscore", 2, @"graphics\ui\");
+            MenuBackground = Content.Load<Texture2D>(@"graphics\ui\menuBackground");
         }
 
         /// <summary>

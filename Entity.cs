@@ -7,6 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Basic extendable "not-a-tile" class. Draws a texture and has a rectangle.
+    /// 
+    /// By Dom Liotti and Will Dickinson
+    /// </summary>
     public class Entity {
 
         //The entity's texture
@@ -50,7 +55,7 @@ namespace The_Bond_of_Stone {
             Active = active;
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, Color color) {
+        public virtual void Draw(SpriteBatch spriteBatch, Color color, int drawOrder = 0) {
             //If this is active, draw it.
             if (Active) {
                 //We can "lock" entities to the virtual pixel grid (looks pretty nice)
@@ -62,9 +67,9 @@ namespace The_Bond_of_Stone {
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, drawRect, color);
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, layerDepth: drawOrder);
                 } else
-                    spriteBatch.Draw(Texture, Rect, color);
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, layerDepth: drawOrder);
             }
         }
 

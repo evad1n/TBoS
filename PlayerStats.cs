@@ -6,6 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Holds meta-information about the player not directly related to its motor functions.
+    /// 
+    /// By Noah Bock and Dom Liotti
+    /// </summary>
     public class PlayerStats {
         public Player Player;
 
@@ -20,6 +25,8 @@ namespace The_Bond_of_Stone {
         float invulnFlashRate = 0.075f;
         float flash;
         public Color invulnColor = Color.White;
+
+        float knockbackPower = 50f;
 
         public int Score = 0;
 		public int ScoreMultiTicks = 0;
@@ -131,7 +138,7 @@ namespace The_Bond_of_Stone {
             {
                 Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
                 knockback = Player.Position - e.Position;
-                Player.KnockBack(knockback * 200);
+                Player.KnockBack(knockback * knockbackPower);
                 invulnerable = true;
                 invulnerabilityTimer = 0f;
             }
@@ -151,7 +158,14 @@ namespace The_Bond_of_Stone {
 
 		//Just sets isAlive to false.
 		public void Die() {
+
+			if (isAlive) {
+				Game1.Score.mostRecentScore = Score;
+				Game1.Score.AddScore(Score);
+			}
+            invulnColor = Color.White;
             isAlive = false;
+			
         }
 
         //Resets this object to its default values.
@@ -166,6 +180,8 @@ namespace The_Bond_of_Stone {
 
             Health = MaxHealth;
             isAlive = true;
+
+
         }
     }
 }

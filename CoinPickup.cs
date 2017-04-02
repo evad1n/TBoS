@@ -7,6 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// A coin which can be picked up and adds to the player's multiplier progress.
+    /// 
+    /// By Dom Liotti and Noah Bock.
+    /// </summary>
     class CoinPickup : Entity {
 
         int value;

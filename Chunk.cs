@@ -8,13 +8,23 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
     /// <summary>
-    /// Represents a chunk's tile data.
+    /// Represents a chunk's tile data, and is capable of drawing and generating a chunk from image data.
+    /// 
+    /// By Dom Liotti and Chip Butler
     /// </summary>
     public class Chunk {
         //Linear list of tile data.
         public List<Tile> Tiles = new List<Tile>();
 
-        //Linear list of entitiy data.
+        //List of the tile IDs within the chunk, in a 2D array (for stitching and similar)
+        private int[,] atlas;
+
+        //Accessor for the list of tile IDs.
+        public int this [int x, int y] {
+            get { return atlas[x, y]; }
+        }
+
+        //Linear list of entity data.
         public List<Entity> Entities = new List<Entity>();
 
         //References to the start and end tiles of this chunk.
@@ -40,7 +50,7 @@ namespace The_Bond_of_Stone {
 
         //Starter generation
         public Chunk(string path, Rectangle origin) {
-            int[,] atlas = MapReader.ReadImage(path);
+            atlas = MapReader.ReadImage(path);
 
             this.origin = origin;
             Generate(atlas, Game1.TILE_SIZE);
@@ -73,29 +83,63 @@ namespace The_Bond_of_Stone {
                     Tile tileToAdd = new Tile(atlas[y, x], new Rectangle(origin.X + (x * size + size), origin.Y + (y * size) - (yoffset * size), size, size));
 
                     //ENTITY SPAWNING
-                    if (atlas[y, x] == 6) {
+                    if (atlas[y, x] == 6)
+                    {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
-                    } else if (atlas[y, x] == 7) {
+                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
+                    }
+                    else if (atlas[y, x] == 7)
+                    {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size/2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
-                    } else if(atlas[y, x] == 8) {
+                        Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
+                    }
+                    else if (atlas[y, x] == 8)
+                    {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.dynamicEntities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
-                    } else if(atlas[y, x] == 9) {
+                        Game1.Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 9)
+                    {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.dynamicEntities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
-                    } else if (atlas[y, x] == 10) {
+                        Game1.Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 14)
+                    {
                         tileToAdd.ID = atlas[y, x] = 0;
-
-                        Entities.Add(new Spike(Graphics.HazardTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(x, y, atlas)));
-                    } else if (atlas[y, x] == 11) {
+                        Game1.Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 15)
+                    {
                         tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 16)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 0;
+                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 17)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                    }
+                    else if (atlas[y, x] == 10 || atlas[y, x] == 12)
+                    {
+                        if (atlas[y, x] == 10) //adding a vertical spike
+                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
+                        else //adding a horizontal spike
+                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
 
-                        float rotation;
+                        tileToAdd.ID = atlas[y, x] = 0;
+                    }
+                    else if (atlas[y, x] == 11 || atlas[y, x] == 13)
+                    {
+                        if (atlas[y, x] == 11) //adding a vertical spike
+                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
+                        else //adding a horizontal spike
+                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
 
-
-                        Entities.Add(new Spike(Graphics.HazardTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(x, y, atlas)));
+                        tileToAdd.ID = atlas[y, x] = 2;
                     }
 
                     Tiles.Add(tileToAdd);
@@ -186,59 +230,43 @@ namespace The_Bond_of_Stone {
             Generated = true;
         }
 
-        string GetSpikeRotation(int x, int y, int[,] atlas) {
+        FacingDirection GetSpikeRotation(bool horizontal, int x, int y, int[,] atlas) {
             bool[] adjacents = new bool[4];
 
-            if (atlas[y - 1, x] == 1 || atlas[y - 1, x] == 3 || atlas[y - 1, x] == 4 || atlas[y - 1, x] == 5)
+            if (y - 1 >= 0 && CollisionHelper.IsSolidTile(atlas[y - 1, x]))
                 adjacents[0] = true;
-            if (atlas[y, x - 1] == 1 || atlas[y, x - 1] == 3 || atlas[y, x - 1] == 4 || atlas[y, x - 1] == 5)
-                adjacents[1] = true;
-            if (atlas[y, x + 1] == 1 || atlas[y, x + 1] == 3 || atlas[y, x + 1] == 4 || atlas[y, x + 1] == 5)
+            if (x - 1 >= 0 && CollisionHelper.IsSolidTile(atlas[y, x - 1]))
                 adjacents[2] = true;
-            if (atlas[y + 1, x] == 1 || atlas[y + 1, x] == 3 || atlas[y + 1, x] == 4 || atlas[y + 1, x] == 5)
+            if (x + 1 < atlas.GetLength(1) && CollisionHelper.IsSolidTile(atlas[y, x + 1]))
+                adjacents[1] = true;
+            if (y + 1 < atlas.GetLength(0) && CollisionHelper.IsSolidTile(atlas[y + 1, x]))
                 adjacents[3] = true;
 
-            string eval = "";
-
-            for(int i = 0; i < adjacents.Length; i++)
-            {
-                if (adjacents[i])
-                    eval += "1";
-                else
-                    eval += "0";
-            }
-
-            switch (eval)
-            {
-                case "1000":
-                    return "down";
-                case "0100":
-                    return "right";
-                case "0010":
-                    return "left";
-                case "1100":
-                    return "downright";
-                case "0011":
-                    return "upleft";
-                case "1010":
-                    return "downleft";
-                case "0101":
-                    return "upright";
-                default:
-                    return "";
+            if (horizontal) {
+                if (adjacents[2])
+                    return FacingDirection.Right;
+                else if (adjacents[1])
+                    return FacingDirection.Left;
+                return 0;
+            } else {
+                if (adjacents[0])
+                    return FacingDirection.Down;
+                else if (adjacents[3])
+                    return FacingDirection.Up;
+                return FacingDirection.Up;
             }
         }
 
         public void Update(GameTime gameTime) {
             List<Entity> garbageEntities = new List<Entity>();
             //Update static entities
-            if (Entities.Count > 0) {
-                foreach (CoinPickup c in Entities) {
-                    c.Update(gameTime);
+            foreach(Entity e in Entities) {
+                if (!e.Active)
+                    garbageEntities.Add(e);
 
-                    if (!c.Active) {
-                        garbageEntities.Add(c);
-                    }
+                if(e is CoinPickup) {
+                    CoinPickup c = (CoinPickup)e;
+                    c.Update(gameTime);
                 }
             }
 

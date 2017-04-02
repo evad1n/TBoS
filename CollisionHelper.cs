@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
+    /// <summary>
+    /// Very important class with static methods which help us determine where collisions occur
+    /// and how they should be resolved.
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     public static class CollisionHelper
     {
         /// <summary>
@@ -52,15 +58,49 @@ namespace The_Bond_of_Stone
 					if (!IsPassable(t.ID) && rect.Intersects(toCheck))
 						return true;
 				}
+
+                //Check spikes in this chunk for collision as well
+                if (chunk.Entities.Count > 0) {
+                    foreach (Entity e in chunk.Entities) {
+                        if(e is Spike) {
+                            Spike s = (Spike)e;
+                            rect = s.Rect;
+
+                            if (rect.Intersects(toCheck))
+                                return true;
+                        }
+                    }
+                }
 			}
 
             //Otherwise, there is no collision.
             return false;
         }
 
+
+        /// <summary>
+        /// Returns whether the rect toCheck is intersecting with the any dynamic entities on the screen.
+        /// </summary>
+        /// <param name="chunk">The chunk whose tiles should be checked.</param>
+        /// <param name="toCheck">The rectangle to check collision against.</param>
+        /// <returns></returns>
+        public static Enemy IsCollidingWithEnemy(Chunk chunk, Rectangle toCheck)
+        {
+            foreach(Enemy e in Game1.Entities.enemies)
+            {
+                if (e.Rect.Intersects(toCheck))
+                {
+                    return e;
+                }
+            }
+
+            //Otherwise, there is no collision.
+            return null;
+        }
+
         //Note: the following method is sub-optimal. It probably isn't going to be an issue, but a better solution would be to
         //determine the "collision depth" and correct the position vector based on that, rather than try many vectors along a path
-        
+
         /// <summary>
         /// Recursive method to determine the furthest available position for a moving rectangle given an origin and destination.
         /// Recursion is used to separate the components of the movement.
@@ -134,6 +174,12 @@ namespace The_Bond_of_Stone
         /// <returns></returns>
         static Rectangle CreateDummyRectangle(Vector2 position, int width, int height) {
             return new Rectangle((int)position.X, (int)position.Y, width, height);
+        }
+
+        public static bool IsSolidTile(int id) {
+            if (solidIDs.Contains(id))
+                return true;
+            return false;
         }
     }
 }

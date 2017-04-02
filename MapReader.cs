@@ -7,6 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// Reads and interprets image map files for passing between the chunk generator and the chunk itself.
+    /// 
+    /// By Dom Liotti and Will Dickinson
+    /// </summary>
     public static class MapReader {
 
         /// <summary>
@@ -89,11 +94,35 @@ namespace The_Bond_of_Stone {
                     break;
 
                 case "255 076 000 255":
-                    tileID = 10; //spawns a spike tile
+                    tileID = 10; //spawns a vertical spike tile
                     break;
 
                 case "167 043 000 255":
-                    tileID = 11; //spawns a spike tile w/ bkd tile
+                    tileID = 11; //spawns a vertical spike tile w/ bkd tile
+                    break;
+
+                case "255 148 000 255":
+                    tileID = 12; //spawns a horizontal spike tile
+                    break;
+
+                case "167 090 000 255":
+                    tileID = 13; //spawns a horizontal spike tile w/ bkd tile
+                    break;
+
+                case "000 239 207 255":
+                    tileID = 14; //spawns a jumping enemy without a background tile
+                    break;
+
+                case "000 155 134 255":
+                    tileID = 15; //spawns a jumping enemy with a background tile
+                    break;
+
+                case "102 000 255 255":
+                    tileID = 16; //spawns a flying enemy without a background tile
+                    break;
+
+                case "060 000 150 255":
+                    tileID = 17; //spawns a flying enemy with a background tile
                     break;
             }
             return tileID;

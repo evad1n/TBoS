@@ -8,10 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// UI class draws UI (static) elements to the screen given a gamestate from Game1.
+    /// 
+    /// By Noah Bock and Dom Liotti
+    /// </summary>
+    /// 
+
+    public enum MenuState { None, HighScore };
     public class UI {
         public PlayerStats PlayerStats;
 
         public Viewport viewport;
+
+        MenuState MainMenuState = MenuState.HighScore;
 
         float multiplierScaleFactor = 0.1f;
         float multiplierGrowTime = 0.15f;
@@ -19,7 +29,6 @@ namespace The_Bond_of_Stone {
 
         bool isGrowing;
         float currentScale;
-
 
         //Splash screen stuff
         float splashScreenDuration = 10f;
@@ -32,14 +41,20 @@ namespace The_Bond_of_Stone {
 
         public bool DoneWithSplashScreen = false;
 
-        public UI(PlayerStats playerStats, Viewport viewport) {
+		bool firstScoreDraw = true;
+        
+		private const float HighScorePopUpDelay = 5;
+		private float currentHSPopDelay = HighScorePopUpDelay;
+		//private bool drawHSOverlay = false;
+        
+		public UI(PlayerStats playerStats, Viewport viewport) {
             PlayerStats = playerStats;
             this.viewport = viewport;
 
             fadeIncrement = -255 / fadeSpeed;
         }
 
-        public void Update(GameTime gameTime) {
+        public void Update(GameTime gameTime, GameState state) {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (ssTimer < splashScreenDuration) {
 
@@ -60,6 +75,7 @@ namespace The_Bond_of_Stone {
                     fading = true;
             }
 
+
             if (fading) {
                 alphaValue += elapsed * fadeIncrement;
 
@@ -75,15 +91,25 @@ namespace The_Bond_of_Stone {
                     break;
 
                 case GameState.MainMenu:
-                    spriteBatch.Draw(
-                        Graphics.Title,
-                        new Rectangle(
-                            viewport.Width / 2 - Graphics.Title.Width * Game1.PIXEL_SCALE / 2,
-                            3 * Game1.PIXEL_SCALE,
-                            Graphics.Title.Width * Game1.PIXEL_SCALE,
-                            Graphics.Title.Height * Game1.PIXEL_SCALE
-                            ), 
-                        Color.White);
+                    switch (MainMenuState)
+                    {
+                        case MenuState.None:
+                            spriteBatch.Draw(
+                                Graphics.Title,
+                                new Rectangle(
+                                    viewport.Width / 2 - Graphics.Title.Width * Game1.PIXEL_SCALE / 2,
+                                    3 * Game1.PIXEL_SCALE,
+                                    Graphics.Title.Width * Game1.PIXEL_SCALE,
+                                    Graphics.Title.Height * Game1.PIXEL_SCALE
+                                ),
+                                Color.White);
+                            break;
+
+                        case MenuState.HighScore:
+							DrawHighScoreOverlay(spriteBatch);
+                            break;
+                    }
+                    
 
                     break;
 
@@ -103,8 +129,10 @@ namespace The_Bond_of_Stone {
 					break;
 
                 case GameState.Pause:
-					//Draw the player's score
-					DrawScore(spriteBatch);
+                    spriteBatch.Draw(Graphics.Overlay, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
+
+                    //Draw the player's score
+                    DrawScore(spriteBatch);
 
 					//Draw the player's time and distance
 					DrawTechnicalScores(spriteBatch);
@@ -114,7 +142,7 @@ namespace The_Bond_of_Stone {
 
 					DrawMultiplier(spriteBatch, gameTime);
 
-					spriteBatch.DrawString(
+                    spriteBatch.DrawString(
                         Graphics.Font_Main,
                         "PAUSED",
                         new Vector2(viewport.Width / 2 - Graphics.Font_Main.MeasureString("Game Over").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 - Graphics.Font_Main.MeasureString("Game Over").Y * Game1.PIXEL_SCALE / 2),
@@ -133,14 +161,19 @@ namespace The_Bond_of_Stone {
 					DrawHealth(spriteBatch);
 
 					DrawMultiplier(spriteBatch, gameTime);
-                    
-					spriteBatch.DrawString(
-                        Graphics.Font_Main,
-                        "Game Over!",
-                        new Vector2(viewport.Width / 2 - Graphics.Font_Main.MeasureString("Game Over").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 - Graphics.Font_Main.MeasureString("Game Over").Y * Game1.PIXEL_SCALE / 2),
-                        Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
 
-                    break;
+					var timer = (float)gameTime.ElapsedGameTime.TotalSeconds;
+					currentHSPopDelay -= timer;
+					if (currentHSPopDelay <= 0)
+						DrawHighScoreOverlay(spriteBatch);
+					else 
+						spriteBatch.DrawString(
+							Graphics.Font_Main,
+							"Game Over!",
+							new Vector2(viewport.Width / 2 - Graphics.Font_Main.MeasureString("Game Over").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 - Graphics.Font_Main.MeasureString("Game Over").Y * Game1.PIXEL_SCALE / 2),
+							Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
+
+					break;
             }
         }
 
@@ -173,10 +206,13 @@ namespace The_Bond_of_Stone {
 		}
 
 		private void DrawTechnicalScores(SpriteBatch spriteBatch) {
-			spriteBatch.DrawString(
-			Graphics.Font_Small,
-			"Time " + PlayerStats.Time.ToString("0.0") + " Dist " + PlayerStats.Distance.ToString("0.0"),
-			new Vector2(Game1.PIXEL_SCALE * 5, (Graphics.UI_Hearts[0].Height + Graphics.Font_Main.LineSpacing + 7) * Game1.PIXEL_SCALE),
+            string s = "Time " + PlayerStats.Time.ToString("0.0") + " Dist " + PlayerStats.Distance.ToString("0.0");
+
+
+            spriteBatch.DrawString(
+            Graphics.Font_Small,
+            s,
+            new Vector2(viewport.Width / 2 - Graphics.Font_Small.MeasureString(s).X * Game1.PIXEL_SCALE / 2, viewport.Height - (Graphics.Font_Small.MeasureString(s).Y / 2 + 20)),
 			Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
 		}
 
@@ -311,5 +347,73 @@ namespace The_Bond_of_Stone {
                     Color.White);
             }
 		}
+
+		public void DrawHighScoreOverlay(SpriteBatch spriteBatch) {
+			firstScoreDraw = true;
+			spriteBatch.Draw(
+				Graphics.HighScoreTextures[0],
+				new Rectangle(
+					viewport.Width / 2 - Graphics.HighScoreTextures[0].Width * Game1.PIXEL_SCALE / 2,
+					3 * Game1.PIXEL_SCALE,
+					Graphics.HighScoreTextures[0].Width * Game1.PIXEL_SCALE,
+					Graphics.HighScoreTextures[0].Height * Game1.PIXEL_SCALE
+					),
+				Color.White);
+
+			Rectangle firstRect = new Rectangle();
+
+			for (int i = 0; i < Game1.Score.Score.Count; i++) {
+
+				Rectangle rect = new Rectangle(
+						viewport.Width / 2 - Graphics.HighScoreTextures[0].Width * Game1.PIXEL_SCALE / 2,
+						(15 * Game1.PIXEL_SCALE + Graphics.HighScoreTextures[0].Height * Game1.PIXEL_SCALE) + (i * ((int)Graphics.Font_Main.MeasureString(" ").Y + 3) * Game1.PIXEL_SCALE),
+						Graphics.HighScoreTextures[0].Width * Game1.PIXEL_SCALE,
+						((int)Graphics.Font_Main.MeasureString(" ").Y + 1) * Game1.PIXEL_SCALE + Game1.PIXEL_SCALE
+						);
+				if (i == 0)
+					firstRect = rect;
+
+				//Draw a background and the highscore
+				spriteBatch.Draw(
+					Graphics.MenuBackground,
+					rect,
+					Color.White);
+
+				string s = string.Format("{0:#,###0}", Game1.Score.Score[i]);
+				Vector2 mSize = Graphics.Font_Main.MeasureString(s);
+				Vector2 sSize = Graphics.Font_Small.MeasureString((i + 1) + ". " + s);
+
+				if (s.Equals(string.Format("{0:#,###0}", Game1.Score.mostRecentScore)) && firstScoreDraw)
+					if (i == 0) {
+						spriteBatch.DrawString(Graphics.Font_Main, s, new Vector2(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2, rect.Y), new Color(255, 174, 12, 255), 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+						firstRect.X = (int)(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2);
+						firstScoreDraw = false;
+					}
+					else {
+						spriteBatch.DrawString(Graphics.Font_Small, (i + 1) + ". " + s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), new Color(255, 174, 12, 255), 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+						firstScoreDraw = false;
+					}
+				else {
+					if (i == 0) {
+						spriteBatch.DrawString(Graphics.Font_Main, s, new Vector2(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2, rect.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+						firstRect.X = (int)(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2);
+					}
+					else
+						spriteBatch.DrawString(Graphics.Font_Small, (i + 1) + ". " + s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+				}
+			}
+
+			spriteBatch.Draw(
+				texture: Graphics.HighScoreTextures[1],
+				destinationRectangle: new Rectangle(firstRect.X - Graphics.HighScoreTextures[1].Width - 3 * Game1.PIXEL_SCALE, firstRect.Y - ((Graphics.HighScoreTextures[1].Height - 4) * Game1.PIXEL_SCALE), Graphics.HighScoreTextures[1].Width * Game1.PIXEL_SCALE, Graphics.HighScoreTextures[1].Height * Game1.PIXEL_SCALE),
+				color: Color.White,
+				rotation: -0.2f);
+
+		}
+
+		public void Reset() {
+			currentHSPopDelay = HighScorePopUpDelay;
+		}
+
 	}
 }

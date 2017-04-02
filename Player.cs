@@ -8,17 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
+    /// <summary>
+    /// The player class. Allows the player to move throughout the world and interprets collisions and entity interactions.
+    /// 
+    /// By Dom Liotti
+    /// </summary>
     public class Player : Entity {
 
         //PHYSICS
         float speedJump = -1500f; //Speed of the player's initial jump
         float acceleration = 13000f; //how fast the player picks up speed from rest
-        float maxFallSpeed = 450f; //max effect of gravity
+        float maxFallSpeed = 2000f; //max effect of gravity
         float maxSpeed = 1200f; //maximum speed
 
         float drag = .48f; //speed reduction (need this)
 
-        float goombaForce = -1000;
+        float goombaForce = -650;
 
         //Particle production
         float particleFrequency = 0.065f;
@@ -48,6 +53,11 @@ namespace The_Bond_of_Stone {
         bool wallJumped;
         public bool canStartJump;
 
+        //Powerups
+        public bool bounce = false;
+        float bounceDuration = 0;
+        Vector2 bounceForce;
+
         public bool Alive;
         public bool Grounded;
         public bool Walled;
@@ -55,6 +65,7 @@ namespace The_Bond_of_Stone {
         bool walledLeft;
 
         public Vector2 velocity;
+        Vector2 previousVelocity;
 
         public new Rectangle Rect
         {
@@ -83,7 +94,6 @@ namespace The_Bond_of_Stone {
         /// <param name="keyboardState">Provides a snapshot of inputs.</param>
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public void Update(GameTime gameTime, KeyboardState keyboardState, KeyboardState prevKeyboardState) {
-
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Alive = Game1.PlayerStats.IsAlive;
@@ -117,7 +127,46 @@ namespace The_Bond_of_Stone {
             if (Walled && !wallJumped)
                 maxFallSpeed = 125;
             else
-                maxFallSpeed = 450;
+                maxFallSpeed = 2000;
+
+            if (Grounded && velocity.Y == maxFallSpeed)
+            {
+                Game1.Camera.ScreenShake(airTime * 3, airTime);
+                airTime = 0;
+            }
+
+            //Bounce
+            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
+            {
+                airTime = 0;
+            }
+
+            if (bounce)
+            {
+                bounceDuration += elapsed;
+                if (bounceDuration > 5f)
+                {
+                    bounce = false;
+                    bounceDuration = 0;
+                }
+            }
+
+            if (!Grounded && !Walled)
+                airTime += elapsed;
+            else if (Grounded && !Walled)
+            {
+                //Once you hit the ground
+                if (bounce)
+                {
+                    bounceForce = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
+                    velocity = bounceForce;
+                }
+                airTime = 0;
+            }
+            else
+            {
+                airTime = 0;
+            }
 
             //Apply the physics
             ApplyPhysics(gameTime, keyboardState);
@@ -155,73 +204,56 @@ namespace The_Bond_of_Stone {
                     particles.Remove(particles[i]);
             }
 
-            if (Grounded && velocity.Y == maxFallSpeed) {
-                Game1.Camera.ScreenShake(airTime * 3, airTime);
-                airTime = 0;
-            }
 
-            if (!Grounded && !Walled)
-                airTime += elapsed;
-            else
-                airTime = 0;
-
+            //Collect coins if necessary
             if (CurrentChunk != null && CurrentChunk.Entities.Count > 0) {
-                foreach (CoinPickup gp in CurrentChunk.Entities) {
-                    if (gp != null && Rect.Intersects(gp.Rect))
-                        gp.Collect();
+                foreach (Entity e in CurrentChunk.Entities) {
+                    if(e is CoinPickup) {
+                        CoinPickup c = (CoinPickup)e;
+
+                        if (c != null && Rect.Intersects(c.Rect))
+                            c.Collect();
+                    }else if(e is Spike) {
+                        Spike s = (Spike)e;
+
+                        //If the player is touching this spike...
+                        if (s != null && Rect.Intersects(s.HitRect)) {
+                            //Take damage 
+                            Game1.PlayerStats.TakeDamage(1, s);
+                        }
+                    }
                 }
             }
         }
 
         public void ResolveDynamicEntityCollisions()
         {
-            foreach (Entity e in Game1.dynamicEntities) {
-                //Collisions for Ground Enemies
-                if (e is GroundEnemy) {
-                    GroundEnemy g = (GroundEnemy)e;
-
-                    if (g != null && Rect.Intersects(g.Rect)) {
-                        if (g.Active) {
-                            if (Position.Y < g.Position.Y && velocity.Y > 0) {
-                                g.Kill();
-                                KnockBack(new Vector2(0, goombaForce));
-                            } else
-                                Game1.PlayerStats.TakeDamage(1, g);
-                        }
-                    }
-                } else if (e is JumpingEnemy) {
-                    JumpingEnemy j = (JumpingEnemy)e;
-
-                    if (j != null && Rect.Intersects(j.Rect))
+            foreach (Enemy e in Game1.Entities.enemies)
+            {
+                if (e != null && Rect.Intersects(e.Rect))
+                {
+                    if (e.Active)
                     {
-                        if (j.Active)
+                        if (Position.Y < e.Position.Y && velocity.Y > 0)
                         {
-                            if (Position.Y < j.Position.Y && velocity.Y > 0)
-                            {
-                                j.Kill();
-                                KnockBack(new Vector2(0, goombaForce));
-                            }
-                            else
-                                Game1.PlayerStats.TakeDamage(1, j);
+                            e.Kill();
+                            KnockBack(new Vector2(0, goombaForce));
                         }
+                        else
+                            Game1.PlayerStats.TakeDamage(1, e);
                     }
                 }
-                else if (e is FlyingEnemy)
-                {
-                    FlyingEnemy f = (FlyingEnemy)e;
+            }
 
-                    if (f != null && Rect.Intersects(f.Rect))
+            foreach(Bullet b in Game1.Entities.projectiles)
+            {
+
+                if (b != null && Rect.Intersects(b.Rect))
+                {
+                    if (b.Active)
                     {
-                        if (f.Active)
-                        {
-                            if (Position.Y < f.Position.Y && velocity.Y > 0)
-                            {
-                                f.Kill();
-                                KnockBack(new Vector2(0, goombaForce));
-                            }
-                            else
-                                Game1.PlayerStats.TakeDamage(1, f);
-                        }
+                        b.Kill();
+                        Game1.PlayerStats.TakeDamage(1, b);
                     }
                 }
             }
@@ -237,6 +269,9 @@ namespace The_Bond_of_Stone {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             float motion = 0f;
 
+            //Save the previous velocity
+            previousVelocity = velocity;
+
             //Save the previous position
             Vector2 previousPosition = Position;    
             //Save the horizontal motion
@@ -245,7 +280,7 @@ namespace The_Bond_of_Stone {
 
             //Set the X and Y components of the velocity separately.
             velocity.X += motion * acceleration * elapsed;
-            velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, goombaForce, maxFallSpeed);
+            velocity.Y = MathHelper.Clamp(velocity.Y + Game1.GRAVITY.Y * elapsed, -maxFallSpeed, maxFallSpeed);
 
             //Apply tertiary forces
             velocity.Y = DoJump(velocity.Y, gameTime);
@@ -256,7 +291,8 @@ namespace The_Bond_of_Stone {
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
+
+            //Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
@@ -268,6 +304,7 @@ namespace The_Bond_of_Stone {
                 velocity.Y = 0;
                 jumpTime = 0.0f;
             }
+
 
             GetAnimation(elapsed);
 
@@ -398,7 +435,7 @@ namespace The_Bond_of_Stone {
         }
 
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
-        public override void Draw(SpriteBatch spriteBatch, Color color) {
+        public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0) {
             if (Active) {
                 if (LockToPixelGrid) {
                     Rectangle drawRect = new Rectangle(

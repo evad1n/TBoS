@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone {
     /// <summary>
-    /// Set it and forget it. No comments.
+    /// Set it and forget it. This is the cloud layer behind the game stage.
+    /// 
+    /// By Dom Liotti
     /// </summary>
     class ParallaxLayer {
         private Texture2D texture;
