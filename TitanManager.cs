@@ -51,6 +51,8 @@ namespace The_Bond_of_Stone {
                                     break;
                             }
                         }
+
+                        titanTimer = 0f;
                     }
                 }
             } else {
@@ -71,6 +73,7 @@ namespace The_Bond_of_Stone {
 
         public void Reset() {
             activeTitan = null;
+            titanTimer = 0f;
         }
     }
 }
