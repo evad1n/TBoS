@@ -117,9 +117,11 @@ namespace The_Bond_of_Stone {
                 //y offset equals the iterator
                 //then break.
             }
-            
-            for(int iter = 0; iter < atlas.GetLength(0); iter++) {
-                if(atlas[iter, atlas.GetLength(1)] == 5) {
+
+            for (int iter = 0; iter < atlas.GetLength(0); iter++)
+            {
+                if (atlas[iter, atlas.GetLength(1) - 1] == 5)
+                {
                     endTileCoords = new int[] { iter, atlas.GetLength(1) };
                 }
             }
