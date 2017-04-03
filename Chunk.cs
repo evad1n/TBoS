@@ -19,9 +19,47 @@ namespace The_Bond_of_Stone {
         //List of the tile IDs within the chunk, in a 2D array (for stitching and similar)
         private int[,] atlas;
 
+        /// <summary>
+        /// The width of the chunk in tiles.
+        /// </summary>
+        public int AtlasWidth { get { return atlas.GetLength(1); } }
+        /// <summary>
+        /// The height of the chunk in tiles.
+        /// </summary>
+        public int AtlasHeight { get { return atlas.GetLength(0); } }
+
+        /// <summary>
+        /// The coordinates of the start tile, in Y X format.
+        /// </summary>
+        private int[] startTileCoords;
+
+        /// <summary>
+        /// The coordinates of the start tile in Y X order.  (as in, [0] contains the y coordinate, [1] contains the x coordinate.  
+        /// </summary>
+        public int[] StartTileCoords {
+            get {
+                return startTileCoords;
+            }
+        }
+
+        /// <summary>
+        /// The coordinates of the end tile, in Y X format.
+        /// </summary>
+        private int[] endTileCoords;
+
+        /// <summary>
+        /// The coordinates of the end tile in Y X order.  (as in, [0] contains the y coordinate, [1] contains the x coordinate.  
+        /// </summary>
+        public int[] EndTileCoords {
+            get {
+                return endTileCoords;
+            }
+        }
+
+
         //Accessor for the list of tile IDs.
-        public int this [int x, int y] {
-            get { return atlas[x, y]; }
+        public int this [int y, int x] {
+            get { return atlas[y, x]; }
         }
 
         //Linear list of entity data.
@@ -71,8 +109,19 @@ namespace The_Bond_of_Stone {
             int yoffset = 0;
             for (int iter = 0; iter < atlas.GetLength(0); iter++) {
                 //If atlas value is a start tile
-                if (atlas[iter, 0] == 4) yoffset = iter;
+                if (atlas[iter, 0] == 4) {
+                    yoffset = iter;
+                    startTileCoords = new int[] { yoffset, 0 };
+                    break;
+                }
                 //y offset equals the iterator
+                //then break.
+            }
+            
+            for(int iter = 0; iter < atlas.GetLength(0); iter++) {
+                if(atlas[iter, atlas.GetLength(1)] == 5) {
+                    endTileCoords = new int[] { iter, atlas.GetLength(1) };
+                }
             }
 
             //Iterate through each value of the Atlas
@@ -287,6 +336,15 @@ namespace The_Bond_of_Stone {
 
             //Draw chunks
             //sb.Draw(Graphics.DebugTexture, rect, color);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        public static void StitchChunks(Chunk left, Chunk right) {
+            
         }
     }
 }

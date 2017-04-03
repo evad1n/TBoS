@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="The_Bond_of_Stone.Camera" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQgAAIAAIAABgAAEAAQACABACAAAAAAAAQAAAAIAgQ=</HashCode>
+      <FileName>Camera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.Chunk" Collapsed="true">
+    <Position X="18.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SAQAAAAAgAAAAgAAAAAQIAAAACAgAAIAAAGAAEAAAAA=</HashCode>
+      <FileName>Chunk.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.CoinPickup" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAIgAAAAAACAAAAAIAACAAAAAgAAAABAA=</HashCode>
+      <FileName>CoinPickup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.CollisionHelper" Collapsed="true">
+    <Position X="20" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAQAAAAAAAAAAAAJACAAAAAAAAAAI=</HashCode>
+      <FileName>CollisionHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.Entity" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAgAgAAAAJAAAACAAAgCgAAIAAAAgAAA=</HashCode>
+      <FileName>Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.FlyingEnemy" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAADAAAMAAIgAAAAAAIgAAALACASACAASgAAAKAAA=</HashCode>
+      <FileName>FlyingEnemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.Game1" Collapsed="true">
+    <Position X="21.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAwCEUIAQGCQA8EgAABoEAQQBCBAAAgQBCIAhQBEAQQ=</HashCode>
+      <FileName>Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.Graphics" Collapsed="true">
+    <Position X="16.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAQQAAQgwRgmQAAEgACAAANAgADAhAgAEICACAAE0=</HashCode>
+      <FileName>Graphics.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.GroundEnemy" Collapsed="true">
+    <Position X="11.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAADAAAEAIIgAAAAAAIgAAALACASACAASgAAAKAAA=</HashCode>
+      <FileName>GroundEnemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.JumpingEnemy" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAADAAAEAIIgAAAAAAIgAAALACASACAASgAAAKAAA=</HashCode>
+      <FileName>JumpingEnemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.LevelGenerator" Collapsed="true">
+    <Position X="18.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAICAEAAAAAAAAAAAgAAAAAAAAAQAAAACAAQgAAAAEA=</HashCode>
+      <FileName>LevelGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.MapReader" Collapsed="true">
+    <Position X="20" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>MapReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.ParallaxLayer" Collapsed="true">
+    <Position X="21.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAAAAIAgAAJAAAAAAAACAAAgAAAAAAAAAAAIA=</HashCode>
+      <FileName>ParallaxLayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.Particle" Collapsed="true">
+    <Position X="14" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Particle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.Player" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QESBAnCACIEIAgSiABgAIgBAALICACRAAAQBAAICAAA=</HashCode>
+      <FileName>Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.PlayerStats" Collapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CQWACAAAAAggDAggAAAAEAAEIEAAAABAASgAgQEACQA=</HashCode>
+      <FileName>PlayerStats.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.Program" Collapsed="true">
+    <Position X="18.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.Spike" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAACACAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Spike.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.Tile" Collapsed="true">
+    <Position X="20" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAQAggBAAEAAIgEAADIAAgCQAAIAAAAIAgA=</HashCode>
+      <FileName>Tile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.TileDecoration" Collapsed="true">
+    <Position X="21.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAIAAAACAAAgAAAAIAAAAAAIA=</HashCode>
+      <FileName>TileDecoration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="The_Bond_of_Stone.UI" Collapsed="true">
+    <Position X="16.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQQABAAAAAAEgCABAQIAAAkCAAgBAAABABAAAQAAFI=</HashCode>
+      <FileName>UI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="The_Bond_of_Stone.GameState" Collapsed="true">
+    <Position X="16.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAggAAAAAAAAACAAAAAAAAYAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game1.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
