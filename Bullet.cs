@@ -12,6 +12,8 @@ namespace The_Bond_of_Stone
     {
         float speed;
         float rotation;
+        float rotationSpeed;
+
         TurretEnemy parent;
         bool bounce;
         Vector2 direction;
@@ -24,14 +26,16 @@ namespace The_Bond_of_Stone
 
         public Vector2 velocity;
         public Vector2 previousVelocity;
+        public Vector2 startVector;
 
-        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, bool bounce = false, int spread = 0) : base(texture, position)
+        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, float rotationSpeed, bool bounce = false, int spread = 0) : base(texture, position)
         {
             this.speed = speed;
             this.parent = parent;
             Texture = texture;
             Position = position;
             this.bounce = bounce;
+            this.rotationSpeed = rotationSpeed;
 
             //Account for spread
             target += new Vector2(Game1.RandomObject.Next(spread));
@@ -39,6 +43,7 @@ namespace The_Bond_of_Stone
             //Calculate direction;
             direction = Move(Position, target, speed);
             velocity = direction;
+            startVector = velocity;
 
             //Calculate bullet rotation
             Vector2 dir = target - position;
@@ -47,8 +52,10 @@ namespace The_Bond_of_Stone
         
         public void Update(GameTime gameTime)
         {
-
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rotation -= elapsed * rotationSpeed;
+
+            //rotation (startVector -)
 
             if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
             {
@@ -144,10 +151,12 @@ namespace The_Bond_of_Stone
             Vector2 previousPosition = Position;
 
             //Apply gravity
-            if(bounce)
-            {
-                velocity.Y = velocity.Y + Game1.GRAVITY.Y * elapsed;
-            }
+            velocity.Y = velocity.Y + Game1.GRAVITY.Y * elapsed;
+            velocity.X *= .98f;
+
+
+            if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
+                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;

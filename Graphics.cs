@@ -102,10 +102,10 @@ namespace The_Bond_of_Stone {
             Spike_Left = PopulateTextureArray("spike_1", 3, @"graphics\entities\");
             Spike_Right = PopulateTextureArray("spike_3", 3, @"graphics\entities\");
 
-            Sawblade = Content.Load<Texture2D>(@"graphics/sawblade_0");
-            Spear = Content.Load<Texture2D>(@"graphics/spear");
-            Arrow = Content.Load<Texture2D>(@"graphics/arrow");
-            Grenade = Content.Load<Texture2D>(@"graphics/sawblade_0");
+            Sawblade = Content.Load<Texture2D>(@"graphics\entities\sawblade_0");
+            Spear = Content.Load<Texture2D>(@"graphics\entities\spear");
+            Arrow = Content.Load<Texture2D>(@"graphics\entities\arrow");
+            Grenade = Content.Load<Texture2D>(@"graphics\entities\sawblade_0");
 
             Effect_PlayerParticlesBottom = PopulateTextureArray("playerParticles_0", 3, @"graphics\entities\");
             Effect_PlayerParticlesLeft = PopulateTextureArray("playerParticles_2", 3, @"graphics\entities\");
