@@ -213,7 +213,7 @@ namespace The_Bond_of_Stone {
             if (!PlayerStats.IsAlive)
             {
                 if(PlayerStats.Health <= 0)
-                    Player.KnockBack(new Vector2(-200f, -2000f));
+                    Player.KnockBack(new Vector2(-200f, -800f));
                 State = GameState.GameOver;
                 Camera.Target = null;
             }

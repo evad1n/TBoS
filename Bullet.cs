@@ -39,6 +39,7 @@ namespace The_Bond_of_Stone
 
             //Calculate direction;
             direction = Move(Position, target, speed);
+            velocity = direction;
 
             //Calculate bullet rotation
             Vector2 dir = target - position;
@@ -57,26 +58,10 @@ namespace The_Bond_of_Stone
 
             //Check collision directions
             Grounded = CheckCardinalCollision(new Vector2(0, 3));
-            walledLeft = CheckCardinalCollision(new Vector2(-3, 0));
-            walledRight = CheckCardinalCollision(new Vector2(3, 0));
-            Walled = walledLeft || walledRight;
-
-            velocity = direction;
-
-            if (Grounded && velocity.Y > 0)
-            {
-                Game1.Camera.ScreenShake(airTime * 3, airTime);
-                airTime = 0;
-            }
-
-            //Bounce
-            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
-            {
-                airTime = 0;
-            }
 
 
-            if (!Grounded && !Walled)
+
+            if (!Grounded)
                 airTime += elapsed;
             else if (Grounded && !Walled)
             {
@@ -128,7 +113,19 @@ namespace The_Bond_of_Stone
                     Kill();
                 }
             }
-            
+
+            if (Grounded && velocity.Y > 0)
+            {
+                Game1.Camera.ScreenShake(airTime * 3, airTime);
+                airTime = 0;
+            }
+
+            //Bounce
+            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
+            {
+                airTime = 0;
+            }
+
 
             //Apply the physics
             ApplyPhysics(gameTime);
@@ -151,6 +148,12 @@ namespace The_Bond_of_Stone
 
             //Save the previous position
             Vector2 previousPosition = Position;
+
+            //Apply gravity
+            if(bounce)
+            {
+                velocity.Y = velocity.Y + Game1.GRAVITY.Y * elapsed;
+            }
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
