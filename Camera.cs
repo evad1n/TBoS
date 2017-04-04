@@ -84,13 +84,16 @@ namespace The_Bond_of_Stone {
                 Speed = initialSpeed;
 
             //Screen shake
-            if (shakeTimer < duration) {
+            if (shakeTimer < duration)
+            {
                 shakeTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                 //Change the screen's position by either -shakeQuake or +shakeQuake each frame on each axis, and dampen shakeQuake.
                 Position = new Vector2(Position.X + Game1.RandomObject.Next(-1, 2) * shakeQuake, Position.Y + Game1.RandomObject.Next(-1, 2) * shakeQuake);
                 shakeQuake = MathHelper.Lerp(shakeQuake, 0, shakeTimer / duration);
             }
+            else
+                shakeQuake = 0;
         }
 
         /// <summary>
