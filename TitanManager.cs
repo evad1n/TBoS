@@ -42,12 +42,12 @@ namespace The_Bond_of_Stone {
                             switch (Game1.RandomObject.Next(0, numTitans)) {
                                 //Spawn Tyche, the Sundered
                                 case 0:
-                                    activeTitan = new Titan(Graphics.Titan_Tyche[0], new Vector2(viewport.Bounds.Left - Graphics.Titan_Tyche[0].Width * Game1.PIXEL_SCALE, 20), 0.125f, Graphics.Titan_Tyche, true);
+                                    activeTitan = new Titan(Graphics.Titan_Tyche[0], new Vector2(viewport.Bounds.Left - Graphics.Titan_Tyche[0].Width * Game1.PIXEL_SCALE, 50), 0.125f, Graphics.Titan_Tyche, true);
                                     break;
 
                                 //Spawn Nemesis, Annihilator
                                 case 1:
-                                    activeTitan = new Titan(Graphics.Titan_Nemesis[0], new Vector2(viewport.Bounds.Right, 20), -1f, Graphics.Titan_Nemesis, false);
+                                    activeTitan = new Titan(Graphics.Titan_Nemesis[0], new Vector2(viewport.Bounds.Right, 50), -1f, Graphics.Titan_Nemesis, false);
                                     break;
                             }
                         }
