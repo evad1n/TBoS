@@ -56,7 +56,6 @@ namespace The_Bond_of_Stone {
         //Powerups
         public bool bounce = false;
         float bounceDuration = 0;
-        Vector2 bounceForce;
 
         public bool Alive;
         public bool Grounded;
@@ -129,9 +128,26 @@ namespace The_Bond_of_Stone {
             else
                 maxFallSpeed = 2000;
 
-            if (Grounded && velocity.Y >= maxFallSpeed/4)
+            //Stuff that happens when you hit the ground
+            if (!Grounded && !Walled)
+                airTime += elapsed;
+            else if (Grounded && velocity.Y >= maxFallSpeed/4)
             {
                 Game1.Camera.ScreenShake(airTime * 3, airTime);
+                airTime = 0;
+            }
+            else if (Grounded && !Walled)
+            {
+                airTime = 0;
+            }
+            else
+            {
+                airTime = 0;
+            }
+
+            //At the vertex
+            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
+            {
                 airTime = 0;
             }
 
@@ -169,39 +185,6 @@ namespace The_Bond_of_Stone {
 
                 if (!particles[i].Active)
                     particles.Remove(particles[i]);
-            }
-
-            //Bounce
-            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
-            {
-                airTime = 0;
-            }
-
-            if (bounce)
-            {
-                bounceDuration += elapsed;
-                if (bounceDuration > 5f)
-                {
-                    bounce = false;
-                    bounceDuration = 0;
-                }
-            }
-
-            if (!Grounded && !Walled)
-                airTime += elapsed;
-            else if (Grounded && !Walled)
-            {
-                //Once you hit the ground
-                if (bounce)
-                {
-                    bounceForce = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
-                    velocity = bounceForce;
-                }
-                airTime = 0;
-            }
-            else
-            {
-                airTime = 0;
             }
 
             //Collect coins if necessary
