@@ -54,7 +54,7 @@ namespace The_Bond_of_Stone
 
             //Shoot timer
             shootTimer += elapsed;
-            if(shootTimer > 0.1f && Game1.PlayerStats.IsAlive)
+            if(shootTimer > 0.5f && Game1.PlayerStats.IsAlive)
             {
                 Shoot();
                 shootTimer = 0;
