@@ -42,7 +42,7 @@ namespace The_Bond_of_Stone {
         public bool isJumping;
         bool wasJumping;
         float jumpTime; //The length of the jump
-        float maxJumpTime = 0.45f; //how long can the player "sustain" a jump?
+        float maxJumpTime = 0.5f; //how long can the player "sustain" a jump?
         float jumpControlPower = 0.14f;
 
         bool WalljumpGivesXVelocity = false;
@@ -129,42 +129,9 @@ namespace The_Bond_of_Stone {
             else
                 maxFallSpeed = 2000;
 
-            if (Grounded && velocity.Y == maxFallSpeed)
+            if (Grounded && velocity.Y >= maxFallSpeed/4)
             {
                 Game1.Camera.ScreenShake(airTime * 3, airTime);
-                airTime = 0;
-            }
-
-            //Bounce
-            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
-            {
-                airTime = 0;
-            }
-
-            if (bounce)
-            {
-                bounceDuration += elapsed;
-                if (bounceDuration > 5f)
-                {
-                    bounce = false;
-                    bounceDuration = 0;
-                }
-            }
-
-            if (!Grounded && !Walled)
-                airTime += elapsed;
-            else if (Grounded && !Walled)
-            {
-                //Once you hit the ground
-                if (bounce)
-                {
-                    bounceForce = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
-                    velocity = bounceForce;
-                }
-                airTime = 0;
-            }
-            else
-            {
                 airTime = 0;
             }
 
@@ -204,6 +171,38 @@ namespace The_Bond_of_Stone {
                     particles.Remove(particles[i]);
             }
 
+            //Bounce
+            if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
+            {
+                airTime = 0;
+            }
+
+            if (bounce)
+            {
+                bounceDuration += elapsed;
+                if (bounceDuration > 5f)
+                {
+                    bounce = false;
+                    bounceDuration = 0;
+                }
+            }
+
+            if (!Grounded && !Walled)
+                airTime += elapsed;
+            else if (Grounded && !Walled)
+            {
+                //Once you hit the ground
+                if (bounce)
+                {
+                    bounceForce = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
+                    velocity = bounceForce;
+                }
+                airTime = 0;
+            }
+            else
+            {
+                airTime = 0;
+            }
 
             //Collect coins if necessary
             if (CurrentChunk != null && CurrentChunk.Entities.Count > 0) {
@@ -291,8 +290,7 @@ namespace The_Bond_of_Stone {
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-
-            //Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
+            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);

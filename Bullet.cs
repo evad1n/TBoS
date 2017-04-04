@@ -79,11 +79,11 @@ namespace The_Bond_of_Stone
 
             if (bounce)
             {
-                if (CheckCardinalCollision(new Vector2(2, 0)) && velocity.X > 0)
+                if (CheckCardinalCollision(new Vector2(3, 0)) && velocity.X > 0)
                 {
                     velocity = new Vector2(-velocity.X, velocity.Y);
                 }
-                else if (CheckCardinalCollision(new Vector2(-2, 0)) && velocity.X < 0)
+                else if (CheckCardinalCollision(new Vector2(-3, 0)) && velocity.X < 0)
                 {
                     velocity = new Vector2(-velocity.X, velocity.Y);
                 }

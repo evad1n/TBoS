@@ -25,7 +25,7 @@ namespace The_Bond_of_Stone {
         public const int TILE_SIZE = 24;
         public const int TILE_PIXEL_SIZE = 8;
         public static int PIXEL_SCALE { get { return TILE_SIZE / TILE_PIXEL_SIZE; } }
-        public static Vector2 GRAVITY = new Vector2(0, 1500f);
+        public static Vector2 GRAVITY = new Vector2(0, 2000f);
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
