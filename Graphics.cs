@@ -42,6 +42,12 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] Titan_Tyche;
         public static Texture2D[] Titan_Nemesis;
 
+        //Projectiles
+        public static Texture2D Sawblade;
+        public static Texture2D Spear;
+        public static Texture2D Arrow;
+        public static Texture2D Grenade;
+
         //UI
         public static Texture2D[] UI_Hearts;
         public static Texture2D[] UI_MultiplierIndicators;
@@ -95,6 +101,11 @@ namespace The_Bond_of_Stone {
             Spike_Down = PopulateTextureArray("spike_2", 3, @"graphics\entities\");
             Spike_Left = PopulateTextureArray("spike_1", 3, @"graphics\entities\");
             Spike_Right = PopulateTextureArray("spike_3", 3, @"graphics\entities\");
+
+            Sawblade = Content.Load<Texture2D>(@"graphics/sawblade_0");
+            Spear = Content.Load<Texture2D>(@"graphics/spear");
+            Arrow = Content.Load<Texture2D>(@"graphics/arrow");
+            Grenade = Content.Load<Texture2D>(@"graphics/sawblade_0");
 
             Effect_PlayerParticlesBottom = PopulateTextureArray("playerParticles_0", 3, @"graphics\entities\");
             Effect_PlayerParticlesLeft = PopulateTextureArray("playerParticles_2", 3, @"graphics\entities\");
