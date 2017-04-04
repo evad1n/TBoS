@@ -131,7 +131,7 @@ namespace The_Bond_of_Stone {
 
             if (Grounded && velocity.Y >= maxFallSpeed/4)
             {
-                Game1.Camera.ScreenShake(airTime * 3, airTime);
+                Game1.Camera.ScreenShake(airTime * 5, airTime / 2);
                 airTime = 0;
             }
 
