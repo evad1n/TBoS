@@ -11,7 +11,6 @@ namespace The_Bond_of_Stone
     public enum Projectile { Sawblade, Spear, Arrow, Grenade};
     public class TurretEnemy : Enemy
     {
-        float bulletSpeed = 500f;
         float shootTimer;
         Projectile type;
 
@@ -78,22 +77,19 @@ namespace The_Bond_of_Stone
 
         public void Shoot()
         {
-            float dist = Vector2.Distance(player.Position, Position);
-            Vector2 target = ((dist / bulletSpeed) * player.velocity) + player.Position;
-
             switch (type)
             {
                 case Projectile.Sawblade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Sawblade, Position, 5, true, 0));
+                    Game1.Entities.projectiles.Add(new Bullet(this, player.Position, 400, Graphics.Sawblade, Position, 5, true, 5));
                     break;
                 case Projectile.Spear:
-                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Spear, Position, 0, false, 80));
+                    Game1.Entities.projectiles.Add(new Bullet(this, player.Position, 700, Graphics.Spear, Position, 0, false, 20));
                     break;
                 case Projectile.Arrow:
-                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Arrow, Position, 0, false, 60));
+                    Game1.Entities.projectiles.Add(new Bullet(this, player.Position, 800, Graphics.Arrow, Position, 0, false, 20));
                     break;
                 case Projectile.Grenade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Grenade, Position, 1, true, 50));
+                    Game1.Entities.projectiles.Add(new Bullet(this, player.Position, 300, Graphics.Grenade, Position, 1, true, 15));
                     break;
             }
         }

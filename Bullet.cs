@@ -18,20 +18,36 @@ namespace The_Bond_of_Stone
         bool bounce;
         Vector2 direction;
         float airTime = 0f;
+        Vector2 target;       
 
         bool Grounded;
         bool Right;
         bool Left;
         bool Ceiling;
+        bool stuck = false;
 
         public Vector2 velocity;
         public Vector2 previousVelocity;
         public Vector2 startVector;
+        public new Rectangle Rect
+        {
+            get
+            {
+                return new Rectangle(
+                    (int)Position.X,
+                    (int)Position.Y,
+                    Texture.Width/4 * Game1.PIXEL_SCALE,
+                    Texture.Width/4 * Game1.PIXEL_SCALE
+                    );
+            }
+        }
+
 
         public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, float rotationSpeed, bool bounce = false, int spread = 0) : base(texture, position)
         {
             this.speed = speed;
             this.parent = parent;
+            this.target = target;
             Texture = texture;
             Position = position;
             this.bounce = bounce;
@@ -47,15 +63,16 @@ namespace The_Bond_of_Stone
 
             //Calculate bullet rotation
             Vector2 dir = target - position;
+            dir.Normalize();
             rotation = (float)Math.Atan2(dir.Y, dir.X);
+            rotation += MathHelper.ToRadians(90);
         }
         
         public void Update(GameTime gameTime)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rotation -= elapsed * rotationSpeed;
 
-            //rotation (startVector -)
+            rotation -= elapsed * rotationSpeed;
 
             if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
             {
@@ -63,10 +80,10 @@ namespace The_Bond_of_Stone
             }
 
             //Check collision directions
-            Grounded = CheckCardinalCollision(new Vector2(0, 3));
-            Right = CheckCardinalCollision(new Vector2(3, 0));
-            Left = CheckCardinalCollision(new Vector2(-3, 0));
-            Ceiling = CheckCardinalCollision(new Vector2(0, -3));
+            Grounded = CheckCardinalCollision(new Vector2(0, 1));
+            Right = CheckCardinalCollision(new Vector2(1, 0));
+            Left = CheckCardinalCollision(new Vector2(-1, 0));
+            Ceiling = CheckCardinalCollision(new Vector2(0, -1));
 
             if (bounce)
             {
@@ -112,11 +129,6 @@ namespace The_Bond_of_Stone
             }
             else
             {
-                //Check for collisions with level geometry
-                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
-                {
-                    Active = false;
-                }
 
                 //Check for collisions with enemies
                 Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
@@ -151,15 +163,36 @@ namespace The_Bond_of_Stone
             Vector2 previousPosition = Position;
 
             //Apply gravity
-            velocity.Y = velocity.Y + Game1.GRAVITY.Y * elapsed;
-            velocity.X *= .98f;
-
-
-            if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
-                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+            if(bounce)
+            {
+                velocity.Y = velocity.Y + Game1.GRAVITY.Y * elapsed;
+                velocity.X *= .98f;
+            }
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
+            //Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
+
+            if(bounce)
+            {
+
+            }
+            else
+            {
+                //Check for collisions with level geometry
+                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
+                {
+                    stuck = true;
+                    velocity = Vector2.Zero;
+                }
+            }
+
+            if(!stuck)
+            {
+                if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
+                    Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+            }
+
 
         }
 
