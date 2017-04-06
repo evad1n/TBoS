@@ -65,7 +65,9 @@ namespace The_Bond_of_Stone {
 
         public static Texture2D[] HighScoreTextures;
 
-        public static SpriteFont Font_Main;
+		public static Texture2D[] MenuButtons;
+
+		public static SpriteFont Font_Main;
         public static SpriteFont Font_Small;
         public static SpriteFont Font_Outlined;
 
@@ -132,7 +134,9 @@ namespace The_Bond_of_Stone {
 
             Icons = PopulateTextureArray("icons", 2, @"graphics\ui\");
 
-            Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
+			MenuButtons = PopulateTextureArray("menuButton", 10, @"graphics\ui\");
+
+			Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");
             Font_Outlined = Content.Load<SpriteFont>(@"graphics\ui\font_outlined");
 

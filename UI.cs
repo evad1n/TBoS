@@ -21,7 +21,7 @@ namespace The_Bond_of_Stone {
 
         public Viewport viewport;
 
-        MenuState MainMenuState = MenuState.HighScore;
+        MenuState MainMenuState = MenuState.None;
 
         float multiplierScaleFactor = 0.1f;
         float multiplierGrowTime = 0.15f;
@@ -43,10 +43,13 @@ namespace The_Bond_of_Stone {
 
 		bool firstScoreDraw = true;
         
-		private const float HighScorePopUpDelay = 5;
+		private const float HighScorePopUpDelay = 2f;
 		private float currentHSPopDelay = HighScorePopUpDelay;
 		//private bool drawHSOverlay = false;
-        
+
+		//Button Stuff
+		Button quitButton = new Button(Graphics.MenuButtons[0],Graphics.MenuButtons[1],new Vector2(200,200),;
+
 		public UI(PlayerStats playerStats, Viewport viewport) {
             PlayerStats = playerStats;
             this.viewport = viewport;
@@ -103,6 +106,8 @@ namespace The_Bond_of_Stone {
                                     Graphics.Title.Height * Game1.PIXEL_SCALE
                                 ),
                                 Color.White);
+
+							
                             break;
 
                         case MenuState.HighScore:
