@@ -15,7 +15,7 @@ namespace The_Bond_of_Stone
     /// </summary>
     class JumpingEnemy : Enemy
     {
-        float speed = 100f;
+        float jumpHeight = 500f;
         int direction = 1;
 
         Chunk nextChunk;
@@ -62,29 +62,19 @@ namespace The_Bond_of_Stone
         public override void Update(GameTime gameTime)
         {
 
-            //Update pathfinding colliders
-            gapRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y - (yOffset) + Game1.TILE_SIZE, Game1.TILE_SIZE, Game1.TILE_SIZE);
-            wallRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y - yOffset, Game1.TILE_SIZE, Game1.TILE_SIZE);
-            nextChunk = Game1.Generator.GetEntityChunkID(gapRect);
-
             //Check collision directions
             Grounded = CheckCardinalCollision(new Vector2(0, 3));
-
-            //Check for pathfinding (gaps and walls)
-            if ((!CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) || CollisionHelper.IsCollidingWithChunk(nextChunk, wallRect)) && Grounded)
-            {
-                direction *= -1;
-                velocity.Y = -500;
-            }
-
-            velocity.X = speed * direction;
+            
+            if (Grounded)
+                velocity.Y = -jumpHeight;
 
             base.Update(gameTime);
 
             //Apply the physics
             ApplyPhysics(gameTime);
 
-
+            GetAnimation();
+            
         }
 
         /// <summary>
@@ -117,30 +107,16 @@ namespace The_Bond_of_Stone
 
             if (CurrentChunk != null)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
-
-
-            GetAnimation(elapsed);
         }
 
-        void GetAnimation(float elapsed)
+        void GetAnimation()
         {
-            //Walk animation
-            if (walkingTimer < walkFrameSpeed)
+            if (Grounded)
             {
-                walkingTimer += elapsed;
-                if (walkingTimer >= walkFrameSpeed)
-                {
-                    walkFrame = (walkFrame + 1) % walkFramesTotal;
-                    Texture = Graphics.EnemySlugTextures[walkFrame];
-                    walkingTimer = 0f;
-                }
+                Texture = Graphics.EnemyJumperTextures[1];
             }
-
-            //Idle
-            else if (Grounded && velocity.X == 0)
-            {
-                Texture = Graphics.EnemySlugTextures[0];
-            }
+            else
+                Texture = Graphics.EnemyJumperTextures[0];
         }
 
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.

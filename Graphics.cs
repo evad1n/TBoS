@@ -35,6 +35,7 @@ namespace The_Bond_of_Stone {
 
         public static Texture2D[] EnemySlugTextures;
         public static Texture2D[] EnemyFlyerTextures;
+        public static Texture2D[] EnemyJumperTextures;
 
         public static Texture2D[] Spike_Up;
         public static Texture2D[] Spike_Down;
@@ -100,6 +101,7 @@ namespace The_Bond_of_Stone {
 
             EnemySlugTextures = PopulateTextureArray("enemySlug", 5, @"graphics\entities\");
             EnemyFlyerTextures = PopulateTextureArray("enemyFlyer", 8, @"graphics\entities\");
+            EnemyJumperTextures = PopulateTextureArray("enemyJumper", 2, @"graphics\entities\");
 
             Spike_Up = PopulateTextureArray("spike_0", 3, @"graphics\entities\");
             Spike_Down = PopulateTextureArray("spike_2", 3, @"graphics\entities\");

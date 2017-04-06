@@ -28,7 +28,7 @@ namespace The_Bond_of_Stone
         float walkingTimer = 0;
         float walkFrameSpeed = 0.05f;
         int walkFrame = 0;
-        int walkFramesTotal = 4;
+        int walkFramesTotal = 5;
 
         public bool Grounded;
 
@@ -132,12 +132,6 @@ namespace The_Bond_of_Stone
                     Texture = Graphics.EnemySlugTextures[walkFrame];
                     walkingTimer = 0f;
                 }
-            }
-            
-            //Idle
-            else if (Grounded && velocity.X == 0)
-            {
-                Texture = Graphics.EnemySlugTextures[0];
             }
         }
 

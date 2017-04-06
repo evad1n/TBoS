@@ -131,19 +131,14 @@ namespace The_Bond_of_Stone {
             //Stuff that happens when you hit the ground
             if (!Grounded && !Walled)
                 airTime += elapsed;
-            else if (Grounded && velocity.Y >= maxFallSpeed/4)
-            {
-                Game1.Camera.ScreenShake(airTime * 5, airTime / 2);
+            else if (Grounded && velocity.Y >= maxFallSpeed/4) {
+                Game1.Camera.ScreenShake(airTime * 5, airTime);
                 airTime = 0;
             }
             else if (Grounded && !Walled)
-            {
                 airTime = 0;
-            }
             else
-            {
                 airTime = 0;
-            }
 
             //At the vertex
             if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))

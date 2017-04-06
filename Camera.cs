@@ -103,8 +103,8 @@ namespace The_Bond_of_Stone {
         /// <param name="duration">The duration of the quake in seconds.</param>
         public void ScreenShake(float magnitude, float duration) {
             shakeTimer = 0;
-            this.duration += duration;
-            shakeQuake += magnitude;
+            this.duration = duration;
+            shakeQuake = magnitude;
         }
 
         public void Reset() {
