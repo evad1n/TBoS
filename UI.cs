@@ -48,7 +48,7 @@ namespace The_Bond_of_Stone {
 		//private bool drawHSOverlay = false;
 
 		//Button Stuff
-		Button quitButton = new Button(Graphics.MenuButtons[0],Graphics.MenuButtons[1],new Vector2(200,200),;
+		Button quitButton = new Button(Graphics.MenuButtons[0], Graphics.MenuButtons[1], new Vector2(200, 200), Ping);
 
 		public UI(PlayerStats playerStats, Viewport viewport) {
             PlayerStats = playerStats;
@@ -76,6 +76,8 @@ namespace The_Bond_of_Stone {
                     fading = false;
                 else if (ssTimer >= splashScreenDuration * .95f && ssTimer < splashScreenDuration * 1.0)
                     fading = true;
+
+				quitButton.Update();
             }
 
 
@@ -107,7 +109,7 @@ namespace The_Bond_of_Stone {
                                 ),
                                 Color.White);
 
-							
+							quitButton.Draw(spriteBatch);
                             break;
 
                         case MenuState.HighScore:
@@ -414,6 +416,16 @@ namespace The_Bond_of_Stone {
 				color: Color.White,
 				rotation: -0.2f);
 
+		}
+
+		public void ChangeMenuState(MenuState ms) {
+			MainMenuState = ms;
+		}
+
+
+		// REMOVE THIS IN A SECOND
+		public static void Ping() {
+			Console.WriteLine("Boop");
 		}
 
 		public void Reset() {

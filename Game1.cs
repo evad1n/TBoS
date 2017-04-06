@@ -95,6 +95,7 @@ namespace The_Bond_of_Stone {
             graphics.ApplyChanges();
 
 			base.Initialize();
+
         }
 
         /// <summary>

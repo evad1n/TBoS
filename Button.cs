@@ -16,7 +16,7 @@ namespace The_Bond_of_Stone
 		Texture2D clickedTexture;
         public Vector2 Position;
 
-		//public bool clicked;
+		public bool clicked;
 
 		Action method;
 
@@ -32,15 +32,20 @@ namespace The_Bond_of_Stone
 			Texture = nonClickedTexture;
 			Position = position;
 
-			//clicked = false;
+			clicked = false;
 
 			this.method = method;
         }
 
 		public void Update() {
-			if (Game1.mouseState.LeftButton == ButtonState.Released && Game1.prevMouseState.LeftButton == ButtonState.Pressed && CheckMouseLocation()) {
+			if (Game1.mouseState.LeftButton == ButtonState.Pressed && CheckMouseLocation())
+				clicked = true;
+			if (Game1.mouseState.LeftButton == ButtonState.Released && CheckMouseLocation() && clicked) {
 				Click();
+				clicked = false;
 			}
+			else
+				clicked = false;
 		}
 
 		public void Draw(SpriteBatch spriteBatch) {
