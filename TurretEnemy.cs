@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
+    public enum Projectile { Sawblade, Spear, Arrow, Grenade};
     public class TurretEnemy : Enemy
     {
         float bulletSpeed = 500f;
         float shootTimer;
+        Projectile type;
 
         Player player;
         int yOffset;
@@ -35,11 +37,12 @@ namespace The_Bond_of_Stone
             }
         }
 
-        public TurretEnemy(Texture2D texture, Vector2 position) : base(texture, position)
+        public TurretEnemy(Texture2D texture, Vector2 position, Projectile type) : base(texture, position)
         {
             Texture = texture;
             Position = position;
             player = Game1.PlayerStats.Player;
+            this.type = type;
         }
 
         /// <summary>
@@ -78,8 +81,21 @@ namespace The_Bond_of_Stone
             float dist = Vector2.Distance(player.Position, Position);
             Vector2 target = ((dist / bulletSpeed) * player.velocity) + player.Position;
 
-            //Vector2 target = player.Position;
-            Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, bulletTexture, Position, true, 50));
+            switch (type)
+            {
+                case Projectile.Sawblade:
+                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Sawblade, Position, 5, true, 0));
+                    break;
+                case Projectile.Spear:
+                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Spear, Position, 0, false, 80));
+                    break;
+                case Projectile.Arrow:
+                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Arrow, Position, 0, false, 60));
+                    break;
+                case Projectile.Grenade:
+                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Grenade, Position, 1, true, 50));
+                    break;
+            }
         }
 
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
