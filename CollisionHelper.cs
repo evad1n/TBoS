@@ -98,6 +98,26 @@ namespace The_Bond_of_Stone
             return null;
         }
 
+        /// <summary>
+        /// Returns whether the rect toCheck is intersecting with the any dynamic entities on the screen.
+        /// </summary>
+        /// <param name="chunk">The chunk whose tiles should be checked.</param>
+        /// <param name="toCheck">The rectangle to check collision against.</param>
+        /// <returns></returns>
+        public static Enemy IsCollidingWithEntity(Chunk chunk, Rectangle toCheck)
+        {
+            foreach (Enemy e in Game1.Entities.enemies)
+            {
+                if (e.Rect.Intersects(toCheck))
+                {
+                    return e;
+                }
+            }
+
+            //Otherwise, there is no collision.
+            return null;
+        }
+
         //Note: the following method is sub-optimal. It probably isn't going to be an issue, but a better solution would be to
         //determine the "collision depth" and correct the position vector based on that, rather than try many vectors along a path
 
