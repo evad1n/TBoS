@@ -17,6 +17,13 @@ namespace The_Bond_of_Stone
     {
         float speed = 100f;
 
+        bool top;
+        bool left;
+        bool right;
+        bool bot;
+
+        Vector2 direction;
+
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
         float animTimer = 0;
@@ -51,10 +58,31 @@ namespace The_Bond_of_Stone
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public override void Update(GameTime gameTime)
         {
+            direction = Game1.PlayerStats.Player.Position - Position;
+            direction.Normalize();
+
+            top = CheckCardinalCollision(new Vector2(0, -3));
+            bot = CheckCardinalCollision(new Vector2(0, 3));
+            left = CheckCardinalCollision(new Vector2(-3, 0));
+            right = CheckCardinalCollision(new Vector2(3, 0));
+
+            //Pathfinding
+            if (top)
+            {
+                if(right)
+                {
+
+                }
+                else if(left)
+                {
+
+                }
+            }
+
 
             if (Game1.PlayerStats.IsAlive)
             {
-                velocity = Move(Position, Game1.PlayerStats.Player.Position, speed);
+                velocity += direction * speed;
             }
             else
             {
