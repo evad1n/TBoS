@@ -15,12 +15,15 @@ namespace The_Bond_of_Stone
     /// </summary>
     class FlyingEnemy : Enemy
     {
-        float speed = 100f;
+        float speed = 150f;
 
         bool top;
         bool left;
         bool right;
         bool bot;
+
+        bool pathfinding = false;
+        float pathTimer = 0f;
 
         Vector2 direction;
 
@@ -48,6 +51,8 @@ namespace The_Bond_of_Stone
         {
             Texture = texture;
             Position = position;
+            direction = Game1.PlayerStats.Player.Position - Position;
+            direction.Normalize();
         }
 
         /// <summary>
@@ -58,38 +63,61 @@ namespace The_Bond_of_Stone
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public override void Update(GameTime gameTime)
         {
-            direction = Game1.PlayerStats.Player.Position - Position;
-            direction.Normalize();
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            pathTimer += elapsed;
 
-            top = CheckCardinalCollision(new Vector2(0, -3));
-            bot = CheckCardinalCollision(new Vector2(0, 3));
-            left = CheckCardinalCollision(new Vector2(-3, 0));
-            right = CheckCardinalCollision(new Vector2(3, 0));
-
-            //Pathfinding
-            if (top)
+            if(pathTimer > 0.2f)
             {
-                if(right)
-                {
+                pathfinding = false;
+            }
 
-                }
-                else if(left)
-                {
+            top = CheckCardinalCollision(new Vector2(0, -3)) && velocity.Y < 0;
+            bot = CheckCardinalCollision(new Vector2(0, 3)) && velocity.Y > 0;
+            left = CheckCardinalCollision(new Vector2(-3, 0)) && velocity.X < 0;
+            right = CheckCardinalCollision(new Vector2(3, 0)) && velocity.X > 0;
 
-                }
+            if((top || bot || left || right) && pathTimer > 0.2f)
+            {
+                pathfinding = true;
+                pathTimer = 0;
             }
 
 
-            if (Game1.PlayerStats.IsAlive)
+            if(!pathfinding)
             {
-                velocity += direction * speed;
+                if (Game1.PlayerStats.IsAlive)
+                {
+                    direction = Game1.PlayerStats.Player.Position - Position;
+                }
+                else
+                {
+                    direction = Game1.Camera.Origin - Position;
+                }
             }
             else
             {
-                velocity = Move(Position, Game1.Camera.Origin, speed);
+                //Pathfinding
+                if (top)
+                {
+                    direction.X = 1;
+                }
+                if (bot)
+                {
+                    direction.X = 1;
+                }
+                if (left)
+                {
+                    direction.Y = -1;
+                }
+                if (right)
+                {
+                    direction.Y = 11;
+                }
             }
 
-            //velocity.X = speed * direction;
+            direction.Normalize();
+
+            velocity = direction * speed;
 
             if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
             {
@@ -121,6 +149,7 @@ namespace The_Bond_of_Stone
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
+            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if (CurrentChunk != null)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
@@ -146,9 +175,6 @@ namespace The_Bond_of_Stone
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
-            //debug
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.White);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], wallRect, Color.White);
 
             if (Active)
             {

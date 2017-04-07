@@ -257,7 +257,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.F))
             {
-                Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y - 50)));
+                Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(mouseState.Position.X, mouseState.Position.Y)));
             }
 
             //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
