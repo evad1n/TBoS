@@ -15,15 +15,10 @@ namespace The_Bond_of_Stone
     /// </summary>
     class FlyingEnemy : Enemy
     {
-        float speed = 150f;
+        float speed = 150;
 
-        bool top;
-        bool left;
-        bool right;
-        bool bot;
-
-        bool pathfinding = false;
-        float pathTimer = 0f;
+        float timer = 0;
+        const float pathTimer = 2;
 
         Vector2 direction;
 
@@ -47,12 +42,21 @@ namespace The_Bond_of_Stone
             }
         }
 
-        public FlyingEnemy(Texture2D texture, Vector2 position) : base(texture, position)
+        public FlyingEnemy(Texture2D texture, Vector2 position, bool horizontal) : base(texture, position)
         {
             Texture = texture;
             Position = position;
-            direction = Game1.PlayerStats.Player.Position - Position;
-            direction.Normalize();
+
+            timer = pathTimer / 2f;
+
+            if(horizontal)
+            {
+                direction = new Vector2(-1, 0);
+            }
+            else
+            {
+                direction = new Vector2(0, -1);
+            }
         }
 
         /// <summary>
@@ -64,58 +68,24 @@ namespace The_Bond_of_Stone
         public override void Update(GameTime gameTime)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            pathTimer += elapsed;
+            timer += elapsed;
 
-            if(pathTimer > 0.2f)
+            if (timer > pathTimer)
             {
-                pathfinding = false;
+                direction *= -1;
+                timer = 0;
             }
 
-            top = CheckCardinalCollision(new Vector2(0, -3)) && velocity.Y < 0;
-            bot = CheckCardinalCollision(new Vector2(0, 3)) && velocity.Y > 0;
-            left = CheckCardinalCollision(new Vector2(-3, 0)) && velocity.X < 0;
-            right = CheckCardinalCollision(new Vector2(3, 0)) && velocity.X > 0;
-
-            if((top || bot || left || right) && pathTimer > 0.2f)
+            if (
+                (CheckCardinalCollision(new Vector2(-1, 0)) && velocity.X < 0) ||
+                (CheckCardinalCollision(new Vector2(1, 0)) && velocity.X > 0) ||
+                (CheckCardinalCollision(new Vector2(0, 1)) && velocity.Y > 0) ||
+                (CheckCardinalCollision(new Vector2(0, -1)) && velocity.Y < 0)
+                )
             {
-                pathfinding = true;
-                pathTimer = 0;
+                direction *= -1;
+                timer = 0;
             }
-
-
-            if(!pathfinding)
-            {
-                if (Game1.PlayerStats.IsAlive)
-                {
-                    direction = Game1.PlayerStats.Player.Position - Position;
-                }
-                else
-                {
-                    direction = Game1.Camera.Origin - Position;
-                }
-            }
-            else
-            {
-                //Pathfinding
-                if (top)
-                {
-                    direction.X = 1;
-                }
-                if (bot)
-                {
-                    direction.X = 1;
-                }
-                if (left)
-                {
-                    direction.Y = -1;
-                }
-                if (right)
-                {
-                    direction.Y = 11;
-                }
-            }
-
-            direction.Normalize();
 
             velocity = direction * speed;
 

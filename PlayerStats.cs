@@ -26,7 +26,7 @@ namespace The_Bond_of_Stone {
         float flash;
         public Color invulnColor = Color.White;
 
-        float knockbackPower = 1000f;
+        float knockbackPower = 500f;
 
         public int Score = 0;
 		public int ScoreMultiTicks = 0;

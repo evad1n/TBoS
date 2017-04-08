@@ -25,7 +25,7 @@ namespace The_Bond_of_Stone {
         public const int TILE_SIZE = 24;
         public const int TILE_PIXEL_SIZE = 8;
         public static int PIXEL_SCALE { get { return TILE_SIZE / TILE_PIXEL_SIZE; } }
-        public static Vector2 GRAVITY = new Vector2(0, 2500f);
+        public static Vector2 GRAVITY = new Vector2(0, 2750f);
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
@@ -237,7 +237,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
             {
-                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(Player.Position.X + 200, Player.Position.Y - 200), Projectile.Sawblade));
+                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(Player.Position.X + 200, Player.Position.Y - 200), Projectile.Arrow));
             }
 
             //Testing things
@@ -257,12 +257,12 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.F))
             {
-                Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(mouseState.Position.X, mouseState.Position.Y)));
+                Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(mouseState.Position.X, mouseState.Position.Y), true));
             }
 
-            //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
-            //    Camera.ScreenShake(3, 0.25f);
-            //}
+            if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
+                Camera.ScreenShake(3, 0.25f);
+            }
 
             Entities.Update(gameTime, State);
 

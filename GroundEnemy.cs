@@ -139,8 +139,8 @@ namespace The_Bond_of_Stone
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
             //debug
-            spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.White);
-            spriteBatch.Draw(Graphics.Tiles_gold[0], wallRect, Color.White);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.White);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], wallRect, Color.White);
 
             if (Active)
             {

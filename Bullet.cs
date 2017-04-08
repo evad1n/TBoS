@@ -14,8 +14,8 @@ namespace The_Bond_of_Stone
         float rotation;
         float rotationSpeed;
 
-        TurretEnemy parent;
-        bool bounce;
+        public TurretEnemy parent;
+        public bool bounce;
         Vector2 direction;
         float airTime = 0f;
         Vector2 target;       
@@ -24,20 +24,24 @@ namespace The_Bond_of_Stone
         bool Right;
         bool Left;
         bool Ceiling;
-        bool stuck = false;
+        public bool stuck = false;
 
         public Vector2 velocity;
         public Vector2 previousVelocity;
-        public Vector2 startVector;
+        public Vector2 origin;
+        public Vector2 relativePosition;
+
         public new Rectangle Rect
         {
             get
             {
+                origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
+
                 return new Rectangle(
                     (int)Position.X,
                     (int)Position.Y,
-                    Texture.Width/4 * Game1.PIXEL_SCALE,
-                    Texture.Width/4 * Game1.PIXEL_SCALE
+                    (Texture.Height / 4) * Game1.PIXEL_SCALE,
+                    (Texture.Height / 4) * Game1.PIXEL_SCALE
                     );
             }
         }
@@ -59,7 +63,6 @@ namespace The_Bond_of_Stone
             //Calculate direction;
             direction = Move(Position, target, speed);
             velocity = direction;
-            startVector = velocity;
 
             //Calculate bullet rotation
             Vector2 dir = target - position;
@@ -72,7 +75,7 @@ namespace The_Bond_of_Stone
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            rotation -= elapsed * rotationSpeed;
+            rotation += elapsed * rotationSpeed * Math.Sign(velocity.X);
 
             if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
             {
@@ -100,23 +103,20 @@ namespace The_Bond_of_Stone
                 if (Grounded && velocity.Y < 0)
                 {
                     velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
-                    Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
+                    //Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
                     airTime = 0;
                 }
                 else if(Ceiling && velocity.Y > 0)
                 {
                     velocity = new Vector2(velocity.X, -velocity.Y);
-                    Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
                 }
                 else if (Right && velocity.X > 0)
                 {
                     velocity = new Vector2(-velocity.X, velocity.Y);
-                    Game1.Camera.ScreenShake(velocity.X * 3, velocity.X);
                 }
                 else if (Left && velocity.X < 0)
                 {
                     velocity = new Vector2(-velocity.X, velocity.Y);
-                    Game1.Camera.ScreenShake(velocity.X * 3, velocity.X);
                 }
 
                 //Check for collisions with enemies
@@ -166,12 +166,11 @@ namespace The_Bond_of_Stone
             if(bounce)
             {
                 velocity.Y = velocity.Y + Game1.GRAVITY.Y * elapsed;
-                velocity.X *= .98f;
             }
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-            //Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
+            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if(bounce)
             {
@@ -185,12 +184,12 @@ namespace The_Bond_of_Stone
                     stuck = true;
                     velocity = Vector2.Zero;
                 }
-            }
 
-            if(!stuck)
-            {
-                if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
-                    Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+                if (!stuck)
+                {
+                    if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
+                        Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+                }
             }
 
 
@@ -198,6 +197,10 @@ namespace The_Bond_of_Stone
 
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
+            if(relativePosition != null)
+            {
+                color = Game1.PlayerStats.invulnColor;
+            }
             //If this is active, draw it.
             if (Active)
             {
@@ -211,10 +214,10 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, rotation: rotation, scale: new Vector2(0.2f));
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f));
                 }
                 else
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, rotation: rotation, scale: new Vector2(0.2f));
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f));
             }
         }
 
