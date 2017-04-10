@@ -53,7 +53,7 @@ namespace The_Bond_of_Stone {
         bool wallJumped;
         public bool canStartJump;
 
-        //Powerups
+        //Debuffs
         public bool bounce = false;
         float bounceDuration = 0;
 
@@ -197,6 +197,10 @@ namespace The_Bond_of_Stone {
                         if (s != null && Rect.Intersects(s.HitRect)) {
                             //Take damage 
                             Game1.PlayerStats.TakeDamage(1, s);
+                            //If walls are spikes, do not walljump off of them.
+                            if (((this.Position.X - s.Position.X) / Game1.TILE_SIZE) / Game1.TILE_PIXEL_SIZE == 1) walledLeft = false;
+                            if (((this.Position.X - s.Position.X) / Game1.TILE_SIZE) / Game1.TILE_PIXEL_SIZE == -1) walledRight = false;
+                            Walled = walledLeft || walledRight;
                         }
                     }
                 }
