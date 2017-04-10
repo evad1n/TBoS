@@ -24,12 +24,17 @@ namespace The_Bond_of_Stone {
         float drag = .48f; //speed reduction (need this)
 
         float goombaForce = -650;
+        float knockbackTimer = 0;
+        bool knockback = false;
 
         //Particle production
         float particleFrequency = 0.065f;
 		float particleLifetime = 4.5f;
         float particleTimer;
         List<Particle> particles = new List<Particle>();
+
+        //Projectile effects
+        List<Bullet> stickies = new List<Bullet>();
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
@@ -146,6 +151,8 @@ namespace The_Bond_of_Stone {
                 airTime = 0;
             }
 
+
+
             //Apply the physics
             ApplyPhysics(gameTime, keyboardState);
 
@@ -174,6 +181,12 @@ namespace The_Bond_of_Stone {
                 particleTimer = 0;
             }
             
+            foreach(Bullet b in stickies)
+            {
+                b.Position = (Position + b.relativePosition);
+            }
+
+
             for (int i = particles.Count - 1; i >= 0; i--)
             {
                 particles[i].Update(gameTime);
@@ -231,10 +244,15 @@ namespace The_Bond_of_Stone {
 
                 if (b != null && Rect.Intersects(b.Rect))
                 {
-                    if (b.Active)
+                    if (b.Active && !b.stuck) 
                     {
-                        b.Kill();
-                        Game1.PlayerStats.TakeDamage(1, b);
+                        if(!b.bounce)
+                        {
+                            b.relativePosition = b.Position - Position;
+                            stickies.Add(b);
+                        }
+
+                        Game1.PlayerStats.TakeDamage(1, b.parent);
                     }
                 }
             }
@@ -436,8 +454,8 @@ namespace The_Bond_of_Stone {
 
         public void KnockBack(Vector2 boom)
         {
-            velocity.X = boom.X;
-            velocity.Y = boom.Y;
+            velocity.X += boom.X;
+            velocity.Y += boom.Y;
             Game1.Camera.ScreenShake(4f, 0.3f);
         }
     }
