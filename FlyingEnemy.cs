@@ -15,7 +15,12 @@ namespace The_Bond_of_Stone
     /// </summary>
     class FlyingEnemy : Enemy
     {
-        float speed = 100f;
+        float speed = 150;
+
+        float timer = 0;
+        const float pathTimer = 2;
+
+        Vector2 direction;
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
@@ -37,10 +42,21 @@ namespace The_Bond_of_Stone
             }
         }
 
-        public FlyingEnemy(Texture2D texture, Vector2 position) : base(texture, position)
+        public FlyingEnemy(Texture2D texture, Vector2 position, bool horizontal) : base(texture, position)
         {
             Texture = texture;
             Position = position;
+
+            timer = pathTimer / 2f;
+
+            if(horizontal)
+            {
+                direction = new Vector2(-1, 0);
+            }
+            else
+            {
+                direction = new Vector2(0, -1);
+            }
         }
 
         /// <summary>
@@ -51,17 +67,27 @@ namespace The_Bond_of_Stone
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public override void Update(GameTime gameTime)
         {
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            timer += elapsed;
 
-            if (Game1.PlayerStats.IsAlive)
+            if (timer > pathTimer)
             {
-                velocity = Move(Position, Game1.PlayerStats.Player.Position, speed);
-            }
-            else
-            {
-                velocity = Move(Position, Game1.Camera.Origin, speed);
+                direction *= -1;
+                timer = 0;
             }
 
-            //velocity.X = speed * direction;
+            if (
+                (CheckCardinalCollision(new Vector2(-1, 0)) && velocity.X < 0) ||
+                (CheckCardinalCollision(new Vector2(1, 0)) && velocity.X > 0) ||
+                (CheckCardinalCollision(new Vector2(0, 1)) && velocity.Y > 0) ||
+                (CheckCardinalCollision(new Vector2(0, -1)) && velocity.Y < 0)
+                )
+            {
+                direction *= -1;
+                timer = 0;
+            }
+
+            velocity = direction * speed;
 
             if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
             {
@@ -93,6 +119,7 @@ namespace The_Bond_of_Stone
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
+            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if (CurrentChunk != null)
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
@@ -118,9 +145,6 @@ namespace The_Bond_of_Stone
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
-            //debug
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.White);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], wallRect, Color.White);
 
             if (Active)
             {

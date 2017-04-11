@@ -25,7 +25,7 @@ namespace The_Bond_of_Stone {
         public const int TILE_SIZE = 24;
         public const int TILE_PIXEL_SIZE = 8;
         public static int PIXEL_SCALE { get { return TILE_SIZE / TILE_PIXEL_SIZE; } }
-        public static Vector2 GRAVITY = new Vector2(0, 2500f);
+        public static Vector2 GRAVITY = new Vector2(0, 2750f);
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
@@ -95,6 +95,7 @@ namespace The_Bond_of_Stone {
             graphics.ApplyChanges();
 
 			base.Initialize();
+
         }
 
         /// <summary>
@@ -237,40 +238,32 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
             {
-                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(Player.Position.X + 200, Player.Position.Y - 200), Projectile.Sawblade));
+                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(Player.Position.X + 200, Player.Position.Y - 200), Projectile.Arrow));
             }
 
-            /*
             //Testing things
-            if(keyboardState.IsKeyDown(Keys.H) && prevKeyboardState.IsKeyUp(Keys.H)) {
-                PlayerStats.TakeDamage(1);
-                Player.KnockBack(new Vector2(9000f, -3000f));
-            }
-
-
 			if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P)) {
 				PlayerStats.TickScore();
             }
 
             if (keyboardState.IsKeyDown(Keys.G) && prevKeyboardState.IsKeyUp(Keys.G))
             {
-                dynamicEntities.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
+                Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
             }
 
             if (keyboardState.IsKeyDown(Keys.J) && prevKeyboardState.IsKeyUp(Keys.J))
             {
-                dynamicEntities.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
+                Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
             }
 
             if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.F))
             {
-                dynamicEntities.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y - 50)));
+                Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(mouseState.Position.X, mouseState.Position.Y), true));
             }
-            */
 
-            //if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
-            //    Camera.ScreenShake(3, 0.25f);
-            //}
+            if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
+                Camera.ScreenShake(3, 0.25f);
+            }
 
             Entities.Update(gameTime, State);
 

@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 namespace The_Bond_of_Stone
 {
     public enum Projectile { Sawblade, Spear, Arrow, Grenade};
+
     public class TurretEnemy : Enemy
     {
-        float bulletSpeed = 500f;
         float shootTimer;
+        float attackSpeed;
         Projectile type;
 
         Player player;
@@ -43,6 +44,23 @@ namespace The_Bond_of_Stone
             Position = position;
             player = Game1.PlayerStats.Player;
             this.type = type;
+
+            //Set attack rate
+            switch (type)
+            {
+                case Projectile.Sawblade:
+                    attackSpeed = 0.4f;
+                    break;
+                case Projectile.Spear:
+                    attackSpeed = 0.7f;
+                    break;
+                case Projectile.Arrow:
+                    attackSpeed = 0.8f;
+                    break;
+                case Projectile.Grenade:
+                    attackSpeed = 0.5f;
+                    break;
+            }
         }
 
         /// <summary>
@@ -57,7 +75,7 @@ namespace The_Bond_of_Stone
 
             //Shoot timer
             shootTimer += elapsed;
-            if(shootTimer > 0.5f && Game1.PlayerStats.IsAlive)
+            if(shootTimer > 1f / attackSpeed && Game1.PlayerStats.IsAlive)
             {
                 Shoot();
                 shootTimer = 0;
@@ -78,22 +96,19 @@ namespace The_Bond_of_Stone
 
         public void Shoot()
         {
-            float dist = Vector2.Distance(player.Position, Position);
-            Vector2 target = ((dist / bulletSpeed) * player.velocity) + player.Position;
-
             switch (type)
             {
                 case Projectile.Sawblade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Sawblade, Position, 5, true, 0));
+                    Game1.Entities.projectiles.Add(new Bullet(this, new Vector2(player.Position.X, Position.Y), 200, Graphics.Sawblade, Position, 5, true, 5));
                     break;
                 case Projectile.Spear:
-                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Spear, Position, 0, false, 80));
+                    Game1.Entities.projectiles.Add(new Bullet(this, player.Position, 700, Graphics.Spear, Position, 0, false, 20));
                     break;
                 case Projectile.Arrow:
-                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Arrow, Position, 0, false, 60));
+                    Game1.Entities.projectiles.Add(new Bullet(this, player.Position, 800, Graphics.Arrow, Position, 0, false, 20));
                     break;
                 case Projectile.Grenade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, target, bulletSpeed, Graphics.Grenade, Position, 1, true, 50));
+                    Game1.Entities.projectiles.Add(new Bullet(this, new Vector2(player.Position.X, Position.Y), 300, Graphics.Grenade, Position, 1, true, 15));
                     break;
             }
         }
