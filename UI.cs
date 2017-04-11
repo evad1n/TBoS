@@ -48,14 +48,26 @@ namespace The_Bond_of_Stone {
 		//private bool drawHSOverlay = false;
 
 		//Button Stuff
-		Button quitButton = new Button(Graphics.MenuButtons[0], Graphics.MenuButtons[1], new Vector2(200, 200), Ping);
+		Button quitButton;
+		Button optionsButton;
+		Button highscoreButton;
+		Button playButton;
+		Button helpButton;
+		Button backButton;
 
 		public UI(PlayerStats playerStats, Viewport viewport) {
             PlayerStats = playerStats;
             this.viewport = viewport;
 
             fadeIncrement = -255 / fadeSpeed;
-        }
+
+			quitButton = new Button(Graphics.MenuButtons[0], Graphics.MenuButtons[1], new Vector2(viewport.Width - ((2 + Graphics.MenuButtons[0].Width) * Game1.PIXEL_SCALE), 0 + (2 * Game1.PIXEL_SCALE)), Ping);
+			optionsButton = new Button(Graphics.MenuButtons[9], Graphics.MenuButtons[10], new Vector2(2 * Game1.PIXEL_SCALE, 0 + (2 * Game1.PIXEL_SCALE)), Ping);
+			highscoreButton = new Button(Graphics.MenuButtons[2], Graphics.MenuButtons[3], new Vector2((viewport.Width / 2 + ((Graphics.MenuButtons[2].Width / 2) * Game1.PIXEL_SCALE) - ((2 + Graphics.MenuButtons[11].Width)) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[2].Height) * Game1.PIXEL_SCALE)), Ping);
+			playButton = new Button(Graphics.MenuButtons[11], Graphics.MenuButtons[12], new Vector2(viewport.Width/2 + ((Graphics.MenuButtons[11].Width/2) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[11].Height) * Game1.PIXEL_SCALE)), Ping);
+			helpButton = new Button(Graphics.MenuButtons[4], Graphics.MenuButtons[5], new Vector2((viewport.Width / 2 + ((Graphics.MenuButtons[4].Width / 2) * Game1.PIXEL_SCALE) + ((2 + Graphics.MenuButtons[11].Width)) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[4].Height) * Game1.PIXEL_SCALE)), Ping);
+			backButton = new Button(Graphics.MenuButtons[6], Graphics.MenuButtons[7], new Vector2(2 * Game1.PIXEL_SCALE, viewport.Height - ((2 + Graphics.MenuButtons[6].Height) * Game1.PIXEL_SCALE)), Ping);
+		}
 
         public void Update(GameTime gameTime, GameState state) {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -77,7 +89,7 @@ namespace The_Bond_of_Stone {
                 else if (ssTimer >= splashScreenDuration * .95f && ssTimer < splashScreenDuration * 1.0)
                     fading = true;
 
-				quitButton.Update();
+				
             }
 
 
@@ -86,8 +98,34 @@ namespace The_Bond_of_Stone {
 
                 if (alphaValue >= 255 || alphaValue <= 0)
                     fadeIncrement *= -1;
-            }
-        }
+
+
+			}
+
+			switch (state) {
+				case GameState.SplashScreen:
+					break;
+				case GameState.MainMenu:
+					quitButton.Update();
+					optionsButton.Update();
+					highscoreButton.Update();
+					playButton.Update();
+					helpButton.Update();
+					if (MainMenuState == MenuState.HighScore)
+						backButton.Update();
+					break;
+				case GameState.Playing:
+					break;
+				case GameState.Pause:
+					quitButton.Update();
+					backButton.Update();
+					break;
+				case GameState.GameOver:
+					quitButton.Update();
+					backButton.Update();
+					break;
+			}
+		}
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime, GameState gameState) {
             switch (gameState) {
@@ -110,11 +148,24 @@ namespace The_Bond_of_Stone {
                                 Color.White);
 
 							quitButton.Draw(spriteBatch);
-                            break;
+							optionsButton.Draw(spriteBatch);
+							highscoreButton.Draw(spriteBatch);
+							playButton.Draw(spriteBatch);
+							helpButton.Draw(spriteBatch);
+
+							break;
 
                         case MenuState.HighScore:
 							DrawHighScoreOverlay(spriteBatch);
-                            break;
+
+							quitButton.Draw(spriteBatch);
+							optionsButton.Draw(spriteBatch);
+							highscoreButton.Draw(spriteBatch);
+							playButton.Draw(spriteBatch);
+							helpButton.Draw(spriteBatch);
+							highscoreButton.Draw(spriteBatch);
+
+							break;
                     }
                     
 
@@ -155,7 +206,10 @@ namespace The_Bond_of_Stone {
                         new Vector2(viewport.Width / 2 - Graphics.Font_Main.MeasureString("Game Over").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 - Graphics.Font_Main.MeasureString("Game Over").Y * Game1.PIXEL_SCALE / 2),
                         Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
 
-                    break;
+					quitButton.Draw(spriteBatch);
+					backButton.Draw(spriteBatch);
+
+					break;
 
                 case GameState.GameOver:
 					//Draw the player's score
@@ -179,6 +233,9 @@ namespace The_Bond_of_Stone {
 							"Game Over!",
 							new Vector2(viewport.Width / 2 - Graphics.Font_Main.MeasureString("Game Over").X * Game1.PIXEL_SCALE / 2, viewport.Height / 2 - Graphics.Font_Main.MeasureString("Game Over").Y * Game1.PIXEL_SCALE / 2),
 							Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 1);
+
+					quitButton.Draw(spriteBatch);
+					backButton.Draw(spriteBatch);
 
 					break;
             }
@@ -424,7 +481,7 @@ namespace The_Bond_of_Stone {
 
 
 		// REMOVE THIS IN A SECOND
-		public static void Ping() {
+		private static void Ping() {
 			Console.WriteLine("Boop");
 		}
 
