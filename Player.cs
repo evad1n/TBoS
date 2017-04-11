@@ -454,8 +454,8 @@ namespace The_Bond_of_Stone {
 
         public void KnockBack(Vector2 boom)
         {
-            velocity.X += boom.X;
-            velocity.Y += boom.Y;
+            velocity.X = boom.X;
+            velocity.Y = boom.Y;
             Game1.Camera.ScreenShake(4f, 0.3f);
         }
     }
