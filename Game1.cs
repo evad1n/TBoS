@@ -205,14 +205,15 @@ namespace The_Bond_of_Stone {
         /// Update the game with play behaviors.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        void UpdatePlaying(GameTime gameTime) {
+        void UpdatePlaying(GameTime gameTime)
+        {
 
             Player.Update(gameTime, keyboardState, prevKeyboardState);
             PlayerStats.Update(gameTime);
 
             if (!PlayerStats.IsAlive)
             {
-                if(PlayerStats.Health <= 0)
+                if (PlayerStats.Health <= 0)
                     Player.KnockBack(new Vector2(-200f, -800f));
                 State = GameState.GameOver;
                 Camera.Target = null;
