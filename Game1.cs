@@ -371,7 +371,7 @@ namespace The_Bond_of_Stone {
             //Draw titans if necessary
             if (Titans.HasTitan) {
                 spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
-                Titans.Draw(spriteBatch);
+                Titans.Draw(spriteBatch, color);
                 spriteBatch.End();
             }
 
@@ -402,7 +402,7 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPause(GameTime gameTime, Color color) {
-            DrawPlaying(gameTime, Color.White);
+            DrawPlaying(gameTime, color);
         }
 
         /// <summary>
@@ -410,7 +410,7 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawGameOver(GameTime gameTime, Color color) {
-            DrawPlaying(gameTime, Color.White);
+            DrawPlaying(gameTime, color);
         }
 
         /// <summary>

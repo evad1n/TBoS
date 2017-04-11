@@ -65,9 +65,9 @@ namespace The_Bond_of_Stone {
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch) {
+        public void Draw(SpriteBatch spriteBatch, Color color) {
             if (activeTitan != null) {
-                activeTitan.Draw(spriteBatch, Color.White, 0);
+                activeTitan.Draw(spriteBatch, color, 0);
             }
         }
 

@@ -13,11 +13,25 @@ namespace The_Bond_of_Stone {
     /// By Dom Liotti and Chip Butler
     /// </summary>
     public class Chunk {
+        //Has the chunk been stitched to the chunk before it?
+        private bool stitched;
+
+        /// <summary>
+        /// Keeps track of whether the chunk has been stitched to the *previous* chunk.
+        /// </summary>
+        public bool Stitched {
+            get { return stitched; }
+        }
+
+
         //Linear list of tile data.
         public List<Tile> Tiles = new List<Tile>();
 
         //List of the tile IDs within the chunk, in a 2D array (for stitching and similar)
         private int[,] atlas;
+
+        //coordinate-to-Tile finder dictionary
+        private Dictionary<int[], Tile> TileByAtlas;
 
         /// <summary>
         /// The width of the chunk in tiles.
@@ -88,6 +102,7 @@ namespace The_Bond_of_Stone {
 
         //Starter generation
         public Chunk(string path, Rectangle origin) {
+            stitched = true;
             atlas = MapReader.ReadImage(path);
 
             this.origin = origin;
@@ -96,6 +111,7 @@ namespace The_Bond_of_Stone {
 
         //Regular chunk instantiation
         public Chunk(Rectangle origin) {
+            stitched = false;
             this.origin = origin;
         }
 
@@ -105,6 +121,7 @@ namespace The_Bond_of_Stone {
         /// <param name="atlas">The 2D array of tile IDs</param>
         /// <param name="size">The size of the tiles.</param>
         public void Generate(int[,] atlas, int size) {
+            this.atlas = atlas;
             //Generate the offset so the chunk is added at the correct height
             int yoffset = 0;
             for (int iter = 0; iter < atlas.GetLength(0); iter++) {
@@ -112,10 +129,8 @@ namespace The_Bond_of_Stone {
                 if (atlas[iter, 0] == 4) {
                     yoffset = iter;
                     startTileCoords = new int[] { yoffset, 0 };
-                    break;
                 }
                 //y offset equals the iterator
-                //then break.
             }
 
             for (int iter = 0; iter < atlas.GetLength(0); iter++)
@@ -125,6 +140,8 @@ namespace The_Bond_of_Stone {
                     endTileCoords = new int[] { iter, atlas.GetLength(1) };
                 }
             }
+
+            TileByAtlas = new Dictionary<int[], Tile>(atlas.Length);
 
             //Iterate through each value of the Atlas
             for (int x = 0; x < atlas.GetLength(1); x++) {
@@ -194,6 +211,7 @@ namespace The_Bond_of_Stone {
                     }
 
                     Tiles.Add(tileToAdd);
+                    TileByAtlas.Add(new int[] { y, x }, tileToAdd);
 
                     rect = new Rectangle(
                         origin.X, 
@@ -341,12 +359,32 @@ namespace The_Bond_of_Stone {
         }
 
         /// <summary>
-        /// 
+        /// Stitches two chunks together.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
+        /// <param name="left">The chunk to the left</param>
+        /// <param name="right">The chunk to the right</param>
         public static void StitchChunks(Chunk left, Chunk right) {
-            
+            right.stitched = true;
+            for(int i = left.EndTileCoords[0]-1, j = right.StartTileCoords[0]-1; i > -1 && j > -1; i--, j--) {
+                if((left[i,left.AtlasWidth-1] == 1 || left[i, left.AtlasWidth - 1] == 3 || left[i, left.AtlasWidth - 1] == 4 || left[i, left.AtlasWidth - 1] == 5) &&(right[j, 0] == 1 || right[j,0] == 3 || right[j,0] == 4 || right[j,0] == 5)) {
+                    Tile tmp = left.TileByAtlas[new int[] { i, left.AtlasWidth - 1 }];
+                    tmp.Adjacents[2] = true;
+                    tmp.StitchTile();
+                    tmp = right.TileByAtlas[new int[] { j, 0 }];
+                    tmp.Adjacents[1] = true;
+                    tmp.StitchTile();
+                }
+            }
+            for (int i = left.EndTileCoords[0] + 1, j = right.StartTileCoords[0] + 1; i > left.AtlasHeight && j > right.AtlasHeight; i++, j++) {
+                if ((left[i, left.AtlasWidth - 1] == 1 || left[i, left.AtlasWidth - 1] == 3 || left[i, left.AtlasWidth - 1] == 4 || left[i, left.AtlasWidth - 1] == 5) && (right[j, 0] == 1 || right[j, 0] == 3 || right[j, 0] == 4 || right[j, 0] == 5)) {
+                    Tile tmp = left.TileByAtlas[new int[] { i, left.AtlasWidth - 1 }];
+                    tmp.Adjacents[2] = true;
+                    tmp.StitchTile();
+                    tmp = right.TileByAtlas[new int[] { j, 0 }];
+                    tmp.Adjacents[1] = true;
+                    tmp.StitchTile();
+                }
+            }
         }
     }
 }
