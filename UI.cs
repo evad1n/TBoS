@@ -55,7 +55,7 @@ namespace The_Bond_of_Stone {
 		Button helpButton;
 		Button backButton;
 
-		public UI(PlayerStats playerStats, Viewport viewport) {
+		public UI(PlayerStats playerStats, Viewport viewport, Game1 game1) {
             PlayerStats = playerStats;
             this.viewport = viewport;
 
@@ -63,9 +63,9 @@ namespace The_Bond_of_Stone {
 
 			quitButton = new Button(Graphics.MenuButtons[0], Graphics.MenuButtons[1], new Vector2(viewport.Width - ((2 + Graphics.MenuButtons[0].Width) * Game1.PIXEL_SCALE), 0 + (2 * Game1.PIXEL_SCALE)), Ping);
 			optionsButton = new Button(Graphics.MenuButtons[9], Graphics.MenuButtons[10], new Vector2(2 * Game1.PIXEL_SCALE, 0 + (2 * Game1.PIXEL_SCALE)), Ping);
-			highscoreButton = new Button(Graphics.MenuButtons[2], Graphics.MenuButtons[3], new Vector2((viewport.Width / 2 + ((Graphics.MenuButtons[2].Width / 2) * Game1.PIXEL_SCALE) - ((2 + Graphics.MenuButtons[11].Width)) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[2].Height) * Game1.PIXEL_SCALE)), Ping);
-			playButton = new Button(Graphics.MenuButtons[11], Graphics.MenuButtons[12], new Vector2(viewport.Width/2 + ((Graphics.MenuButtons[11].Width/2) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[11].Height) * Game1.PIXEL_SCALE)), Ping);
-			helpButton = new Button(Graphics.MenuButtons[4], Graphics.MenuButtons[5], new Vector2((viewport.Width / 2 + ((Graphics.MenuButtons[4].Width / 2) * Game1.PIXEL_SCALE) + ((2 + Graphics.MenuButtons[11].Width)) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[4].Height) * Game1.PIXEL_SCALE)), Ping);
+			highscoreButton = new Button(Graphics.MenuButtons[2], Graphics.MenuButtons[3], new Vector2((viewport.Width / 2 - ((Graphics.MenuButtons[2].Width / 2) * Game1.PIXEL_SCALE) - ((2 + Graphics.MenuButtons[11].Width)) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[2].Height) * Game1.PIXEL_SCALE)), Ping);
+			playButton = new Button(Graphics.MenuButtons[11], Graphics.MenuButtons[12], new Vector2(viewport.Width/2 - ((Graphics.MenuButtons[11].Width/2) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[11].Height) * Game1.PIXEL_SCALE)), game1.toPlayState);
+			helpButton = new Button(Graphics.MenuButtons[4], Graphics.MenuButtons[5], new Vector2((viewport.Width / 2 - ((Graphics.MenuButtons[4].Width / 2) * Game1.PIXEL_SCALE) + ((2 + Graphics.MenuButtons[11].Width)) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[4].Height) * Game1.PIXEL_SCALE)), Ping);
 			backButton = new Button(Graphics.MenuButtons[6], Graphics.MenuButtons[7], new Vector2(2 * Game1.PIXEL_SCALE, viewport.Height - ((2 + Graphics.MenuButtons[6].Height) * Game1.PIXEL_SCALE)), Ping);
 		}
 
@@ -212,16 +212,6 @@ namespace The_Bond_of_Stone {
 					break;
 
                 case GameState.GameOver:
-					//Draw the player's score
-					DrawScore(spriteBatch);
-
-					//Draw the player's time and distance
-					//DrawTechnicalScores(spriteBatch);
-
-					//Draw the player's Health
-					DrawHealth(spriteBatch);
-
-					DrawMultiplier(spriteBatch, gameTime);
 
 					var timer = (float)gameTime.ElapsedGameTime.TotalSeconds;
 					currentHSPopDelay -= timer;
@@ -386,11 +376,6 @@ namespace The_Bond_of_Stone {
             spriteBatch.Draw(Graphics.BlackTexture, new Rectangle(0, 0, viewport.Width, viewport.Height), new Color(0, 0, 0, (int)MathHelper.Clamp(alphaValue, 0, 255)));
         }
 
-        bool IsButtonPressed(Rectangle button, MouseState state)
-        {
-            return state.LeftButton == ButtonState.Pressed && state.X >= button.X && state.X <= button.Right && state.Y >= button.Y && state.Y <= button.Bottom;
-        }
-
 		private void DrawMultiplierTicks(SpriteBatch spriteBatch) {
 
 			for (int i = 0; i < 4; i++) {
@@ -445,7 +430,7 @@ namespace The_Bond_of_Stone {
 
 				string s = string.Format("{0:#,###0}", Game1.Score.Score[i]);
 				Vector2 mSize = Graphics.Font_Main.MeasureString(s);
-				Vector2 sSize = Graphics.Font_Small.MeasureString((i + 1) + ". " + s);
+				Vector2 sSize = Graphics.Font_Small.MeasureString(s);
 
 				if (s.Equals(string.Format("{0:#,###0}", Game1.Score.mostRecentScore)) && firstScoreDraw)
 					if (i == 0) {
@@ -454,7 +439,7 @@ namespace The_Bond_of_Stone {
 						firstScoreDraw = false;
 					}
 					else {
-						spriteBatch.DrawString(Graphics.Font_Small, (i + 1) + ". " + s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), new Color(255, 174, 12, 255), 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+						spriteBatch.DrawString(Graphics.Font_Small, s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), new Color(255, 174, 12, 255), 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
 						firstScoreDraw = false;
 					}
 				else {
@@ -463,7 +448,7 @@ namespace The_Bond_of_Stone {
 						firstRect.X = (int)(rect.X + rect.Width / 2 - mSize.X * Game1.PIXEL_SCALE / 2);
 					}
 					else
-						spriteBatch.DrawString(Graphics.Font_Small, (i + 1) + ". " + s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
+						spriteBatch.DrawString(Graphics.Font_Small, s, new Vector2(rect.X + rect.Width / 2 - sSize.X * Game1.PIXEL_SCALE / 2, rect.Y + rect.Height / 2 - mSize.Y), Color.White, 0, Vector2.Zero, Game1.PIXEL_SCALE, SpriteEffects.None, 0);
 				}
 			}
 
@@ -481,7 +466,7 @@ namespace The_Bond_of_Stone {
 
 
 		// REMOVE THIS IN A SECOND
-		private static void Ping() {
+		private void Ping() {
 			Console.WriteLine("Boop");
 		}
 

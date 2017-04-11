@@ -18,7 +18,7 @@ namespace The_Bond_of_Stone {
         //PHYSICS
         float speedJump = -1500f; //Speed of the player's initial jump
         float acceleration = 13000f; //how fast the player picks up speed from rest
-        float maxFallSpeed = 2000f; //max effect of gravity
+        float maxFallSpeed = 1500f; //max effect of gravity
         float maxSpeed = 1200f; //maximum speed
 
         float drag = .48f; //speed reduction (need this)
@@ -50,7 +50,7 @@ namespace The_Bond_of_Stone {
         float maxJumpTime = 0.5f; //how long can the player "sustain" a jump?
         float jumpControlPower = 0.14f;
 
-        bool WalljumpGivesXVelocity = false;
+		bool WalljumpGivesXVelocity = false;
         float wallJumpXVelocity = 750;
 
         float airTime;
@@ -129,9 +129,9 @@ namespace The_Bond_of_Stone {
             }
 
             if (Walled && !wallJumped)
-                maxFallSpeed = 125;
+                maxFallSpeed = 50;
             else
-                maxFallSpeed = 2000;
+                maxFallSpeed = 1500;
 
             //Stuff that happens when you hit the ground
             if (!Grounded && !Walled)

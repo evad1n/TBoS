@@ -19,7 +19,9 @@ namespace The_Bond_of_Stone {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public GameState State { get; set; }
+		//public GameState State { get; set; }
+
+		public static GameState State;
 
         //STATICS AND CONSTANTS
         public const int TILE_SIZE = 24;
@@ -112,7 +114,7 @@ namespace The_Bond_of_Stone {
 
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
             PlayerStats = new PlayerStats(Player, 6);
-            Interface = new UI(PlayerStats, GraphicsDevice.Viewport);
+            Interface = new UI(PlayerStats, GraphicsDevice.Viewport, this);
             Camera = new Camera(GraphicsDevice, Player, cameraSpeed);
             Generator = new LevelGenerator(graphics, chunkStartPos);
             Score = new ScoreManager();
@@ -414,9 +416,10 @@ namespace The_Bond_of_Stone {
             DrawPlaying(gameTime, Color.White);
         }
 
-        /// <summary>
-        /// Resets the game.
-        /// </summary>
+		/// <summary>
+		/// Resets the game.
+		/// </summary>
+		private static Action resetGameDelegate;
         public void ResetGame() {
             //Generate a new level
             Generator.Restart();
@@ -425,7 +428,7 @@ namespace The_Bond_of_Stone {
             Entities.enemies.Clear();
             Entities.projectiles.Clear();
 
-            Titans.Reset();
+			Titans.Reset();
 
             //Reset the player and camera
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
@@ -445,5 +448,14 @@ namespace The_Bond_of_Stone {
         public static bool KeyPressed(Keys key) {
             return (keyboardState.IsKeyDown(key) && !prevKeyboardState.IsKeyDown(key));
         }
-    }
+
+		#region State Related Button Methods
+
+		public void toPlayState() {
+			State = GameState.Playing;
+			ResetGame();
+		}
+
+		#endregion
+	}
 }
