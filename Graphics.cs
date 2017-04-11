@@ -134,7 +134,7 @@ namespace The_Bond_of_Stone {
 
             Icons = PopulateTextureArray("icons", 2, @"graphics\ui\");
 
-			MenuButtons = PopulateTextureArray("menuButton", 10, @"graphics\ui\");
+			MenuButtons = PopulateTextureArray("menuButton", 13, @"graphics\ui\");
 
 			Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");
