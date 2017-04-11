@@ -185,7 +185,7 @@ namespace The_Bond_of_Stone {
             //Update positions of sticky projectiles
             foreach(Bullet b in stickies)
             {
-                b.Position = (Position + b.relativePosition + new Vector2(10, 0));
+                b.Position = (Position + b.relativePosition + new Vector2(10, 5));
                 if(prevFacing != facing)
                 {
                     b.Flip();
@@ -258,7 +258,7 @@ namespace The_Bond_of_Stone {
                             b.sticky = true;
                             b.stuck = true;
                             b.relativePosition = b.Position - Position;
-                            b.relativePosition.X = MathHelper.Clamp(b.relativePosition.X, -2, 2);
+                            b.relativePosition.X = MathHelper.Clamp(b.relativePosition.X, -3, 3);
                             b.stuckRotation = b.rotation;
                             stickies.Add(b);
                         }

@@ -217,10 +217,10 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f));
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f), layerDepth: 0);
                 }
                 else
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f));
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f), layerDepth: 0);
             }
         }
 
