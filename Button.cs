@@ -49,7 +49,8 @@ namespace The_Bond_of_Stone
 		}
 
 		public void Draw(SpriteBatch spriteBatch) {
-			spriteBatch.Draw(nonClickedTexture, Rect, Color.White);
+            if (!clicked) spriteBatch.Draw(nonClickedTexture, Rect, Color.White);
+            else spriteBatch.Draw(clickedTexture, Rect, Color.White);
 		}
 
 
