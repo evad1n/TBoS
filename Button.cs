@@ -22,7 +22,7 @@ namespace The_Bond_of_Stone
 
         public Rectangle Rect
         {
-            get { return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height); }
+            get { return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width * Game1.PIXEL_SCALE, Texture.Height * Game1.PIXEL_SCALE); }
         }
 
         public Button(Texture2D nonClickedTexture, Texture2D clickedTexture, Vector2 position, Action method)
@@ -38,19 +38,23 @@ namespace The_Bond_of_Stone
         }
 
 		public void Update() {
-			if (Game1.mouseState.LeftButton == ButtonState.Pressed && CheckMouseLocation())
+			if (!clicked && Game1.mouseState.LeftButton == ButtonState.Pressed && CheckMouseLocation()) {
 				clicked = true;
-			if (Game1.mouseState.LeftButton == ButtonState.Released && CheckMouseLocation() && clicked) {
+			}
+			else if (clicked && Game1.mouseState.LeftButton == ButtonState.Released && CheckMouseLocation()) {
 				Click();
 				clicked = false;
 			}
-			else
+			else if (clicked && Game1.mouseState.LeftButton == ButtonState.Released && !CheckMouseLocation()) {
 				clicked = false;
+			}
 		}
 
 		public void Draw(SpriteBatch spriteBatch) {
-            if (!clicked) spriteBatch.Draw(nonClickedTexture, Rect, Color.White);
-            else spriteBatch.Draw(clickedTexture, Rect, Color.White);
+			if (clicked && CheckMouseLocation())
+				spriteBatch.Draw(clickedTexture, Rect, Color.White);
+			else
+				spriteBatch.Draw(nonClickedTexture, Rect, Color.White);
 		}
 
 
@@ -59,11 +63,11 @@ namespace The_Bond_of_Stone
 		}
 
 		private bool CheckMouseLocation() {
-			if (!Rect.Contains(Game1.mouseState.X, Game1.mouseState.Y))
-				return false;
-			if (!Rect.Contains(Game1.prevMouseState.X, Game1.prevMouseState.Y))
-				return false;
-			return true;
+			if (Rect.Contains(Game1.mouseState.X, Game1.mouseState.Y))
+				return true;
+			if (Rect.Contains(Game1.prevMouseState.X, Game1.prevMouseState.Y))
+				return true;
+			return false;
 		}
     }
 }

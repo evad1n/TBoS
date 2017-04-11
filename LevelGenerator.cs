@@ -37,9 +37,14 @@ namespace The_Bond_of_Stone {
         }
 
         public void UpdateChunkGeneration() {
+            Chunk prevChunk = Chunks[0];
             foreach (Chunk chunk in Chunks) {
                 if (!chunk.Generated)
                     chunk.Generate(MapReader.ReadImage(GetNewMapName()), Game1.TILE_SIZE);
+                if (!chunk.Stitched) {
+                    Chunk.StitchChunks(prevChunk, chunk);
+                }
+                prevChunk = chunk;
             }
 
             if (Chunks.Count > 0) {

@@ -15,7 +15,7 @@ namespace The_Bond_of_Stone
     /// </summary>
     class FlyingEnemy : Enemy
     {
-        float speed = 150;
+        float speed = 120;
 
         float timer = 0;
         const float pathTimer = 2;
