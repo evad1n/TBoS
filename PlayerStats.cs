@@ -161,6 +161,8 @@ namespace The_Bond_of_Stone {
 		//Just sets isAlive to false.
 		public void Die() {
 
+            Health = 0;
+
 			if (isAlive) {
 				Game1.Score.mostRecentScore = Score;
 				Game1.Score.AddScore(Score);
