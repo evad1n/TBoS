@@ -29,7 +29,7 @@ namespace The_Bond_of_Stone {
 
         //Array holding four booleans, which define whether this tile has neighboring tiles
         //that it should stitch together with in its four cardinal directions, in the order
-        //North, West, East, South.
+        //North, West, East, South.  //Up, left, right, down.
         private bool[] adjacents = new bool[4];
         public bool[] Adjacents {
             get { return adjacents; }
@@ -89,7 +89,7 @@ namespace The_Bond_of_Stone {
 
             //Draw the tile's decorations.
             foreach (TileDecoration d in Decorations) {
-                d.Draw(sb, Color.White);
+                d.Draw(sb, color);
             }
         }
 
