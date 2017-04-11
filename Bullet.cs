@@ -11,8 +11,10 @@ namespace The_Bond_of_Stone
     public class Bullet : Entity
     {
         float speed;
-        float rotation;
+        public float rotation;
         float rotationSpeed;
+        public bool facingLeft = false;
+        public float stuckRotation;
 
         public TurretEnemy parent;
         public bool bounce;
@@ -25,6 +27,7 @@ namespace The_Bond_of_Stone
         bool Left;
         bool Ceiling;
         public bool stuck = false;
+        public bool sticky = false;
 
         public Vector2 velocity;
         public Vector2 previousVelocity;
@@ -197,7 +200,7 @@ namespace The_Bond_of_Stone
 
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
-            if(relativePosition != null)
+            if(sticky)
             {
                 color = Game1.PlayerStats.invulnColor;
             }
@@ -214,10 +217,10 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f));
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f), layerDepth: 0);
                 }
                 else
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f));
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f), layerDepth: 0);
             }
         }
 
@@ -248,6 +251,13 @@ namespace The_Bond_of_Stone
             //Bullet explosion or something
 
             Active = false;
+        }
+
+        public void Flip()
+        {
+            float r = MathHelper.ToDegrees(rotation);
+            r = 180 - r;
+            rotation += MathHelper.ToRadians(2 * r);
         }
     }
 }

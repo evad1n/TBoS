@@ -240,7 +240,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
             {
-                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(Player.Position.X + 200, Player.Position.Y - 200), Projectile.Arrow));
+                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(Player.Position.X + 200, Player.Position.Y - 200), Projectile.Spear));
             }
 
             //Testing things
@@ -374,7 +374,7 @@ namespace The_Bond_of_Stone {
             //Draw titans if necessary
             if (Titans.HasTitan) {
                 spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
-                Titans.Draw(spriteBatch);
+                Titans.Draw(spriteBatch, color);
                 spriteBatch.End();
             }
 
@@ -405,7 +405,7 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPause(GameTime gameTime, Color color) {
-            DrawPlaying(gameTime, Color.White);
+            DrawPlaying(gameTime, color);
         }
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawGameOver(GameTime gameTime, Color color) {
-            DrawPlaying(gameTime, Color.White);
+            DrawPlaying(gameTime, color);
         }
 
 		/// <summary>
