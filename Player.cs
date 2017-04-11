@@ -38,6 +38,7 @@ namespace The_Bond_of_Stone {
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
+        SpriteEffects prevFacing = SpriteEffects.None;
         float walkingTimer = 0;
         float walkFrameSpeed = 0.05f;
         int walkFrame = 0;
@@ -181,9 +182,14 @@ namespace The_Bond_of_Stone {
                 particleTimer = 0;
             }
             
+            //Update positions of sticky projectiles
             foreach(Bullet b in stickies)
             {
-                b.Position = (Position + b.relativePosition);
+                b.Position = (Position + b.relativePosition + new Vector2(10, 0));
+                if(prevFacing != facing)
+                {
+                    b.Flip();
+                }
             }
 
 
@@ -248,7 +254,12 @@ namespace The_Bond_of_Stone {
                     {
                         if(!b.bounce)
                         {
+                            //Save rotation and relative position for stuck projectiles
+                            b.sticky = true;
+                            b.stuck = true;
                             b.relativePosition = b.Position - Position;
+                            b.relativePosition.X = MathHelper.Clamp(b.relativePosition.X, -2, 2);
+                            b.stuckRotation = b.rotation;
                             stickies.Add(b);
                         }
 
@@ -356,20 +367,25 @@ namespace The_Bond_of_Stone {
         //Returns -1, 0, or 1 depending on the X input state.
         public float GetXMotionFromInput(KeyboardState keyboardState) {
             float motion = 0f;
+            prevFacing = facing;
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)) {
                 motion += -1f;
 
                 if(!Walled)
+                {
                     facing = SpriteEffects.FlipHorizontally;
+                }
             }
 
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
                 motion += 1f;
 
-                if(!Walled)
+                if (!Walled)
+                {
                     facing = SpriteEffects.None;
+                }
             }
 
             return motion;
