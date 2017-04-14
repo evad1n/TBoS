@@ -132,11 +132,10 @@ namespace The_Bond_of_Stone
             }
             else
             {
-
                 //Check for collisions with enemies
                 Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
 
-                if (e != null && e != parent)
+                if (e != null && e != parent && !stuck)
                 {
                     e.Kill();
                     Kill();
