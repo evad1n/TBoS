@@ -221,6 +221,11 @@ namespace The_Bond_of_Stone {
                             if (((this.Position.X - s.Position.X) / Game1.TILE_SIZE) / Game1.TILE_PIXEL_SIZE == -1) walledRight = false;
                             Walled = walledLeft || walledRight;
                         }
+                    } else if (e is HealthPickup) {
+                        HealthPickup hp = (HealthPickup)e;
+
+                        if (hp != null && Rect.Intersects(hp.Rect))
+                            hp.Collect();
                     }
                 }
             }

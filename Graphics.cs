@@ -32,6 +32,7 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] Effect_PlayerParticlesRight;
 
         public static Texture2D[] PickupTexture_Coin;
+        public static Texture2D[] PickupTexture_Health;
 
         public static Texture2D[] EnemySlugTextures;
         public static Texture2D[] EnemyFlyerTextures;
@@ -122,6 +123,7 @@ namespace The_Bond_of_Stone {
             Titan_Tyche = PopulateTextureArray("titan_0", 12, @"graphics\misc\");
 
             PickupTexture_Coin = PopulateTextureArray("pickup_0", 4, @"graphics\entities\");
+            PickupTexture_Health = PopulateTextureArray("pickup_1", 6, @"graphics\entities\");
 
             EmptyTexture = Content.Load<Texture2D>(@"graphics\empty");
             BlackTexture = Content.Load<Texture2D>(@"graphics\ui\black");

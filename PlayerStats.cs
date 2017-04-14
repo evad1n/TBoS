@@ -119,11 +119,13 @@ namespace The_Bond_of_Stone {
 
         //removes health from the player. If the health is 0, kills the player.
         public void TakeDamage(int damage) {
-            if(!invulnerable)
+            if(damage > 0 && !invulnerable)
             {
                 Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
                 invulnerable = true;
                 invulnerabilityTimer = 0f;
+            } else if(damage < 0) {
+                Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
             }
 
             if (Health == 0)

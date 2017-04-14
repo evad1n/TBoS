@@ -124,6 +124,14 @@ namespace The_Bond_of_Stone {
                 case "060 000 150 255":
                     tileID = 17; //spawns a flying enemy with a background tile
                     break;
+
+                case "217 062 058 255":
+                    tileID = 18; //spawns a health pickup on open air
+                    break;
+
+                case "196 045 043 255":
+                    tileID = 19; //spawns a health pickup with a background tile behind it
+                    break;
             }
             return tileID;
         }

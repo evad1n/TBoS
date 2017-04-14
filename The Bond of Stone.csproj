@@ -52,7 +52,7 @@
     <Compile Include="CoinPickup.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="GroundEnemy.cs" />
-    <Compile Include="HeartPickup.cs" />
+    <Compile Include="HealthPickup.cs" />
     <Compile Include="JumpingEnemy.cs" />
     <Compile Include="LevelGenerator.cs" />
     <Compile Include="MapReader.cs" />

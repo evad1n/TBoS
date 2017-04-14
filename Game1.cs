@@ -181,6 +181,8 @@ namespace The_Bond_of_Stone {
 
             Interface.Update(gameTime, State);
 
+            Titans.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -223,8 +225,6 @@ namespace The_Bond_of_Stone {
             }
 
             Camera.Update(gameTime);
-
-            Titans.Update(gameTime);
 
             foreach (ParallaxLayer pl in parallaxLayers)
                 pl.Update(gameTime);
@@ -339,10 +339,10 @@ namespace The_Bond_of_Stone {
                     DrawPlaying(gameTime, Color.White);
                     break;
                 case GameState.GameOver:
-					DrawGameOver(gameTime, Color.GhostWhite);
+					DrawGameOver(gameTime, Color.White);
                     break;
                 case GameState.Pause:
-                    DrawPause(gameTime, Color.Gray);
+                    DrawPause(gameTime, Color.White);
                     break;
             }
 
