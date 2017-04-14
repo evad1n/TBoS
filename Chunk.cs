@@ -195,6 +195,16 @@ namespace The_Bond_of_Stone {
                         tileToAdd.ID = atlas[y, x] = 2;
                         Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
                     }
+                    else if (atlas[y, x] == 20)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 0;
+                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                    }
+                    else if (atlas[y, x] == 21)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                    }
                     else if (atlas[y, x] == 10 || atlas[y, x] == 12)
                     {
                         if (atlas[y, x] == 10) //adding a vertical spike
