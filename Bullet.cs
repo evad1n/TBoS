@@ -34,6 +34,9 @@ namespace The_Bond_of_Stone
         public Vector2 origin;
         public Vector2 relativePosition;
 
+        Chunk previousChunk;
+        Chunk nextChunk;
+
         public new Rectangle Rect
         {
             get
@@ -78,18 +81,21 @@ namespace The_Bond_of_Stone
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            previousChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X - 10, Position.Y));
+            nextChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X + 10, Position.Y));
+
             rotation += elapsed * rotationSpeed * Math.Sign(velocity.X);
 
-            if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
+            if (CurrentChunk != null && Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y > CurrentChunk.Bottom + Game1.CHUNK_LOWER_BOUND)
             {
                 Active = false;
             }
 
             //Check collision directions
-            Grounded = CheckCardinalCollision(new Vector2(0, 1));
-            Right = CheckCardinalCollision(new Vector2(1, 0));
-            Left = CheckCardinalCollision(new Vector2(-1, 0));
-            Ceiling = CheckCardinalCollision(new Vector2(0, -1));
+            Grounded = CheckCardinalCollision(new Vector2(0, 10));
+            Right = CheckCardinalCollision(new Vector2(10, 0));
+            Left = CheckCardinalCollision(new Vector2(-10, 0));
+            Ceiling = CheckCardinalCollision(new Vector2(0, -10));
 
             if (bounce)
             {
@@ -105,8 +111,8 @@ namespace The_Bond_of_Stone
 
                 if (Grounded && velocity.Y < 0)
                 {
-                    velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime));
-                    //Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
+                    velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime/2));
+                    Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
                     airTime = 0;
                 }
                 else if(Ceiling && velocity.Y > 0)
@@ -167,12 +173,12 @@ namespace The_Bond_of_Stone
             //Apply gravity
             if(bounce)
             {
-                velocity.Y = velocity.Y + Game1.GRAVITY.Y * elapsed;
+                velocity.Y += Game1.GRAVITY.Y * elapsed;
             }
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
+            //Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if(bounce)
             {
@@ -181,7 +187,7 @@ namespace The_Bond_of_Stone
             else
             {
                 //Check for collisions with level geometry
-                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
+                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect) || CollisionHelper.IsCollidingWithChunk(previousChunk, Rect) || CollisionHelper.IsCollidingWithChunk(nextChunk, Rect))
                 {
                     stuck = true;
                     velocity = Vector2.Zero;
@@ -189,7 +195,7 @@ namespace The_Bond_of_Stone
 
                 if (!stuck)
                 {
-                    if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
+                    if (CurrentChunk != null)
                         Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
                 }
             }
@@ -229,7 +235,7 @@ namespace The_Bond_of_Stone
             {
                 Rectangle check = Rect;
                 check.Offset(offset);
-                return CollisionHelper.IsCollidingWithChunk(CurrentChunk, check);
+                return CollisionHelper.IsCollidingWithChunk(CurrentChunk, check) || CollisionHelper.IsCollidingWithChunk(previousChunk, Rect) || CollisionHelper.IsCollidingWithChunk(nextChunk, Rect);
             }
             else
                 return false;

@@ -240,7 +240,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
             {
-                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(Player.Position.X + 200, Player.Position.Y - 200), Projectile.Spear));
+                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Sawblade));
             }
 
             //Testing things
@@ -260,7 +260,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.F))
             {
-                Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(mouseState.Position.X, mouseState.Position.Y), true));
+                Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(mouseState.Position.X, mouseState.Position.Y), false));
             }
 
             if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {

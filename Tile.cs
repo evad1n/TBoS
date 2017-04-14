@@ -66,12 +66,6 @@ namespace The_Bond_of_Stone {
 
             this.stitched = stitched;
 
-            //Draw Queueing: draw tiles that should be in the background before anything else.
-            if (ID != 2)
-                DrawQueue = 1;
-            else
-                DrawQueue = 0;
-
             //Initialize the texture to an empty image if one isn't given.
             if (texture == null)
                 this.texture = Graphics.EmptyTexture;
@@ -188,6 +182,15 @@ namespace The_Bond_of_Stone {
                             Decorations.Add(new TileDecoration(new Rectangle(Rect.X, Rect.Y + (Rect.Height - Rect.Height / Game1.TILE_PIXEL_SIZE), Rect.Width, Rect.Height), 3));
                     break;
             }
+        }
+
+        public void SetDrawQueue()
+        {
+            //Draw Queueing: draw tiles that should be in the background before anything else.
+            if (ID != 2)
+                DrawQueue = 1;
+            else
+                DrawQueue = 0;
         }
     }
 }

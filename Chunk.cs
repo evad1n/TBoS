@@ -223,7 +223,13 @@ namespace The_Bond_of_Stone {
                         (x + 1) * size,
                         (y + 1) * size
                         );
+
                 }
+            }
+
+            foreach(Tile t in Tiles)
+            {
+                t.SetDrawQueue();
             }
 
             //BETWEEN THIS LINE AND END OF METHOD = TILE PRETTY-IFYING (stitching, decorating)
@@ -357,6 +363,7 @@ namespace The_Bond_of_Stone {
             List<Tile> foreground = Tiles.Where(s => s.DrawQueue == 1).ToList();
             foreach (Tile tile in foreground)
                 tile.Draw(sb, color);
+
 
             //Draw chunks
             //sb.Draw(Graphics.DebugTexture, rect, color);

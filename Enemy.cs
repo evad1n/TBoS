@@ -27,7 +27,7 @@ namespace The_Bond_of_Stone
         /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public virtual void Update(GameTime gameTime)
         {
-            if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y > CurrentChunk.Bottom + Game1.CHUNK_LOWER_BOUND)
+            if (CurrentChunk != null && Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y > CurrentChunk.Bottom + Game1.CHUNK_LOWER_BOUND)
             {
                 Active = false;
             }

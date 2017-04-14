@@ -59,18 +59,18 @@ namespace The_Bond_of_Stone
 						return true;
 				}
 
-                //Check spikes in this chunk for collision as well
-                if (chunk.Entities.Count > 0) {
-                    foreach (Entity e in chunk.Entities) {
-                        if(e is Spike) {
-                            Spike s = (Spike)e;
-                            rect = s.Rect;
+                ////Check spikes in this chunk for collision as well
+                //if (chunk.Entities.Count > 0) {
+                //    foreach (Entity e in chunk.Entities) {
+                //        if(e is Spike) {
+                //            Spike s = (Spike)e;
+                //            rect = s.Rect;
 
-                            if (rect.Intersects(toCheck))
-                                return true;
-                        }
-                    }
-                }
+                //            if (rect.Intersects(toCheck))
+                //                return true;
+                //        }
+                //    }
+                //}
 			}
 
             //Otherwise, there is no collision.
