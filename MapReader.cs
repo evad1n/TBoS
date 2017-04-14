@@ -118,11 +118,11 @@ namespace The_Bond_of_Stone {
                     break;
 
                 case "102 000 255 255":
-                    tileID = 16; //spawns a flying enemy without a background tile
+                    tileID = 16; //spawns a horizontal flying enemy without a background tile
                     break;
 
                 case "060 000 150 255":
-                    tileID = 17; //spawns a flying enemy with a background tile
+                    tileID = 17; //spawns a horizontal flying enemy with a background tile
                     break;
 
                 case "217 062 058 255":
@@ -131,6 +131,14 @@ namespace The_Bond_of_Stone {
 
                 case "196 045 043 255":
                     tileID = 19; //spawns a health pickup with a background tile behind it
+                    break;
+
+                case "047 000 255 255":
+                    tileID = 20; //spawns a vertical flying enemy without a background tile
+                    break;
+
+                case "034 000 188 255":
+                    tileID = 21; //spawns a vertical flying enemy with a background tile
                     break;
             }
             return tileID;

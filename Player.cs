@@ -105,8 +105,8 @@ namespace The_Bond_of_Stone {
 
             //Check collision directions
             Grounded = CheckCardinalCollision(new Vector2(0, 3));
-            walledLeft = CheckCardinalCollision(new Vector2(-3, 0));
-            walledRight = CheckCardinalCollision(new Vector2(3, 0));
+            walledLeft = CheckCardinalCollision(new Vector2(-6, 0));
+            walledRight = CheckCardinalCollision(new Vector2(6, 0));
             Walled = walledLeft || walledRight;
 
             //Determine canStartJump states (Yes, this is necessary)
@@ -130,7 +130,7 @@ namespace The_Bond_of_Stone {
             }
 
             if (Walled && !wallJumped)
-                maxFallSpeed = 50;
+                maxFallSpeed = 125;
             else
                 maxFallSpeed = 1500;
 
