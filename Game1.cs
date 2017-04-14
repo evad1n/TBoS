@@ -389,13 +389,19 @@ namespace The_Bond_of_Stone {
 
             //Draw the foreground elements (Level, entities)
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: Camera.GetViewMatrix());
+
+            //Draw background tiles
             foreach (Chunk map in Generator.Chunks)
-                map.Draw(spriteBatch, color); //Draw each active chunk
+                map.DrawBackground(spriteBatch, color);
 
             //Draw enemies
             Entities.Draw(spriteBatch, State);
 
-			Player.Draw(spriteBatch, PlayerStats.invulnColor);
+            //Draw foreground tiles
+            foreach (Chunk map in Generator.Chunks)
+                map.DrawForeground(spriteBatch, color);
+
+            Player.Draw(spriteBatch, PlayerStats.invulnColor);
 
 			spriteBatch.End();
 		}

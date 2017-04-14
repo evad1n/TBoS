@@ -99,48 +99,30 @@ namespace The_Bond_of_Stone
             {
                 case GameState.Playing:
                     //Draw enemies
-                    if (enemies.Count > 0)
-                    {
-                        foreach (Entity g in enemies)
-                            g.Draw(sb, Color.White);
-                    }
+                    foreach (Entity g in enemies)
+                        g.Draw(sb, Color.White);
 
                     //Draw projectiles
-                    if (enemies.Count > 0)
-                    {
-                        foreach (Bullet b in projectiles)
-                            b.Draw(sb, Color.White);
-                    }
+                    foreach (Bullet b in projectiles)
+                        b.Draw(sb, Color.White);
                     break;
                 case GameState.GameOver:
                     //Draw enemies
-                    if (enemies.Count > 0)
-                    {
-                        foreach (Entity g in enemies)
-                            g.Draw(sb, Color.White);
-                    }
+                    foreach (Entity g in enemies)
+                        g.Draw(sb, Color.White);
 
                     //Draw projectiles
-                    if (enemies.Count > 0)
-                    {
-                        foreach (Bullet b in projectiles)
-                            b.Draw(sb, Color.White);
-                    }
+                    foreach (Bullet b in projectiles)
+                        b.Draw(sb, Color.White);
                     break;
                 case GameState.Pause:
                     //Draw enemies
-                    if (enemies.Count > 0)
-                    {
-                        foreach (Entity g in enemies)
-                            g.Draw(sb, Color.White);
-                    }
+                    foreach (Entity g in enemies)
+                        g.Draw(sb, Color.White);
 
                     //Draw projectiles
-                    if (enemies.Count > 0)
-                    {
-                        foreach (Bullet b in projectiles)
-                            b.Draw(sb, Color.White);
-                    }
+                    foreach (Bullet b in projectiles)
+                        b.Draw(sb, Color.White);
                     break;
             }
         }

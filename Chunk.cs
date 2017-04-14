@@ -352,13 +352,25 @@ namespace The_Bond_of_Stone {
                 Entities.Remove(e);
         }
 
-        public void Draw(SpriteBatch sb, Color color) {
+        public void DrawForeground(SpriteBatch sb, Color color) {
             //The tiles are sorted and drawn in ascending order of the DrawQueue property value
-            List<Tile> sortedTiles = Tiles.OrderBy(o => o.DrawQueue).ToList();
-            foreach (Tile tile in sortedTiles)
+            List<Tile> foreground = Tiles.Where(s => s.DrawQueue == 1).ToList();
+            foreach (Tile tile in foreground)
                 tile.Draw(sb, color);
 
-            if (Entities.Count > 0) {
+            //Draw chunks
+            //sb.Draw(Graphics.DebugTexture, rect, color);
+        }
+
+        public void DrawBackground(SpriteBatch sb, Color color)
+        {
+            //The tiles are sorted and drawn in ascending order of the DrawQueue property value
+            List<Tile> background = Tiles.Where(s => s.DrawQueue == 0).ToList();
+            foreach (Tile tile in background)
+                tile.Draw(sb, color);
+
+            if (Entities.Count > 0)
+            {
                 foreach (Entity e in Entities)
                     e.Draw(sb, Color.White);
             }
