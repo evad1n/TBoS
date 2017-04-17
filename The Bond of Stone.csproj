@@ -39,6 +39,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ArrowLauncher.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="Camera.cs" />
