@@ -18,7 +18,6 @@ namespace The_Bond_of_Stone
     class Spike : Entity
     {
         public FacingDirection Facing;
-        public Rectangle HitRect;
 
         public Spike(Texture2D texture, Vector2 position, FacingDirection direction) : base(texture, position) {
             Texture = texture;
@@ -29,19 +28,16 @@ namespace The_Bond_of_Stone
             if (Facing == FacingDirection.Up) {
                 Texture = Graphics.Spike_Up[Game1.RandomObject.Next(0, Graphics.Spike_Up.Length)];
                 Position = new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE);
-                HitRect = new Rectangle(Rect.X + Game1.PIXEL_SCALE, Rect.Y - 2 * Game1.PIXEL_SCALE, Rect.Width - Game1.PIXEL_SCALE, Rect.Height + 2 * Game1.PIXEL_SCALE + 1);
             } else if (Facing == FacingDirection.Left) {
                 Texture = Graphics.Spike_Left[Game1.RandomObject.Next(0, Graphics.Spike_Left.Length)];
                 Position = new Vector2(Position.X + Game1.PIXEL_SCALE, Position.Y);
-                HitRect = new Rectangle(Rect.X - Game1.PIXEL_SCALE, Rect.Y + Game1.PIXEL_SCALE, Rect.Width + Game1.PIXEL_SCALE, Rect.Height - Game1.PIXEL_SCALE);
             } else if (Facing == FacingDirection.Down) {
                 Texture = Graphics.Spike_Down[Game1.RandomObject.Next(0, Graphics.Spike_Down.Length)];
                 Position = new Vector2(Position.X, Position.Y - Game1.PIXEL_SCALE);
-                HitRect = new Rectangle(Rect.X + Game1.PIXEL_SCALE, Rect.Y, Rect.Width - Game1.PIXEL_SCALE, Rect.Height + Game1.PIXEL_SCALE);
+               
             } else if (Facing == FacingDirection.Right) {
                 Texture = Graphics.Spike_Right[Game1.RandomObject.Next(0, Graphics.Spike_Right.Length)];
                 Position = new Vector2(Position.X - Game1.PIXEL_SCALE, Position.Y);
-                HitRect = new Rectangle(Rect.X, Rect.Y + Game1.PIXEL_SCALE, Rect.Width + Game1.PIXEL_SCALE, Rect.Height - Game1.PIXEL_SCALE);
             }
         }
 

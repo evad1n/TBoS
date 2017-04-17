@@ -129,11 +129,6 @@ namespace The_Bond_of_Stone {
                     canStartJump = false;
             }
 
-            if (Walled && !wallJumped)
-                maxFallSpeed = 125;
-            else
-                maxFallSpeed = 1500;
-
             //Stuff that happens when you hit the ground
             if (!Grounded && !Walled)
                 airTime += elapsed;
@@ -146,19 +141,22 @@ namespace The_Bond_of_Stone {
             else
                 airTime = 0;
 
-            //At the vertex
+            //At the apex
             if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
             {
                 airTime = 0;
             }
-
-
-
+            
             //Apply the physics
             ApplyPhysics(gameTime, keyboardState);
 
             //Clear the jumping state
             isJumping = false;
+
+            if (Walled && !wallJumped)
+                maxFallSpeed = 125;
+            else
+                maxFallSpeed = 1500;
 
             //Create particles if necessary
             particleTimer += elapsed;
@@ -213,7 +211,7 @@ namespace The_Bond_of_Stone {
                         Spike s = (Spike)e;
 
                         //If the player is touching this spike...
-                        if (s != null && Rect.Intersects(s.HitRect)) {
+                        if (s != null && Rect.Intersects(s.Rect)) {
                             //Take damage 
                             Game1.PlayerStats.TakeDamage(1, s);
                             //If walls are spikes, do not walljump off of them.
