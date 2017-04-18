@@ -16,19 +16,10 @@ namespace The_Bond_of_Stone
     class JumpingEnemy : Enemy
     {
         float jumpHeight = 500f;
-        int direction = 1;
-
-        Chunk nextChunk;
-        Rectangle gapRect;
-        Rectangle wallRect;
         int yOffset;
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
-        float walkingTimer = 0;
-        float walkFrameSpeed = 0.05f;
-        int walkFrame = 0;
-        int walkFramesTotal = 4;
 
         public bool Grounded;
 
@@ -41,13 +32,13 @@ namespace The_Bond_of_Stone
                 return new Rectangle(
                     (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
                     (int)Math.Round((Position.Y + Game1.PIXEL_SCALE) / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
-                    Graphics.EnemySlugTextures[0].Width * Game1.PIXEL_SCALE,
-                    Graphics.EnemySlugTextures[0].Height * Game1.PIXEL_SCALE
+                    Graphics.EnemyJumperTextures[0].Width * Game1.PIXEL_SCALE,
+                    Graphics.EnemyJumperTextures[0].Height * Game1.PIXEL_SCALE
                     );
             }
         }
 
-        public JumpingEnemy(Texture2D texture, Vector2 position) : base(texture, position)
+        public JumpingEnemy(Vector2 position) : base(Graphics.EnemyJumperTextures[0], position)
         {
             Texture = texture;
             Position = position;

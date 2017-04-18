@@ -55,7 +55,7 @@ namespace The_Bond_of_Stone {
         public static ScoreManager Score;
         public TitanManager Titans;
 
-        Player Player;
+        public static Player Player;
         public static PlayerStats PlayerStats;
 
         ParallaxLayer[] parallaxLayers;
@@ -240,7 +240,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
             {
-                Entities.enemies.Add(new TurretEnemy(Graphics.EnemySlugTextures[4], new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Sawblade));
+                Entities.enemies.Add(new TurretEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Arrow, new Vector2(1,0)));
             }
 
             //Testing things
@@ -250,17 +250,22 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.G) && prevKeyboardState.IsKeyUp(Keys.G))
             {
-                Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
+                Entities.enemies.Add(new GroundEnemy(new Vector2(Player.Position.X + 20, Player.Position.Y)));
             }
 
             if (keyboardState.IsKeyDown(Keys.J) && prevKeyboardState.IsKeyUp(Keys.J))
             {
-                Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(Player.Position.X + 20, Player.Position.Y)));
+                Entities.enemies.Add(new JumpingEnemy(new Vector2(Player.Position.X + 20, Player.Position.Y)));
             }
 
             if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.F))
             {
-                Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(mouseState.Position.X, mouseState.Position.Y), false));
+                Entities.enemies.Add(new FlyingEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), false));
+            }
+
+            if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.I))
+            {
+                Player.CurrentChunk.Entities.Add(new SpearTrap(new Vector2(mouseState.Position.X, mouseState.Position.Y), new Vector2(-1,0)));
             }
 
             if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {

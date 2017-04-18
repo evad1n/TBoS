@@ -168,42 +168,102 @@ namespace The_Bond_of_Stone {
                         Entities.Add(new HealthPickup(Graphics.PickupTexture_Health[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 2));
                     } else if (atlas[y, x] == 8) {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new GroundEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 9)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new GroundEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 14)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new JumpingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 15)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new JumpingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 16)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
                     }
                     else if (atlas[y, x] == 17)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
                     }
                     else if (atlas[y, x] == 20)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
                     }
                     else if (atlas[y, x] == 21)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                    }
+                    else if (atlas[y, x] == 22)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, -1)));
+                    }
+                    else if (atlas[y, x] == 23)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(1, 0)));
+                    }
+                    else if (atlas[y, x] == 24)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, 1)));
+                    }
+                    else if (atlas[y, x] == 25)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(-1, 0)));
+                    }
+                    else if (atlas[y, x] == 26)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, -1)));
+                    }
+                    else if (atlas[y, x] == 27)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(1, 0)));
+                    }
+                    else if (atlas[y, x] == 28)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, 1)));
+                    }
+                    else if (atlas[y, x] == 29)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(-1, 0)));
+                    }             
+                    else if (atlas[y, x] == 30)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 0;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Spear, Vector2.Zero));
+                    }
+                    else if (atlas[y, x] == 31)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Spear, Vector2.Zero));
+                    }
+                    else if (atlas[y, x] == 32)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(-1, 0)));
+                    }
+                    else if (atlas[y, x] == 33)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 10 || atlas[y, x] == 12)
                     {

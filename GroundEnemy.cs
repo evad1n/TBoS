@@ -47,7 +47,7 @@ namespace The_Bond_of_Stone
             }
         }
 
-        public GroundEnemy(Texture2D texture, Vector2 position) : base(texture, position)
+        public GroundEnemy(Vector2 position) : base(Graphics.EnemySlugTextures[0], position)
         {
             Texture = texture;
             Position = position;

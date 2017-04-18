@@ -15,10 +15,10 @@ namespace The_Bond_of_Stone
         float shootTimer;
         float attackSpeed;
         Projectile type;
+        Vector2 direction;
 
         Player player;
         int yOffset;
-        Texture2D bulletTexture = Graphics.Spike_Right[0];
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
@@ -38,12 +38,13 @@ namespace The_Bond_of_Stone
             }
         }
 
-        public TurretEnemy(Texture2D texture, Vector2 position, Projectile type) : base(texture, position)
+        public TurretEnemy(Vector2 position, Projectile type, Vector2 direction) : base(Graphics.EnemySlugTextures[0], position)
         {
             Texture = texture;
             Position = position;
             player = Game1.PlayerStats.Player;
             this.type = type;
+            this.direction = direction;
 
             //Set attack rate
             switch (type)
@@ -83,32 +84,36 @@ namespace The_Bond_of_Stone
 
             base.Update(gameTime);
 
-            if (player.Position.X < Position.X)
+            if(direction != null)
             {
-                facing = SpriteEffects.None;
-            }
-            else
-            {
-                facing = SpriteEffects.FlipHorizontally;
+                if (player.Position.X < Position.X)
+                {
+                    facing = SpriteEffects.None;
+                }
+                else
+                {
+                    facing = SpriteEffects.FlipHorizontally;
+                }
             }
         }
 
 
         public void Shoot()
         {
+
             switch (type)
             {
                 case Projectile.Sawblade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, new Vector2(player.Position.X, Position.Y), 200, Graphics.Sawblade, Position, 5, true, 5));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 200, Graphics.Sawblade, Position, 5, true, 5));
                     break;
                 case Projectile.Spear:
-                    Game1.Entities.projectiles.Add(new Bullet(this, player.Position, 700, Graphics.Spear, Position, 0, false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 700, Graphics.Spear, Position, 0, false, 20));
                     break;
                 case Projectile.Arrow:
-                    Game1.Entities.projectiles.Add(new Bullet(this, player.Position, 800, Graphics.Arrow, Position, 0, false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 800, Graphics.Arrow, Position, 0, false, 20));
                     break;
                 case Projectile.Grenade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, new Vector2(player.Position.X, Position.Y), 300, Graphics.Grenade, Position, 1, true, 15));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 300, Graphics.Grenade, Position, 1, true, 15));
                     break;
             }
         }
