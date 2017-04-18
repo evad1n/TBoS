@@ -78,7 +78,7 @@ namespace The_Bond_of_Stone {
         protected override void Initialize() {
             State = GameState.SplashScreen;
 
-            parallaxLayers = new ParallaxLayer[2];
+            parallaxLayers = new ParallaxLayer[3];
 
             playerStartPos = new Vector2(64, 64);
             chunkStartPos = new Rectangle(
@@ -124,8 +124,9 @@ namespace The_Bond_of_Stone {
             Generator.DoStarterGeneration();
             Camera.Reset();
 
-			parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
-            parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(2f, 0f), GraphicsDevice.Viewport);
+			parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(0.5f, 0f), GraphicsDevice.Viewport);
+            parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
+            parallaxLayers[2] = new ParallaxLayer(Graphics.ParallaxLayers[2], Player, new Vector2(2.1f, 0f), GraphicsDevice.Viewport);
         }
 
         /// <summary>
@@ -371,6 +372,12 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPlaying(GameTime gameTime, Color color) {
+
+            //Draw the background parallax layer
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
+            parallaxLayers[0].Draw(spriteBatch);
+            spriteBatch.End();
+
             //Draw titans if necessary
             if (Titans.HasTitan) {
                 spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
@@ -380,8 +387,8 @@ namespace The_Bond_of_Stone {
 
             //Draw the parallax layers in the background.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
-            foreach (ParallaxLayer pl in parallaxLayers)
-                pl.Draw(spriteBatch);
+            parallaxLayers[1].Draw(spriteBatch);
+            parallaxLayers[2].Draw(spriteBatch);
 
             Camera.Draw(spriteBatch);
 
