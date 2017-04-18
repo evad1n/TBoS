@@ -31,7 +31,7 @@ namespace The_Bond_of_Stone {
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
-        public static int TITAN_SPAWN_RATE = 25;
+        public static int TITAN_SPAWN_RATE = -1;
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
@@ -54,6 +54,7 @@ namespace The_Bond_of_Stone {
         public static EntityManager Entities;
         public static ScoreManager Score;
         public TitanManager Titans;
+        Sound LoadedSound;
 
         Player Player;
         public static PlayerStats PlayerStats;
@@ -78,7 +79,7 @@ namespace The_Bond_of_Stone {
         protected override void Initialize() {
             State = GameState.SplashScreen;
 
-            parallaxLayers = new ParallaxLayer[3];
+            parallaxLayers = new ParallaxLayer[2];
 
             playerStartPos = new Vector2(64, 64);
             chunkStartPos = new Rectangle(
@@ -112,6 +113,9 @@ namespace The_Bond_of_Stone {
             LoadedGraphics = new Graphics();
             LoadedGraphics.LoadContent(Content);
 
+            LoadedSound = new Sound();
+            LoadedSound.LoadContent(Content);
+
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
             PlayerStats = new PlayerStats(Player, 6);
             Interface = new UI(PlayerStats, GraphicsDevice.Viewport, this);
@@ -126,7 +130,6 @@ namespace The_Bond_of_Stone {
 
 			parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(0.5f, 0f), GraphicsDevice.Viewport);
             parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
-            parallaxLayers[2] = new ParallaxLayer(Graphics.ParallaxLayers[2], Player, new Vector2(2.1f, 0f), GraphicsDevice.Viewport);
         }
 
         /// <summary>
@@ -372,12 +375,6 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPlaying(GameTime gameTime, Color color) {
-
-            //Draw the background parallax layer
-            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
-            parallaxLayers[0].Draw(spriteBatch);
-            spriteBatch.End();
-
             //Draw titans if necessary
             if (Titans.HasTitan) {
                 spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
@@ -387,8 +384,8 @@ namespace The_Bond_of_Stone {
 
             //Draw the parallax layers in the background.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
+            parallaxLayers[0].Draw(spriteBatch);
             parallaxLayers[1].Draw(spriteBatch);
-            parallaxLayers[2].Draw(spriteBatch);
 
             Camera.Draw(spriteBatch);
 

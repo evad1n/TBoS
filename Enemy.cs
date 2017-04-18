@@ -69,6 +69,7 @@ namespace The_Bond_of_Stone
 
         public virtual void Kill()
         {
+            Sound.EnemyDeath.Play();
             Active = false;
         }
     }

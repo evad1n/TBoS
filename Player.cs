@@ -27,6 +27,9 @@ namespace The_Bond_of_Stone {
         float knockbackTimer = 0;
         bool knockback = false;
 
+        bool jumpedThisFrame = false;
+        bool walljumpedThisFrame = false;
+
         //Particle production
         float particleFrequency = 0.065f;
 		float particleLifetime = 4.5f;
@@ -121,6 +124,14 @@ namespace The_Bond_of_Stone {
                 prevKeyboardState.IsKeyDown(Keys.W) ||
                 prevKeyboardState.IsKeyDown(Keys.Up)) &&
                 !wallJumped;
+
+            if(canStartJump && Grounded)
+            {
+                Sound.PlayerJump.Play();
+            } else if(canStartJump && Walled)
+            {
+                Sound.PlayerWallJump.Play();
+            }
 
             ResolveDynamicEntityCollisions();
 

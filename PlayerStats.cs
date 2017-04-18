@@ -94,16 +94,6 @@ namespace The_Bond_of_Stone {
             } else
                 invulnIsFlashed = false;
 
-			if (ScoreMultiTicks >= 4 && ScoreMultiplier < 8) {
-				ScoreMultiTicks = 0;
-				if (ScoreMultiplier == 1)
-					ScoreMultiplier = 2;
-				else if (ScoreMultiplier == 2)
-					ScoreMultiplier = 4;
-				else if (ScoreMultiplier == 4)
-					ScoreMultiplier = 8;
-			}
-
             //Calculate whether the player died this update
             //if the player is alive
             //and the player has a chunk and is a certain distance below that chunk
@@ -124,8 +114,10 @@ namespace The_Bond_of_Stone {
                 Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
                 invulnerable = true;
                 invulnerabilityTimer = 0f;
+                Sound.PlayerTakeDamage.Play();
             } else if(damage < 0) {
                 Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
+                Sound.PickupGem.Play();
             }
 
             if (Health == 0)
@@ -153,7 +145,22 @@ namespace The_Bond_of_Stone {
 
         public void TickScore() {
 			ScoreMultiTicks++;
-		}
+
+            if (ScoreMultiTicks >= 4 && ScoreMultiplier < 8)
+            {
+                ScoreMultiTicks = 0;
+                if (ScoreMultiplier == 1)
+                    ScoreMultiplier = 2;
+                else if (ScoreMultiplier == 2)
+                    ScoreMultiplier = 4;
+                else if (ScoreMultiplier == 4)
+                    ScoreMultiplier = 8;
+
+                Sound.MultiplierIncrease.Play();
+            }else {
+                Sound.PickupCoin.Play();
+            }
+        }
 
 		public void ResetMultiplier() {
 			ScoreMultiplier = 1;
@@ -169,6 +176,7 @@ namespace The_Bond_of_Stone {
 			}
             invulnColor = Color.White;
             isAlive = false;
+            Sound.PlayerDeath.Play();
 			
         }
 
