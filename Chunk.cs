@@ -162,10 +162,10 @@ namespace The_Bond_of_Stone {
                         Entities.Add(new CoinPickup(Graphics.PickupTexture_Coin[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
                     } else if (atlas[y, x] == 18) {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Entities.Add(new HealthPickup(Graphics.PickupTexture_Health[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
+                        Entities.Add(new HealthPickup(Graphics.PickupTexture_Health[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 2));
                     } else if (atlas[y, x] == 19) {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Entities.Add(new HealthPickup(Graphics.PickupTexture_Health[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 1));
+                        Entities.Add(new HealthPickup(Graphics.PickupTexture_Health[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 2));
                     } else if (atlas[y, x] == 8) {
                         tileToAdd.ID = atlas[y, x] = 0;
                         Game1.Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
