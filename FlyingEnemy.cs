@@ -36,13 +36,13 @@ namespace The_Bond_of_Stone
                 return new Rectangle(
                     (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
                     (int)Math.Round(Position.Y / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
-                    Graphics.EnemySlugTextures[0].Width * Game1.PIXEL_SCALE,
-                    Graphics.EnemySlugTextures[0].Height * Game1.PIXEL_SCALE
+                    Graphics.EnemyFlyerTextures[0].Width * Game1.PIXEL_SCALE,
+                    Graphics.EnemyFlyerTextures[0].Height * Game1.PIXEL_SCALE
                     );
             }
         }
 
-        public FlyingEnemy(Texture2D texture, Vector2 position, bool horizontal) : base(texture, position)
+        public FlyingEnemy(Vector2 position, bool horizontal) : base(Graphics.EnemyFlyerTextures[0], position)
         {
             Texture = texture;
             Position = position;
@@ -89,7 +89,7 @@ namespace The_Bond_of_Stone
 
             velocity = direction * speed;
 
-            if (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom)
+            if (CurrentChunk != null && (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom + 500))
             {
                 Active = false;
             }

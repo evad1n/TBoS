@@ -18,7 +18,6 @@ namespace The_Bond_of_Stone
 
         public TurretEnemy parent;
         public bool bounce;
-        Vector2 direction;
         float airTime = 0f;
         Vector2 target;       
 
@@ -63,18 +62,36 @@ namespace The_Bond_of_Stone
             this.bounce = bounce;
             this.rotationSpeed = rotationSpeed;
 
-            //Account for spread
-            target += new Vector2(Game1.RandomObject.Next(spread));
 
-            //Calculate direction;
-            direction = Move(Position, target, speed);
-            velocity = direction;
+            if(target == Vector2.Zero)
+            {
+                //Account for spread
+                target += new Vector2(Game1.RandomObject.Next(spread));
 
-            //Calculate bullet rotation
-            Vector2 dir = target - position;
-            dir.Normalize();
-            rotation = (float)Math.Atan2(dir.Y, dir.X);
-            rotation += MathHelper.ToRadians(90);
+                //Calculate direction to find player
+                target = Game1.PlayerStats.Player.Position;
+                target = Move(Position, target, speed);
+
+                //Calculate bullet rotation
+                Vector2 dir = target - position;
+                dir.Normalize();
+                rotation = (float)Math.Atan2(dir.Y, dir.X);
+                rotation += MathHelper.ToRadians(90);
+            }
+            else
+            {
+
+                //Calculate bullet rotation
+                rotation = (float)Math.Atan2(target.Y, target.X);
+                rotation += MathHelper.ToRadians(90);
+
+                target *= speed;
+
+                //Account for spread
+                target += new Vector2(Game1.RandomObject.Next(spread));
+            }
+
+            velocity = target;
         }
         
         public void Update(GameTime gameTime)
@@ -86,7 +103,7 @@ namespace The_Bond_of_Stone
 
             rotation += elapsed * rotationSpeed * Math.Sign(velocity.X);
 
-            if (CurrentChunk != null && Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y > CurrentChunk.Bottom + Game1.CHUNK_LOWER_BOUND)
+            if (CurrentChunk != null && (Position.Y - Rect.Height < Game1.Camera.Rect.Top || Position.X - Rect.Width > Game1.Camera.Rect.Right || Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom + 500))
             {
                 Active = false;
             }

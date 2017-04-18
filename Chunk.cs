@@ -125,20 +125,26 @@ namespace The_Bond_of_Stone {
             //Generate the offset so the chunk is added at the correct height
             int yoffset = 0;
             for (int iter = 0; iter < atlas.GetLength(0); iter++) {
+                bool foundStartTile = false;
                 //If atlas value is a start tile
                 if (atlas[iter, 0] == 4) {
                     yoffset = iter;
                     startTileCoords = new int[] { yoffset, 0 };
+                    foundStartTile = true;
                 }
                 //y offset equals the iterator
+                if (foundStartTile) break;
             }
 
             for (int iter = 0; iter < atlas.GetLength(0); iter++)
             {
+                bool foundEndTile = false;
                 if (atlas[iter, atlas.GetLength(1) - 1] == 5)
                 {
                     endTileCoords = new int[] { iter, atlas.GetLength(1) };
+                    foundEndTile = true;
                 }
+                if (foundEndTile) break;
             }
 
             TileByAtlas = new Dictionary<int[], Tile>(atlas.Length);
@@ -168,42 +174,102 @@ namespace The_Bond_of_Stone {
                         Entities.Add(new HealthPickup(Graphics.PickupTexture_Health[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), 2));
                     } else if (atlas[y, x] == 8) {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new GroundEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 9)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new GroundEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new GroundEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 14)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new JumpingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 15)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new JumpingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
+                        Game1.Entities.enemies.Add(new JumpingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size))));
                     }
                     else if (atlas[y, x] == 16)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
                     }
                     else if (atlas[y, x] == 17)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
                     }
                     else if (atlas[y, x] == 20)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
                     }
                     else if (atlas[y, x] == 21)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new FlyingEnemy(Graphics.EnemySlugTextures[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                        Game1.Entities.enemies.Add(new FlyingEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                    }
+                    else if (atlas[y, x] == 22)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, -1)));
+                    }
+                    else if (atlas[y, x] == 23)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(1, 0)));
+                    }
+                    else if (atlas[y, x] == 24)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, 1)));
+                    }
+                    else if (atlas[y, x] == 25)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(-1, 0)));
+                    }
+                    else if (atlas[y, x] == 26)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, -1)));
+                    }
+                    else if (atlas[y, x] == 27)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(1, 0)));
+                    }
+                    else if (atlas[y, x] == 28)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, 1)));
+                    }
+                    else if (atlas[y, x] == 29)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 3;
+                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(-1, 0)));
+                    }             
+                    else if (atlas[y, x] == 30)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 0;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Spear, Vector2.Zero));
+                    }
+                    else if (atlas[y, x] == 31)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Spear, Vector2.Zero));
+                    }
+                    else if (atlas[y, x] == 32)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(-1, 0)));
+                    }
+                    else if (atlas[y, x] == 33)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 10 || atlas[y, x] == 12)
                     {
@@ -405,20 +471,20 @@ namespace The_Bond_of_Stone {
             right.stitched = true;
             for(int i = left.EndTileCoords[0]-1, j = right.StartTileCoords[0]-1; i > -1 && j > -1; i--, j--) {
                 if((left[i,left.AtlasWidth-1] == 1 || left[i, left.AtlasWidth - 1] == 3 || left[i, left.AtlasWidth - 1] == 4 || left[i, left.AtlasWidth - 1] == 5) &&(right[j, 0] == 1 || right[j,0] == 3 || right[j,0] == 4 || right[j,0] == 5)) {
-                    Tile tmp = left.TileByAtlas[new int[] { i, left.AtlasWidth - 1 }];
+                    Tile tmp = left.TileByAtlas.SingleOrDefault(t => (t.Key.First()==i) && (t.Key.Last() == left.AtlasWidth - 1)).Value;
                     tmp.Adjacents[2] = true;
                     tmp.StitchTile();
-                    tmp = right.TileByAtlas[new int[] { j, 0 }];
+                    tmp = right.TileByAtlas.SingleOrDefault(t => (t.Key.First() == j) && (t.Key.Last() == 0)).Value;
                     tmp.Adjacents[1] = true;
                     tmp.StitchTile();
                 }
             }
-            for (int i = left.EndTileCoords[0] + 1, j = right.StartTileCoords[0] + 1; i > left.AtlasHeight && j > right.AtlasHeight; i++, j++) {
+            for (int i = left.EndTileCoords[0] + 1, j = right.StartTileCoords[0] + 1; i < left.AtlasHeight && j < right.AtlasHeight; i++, j++) {
                 if ((left[i, left.AtlasWidth - 1] == 1 || left[i, left.AtlasWidth - 1] == 3 || left[i, left.AtlasWidth - 1] == 4 || left[i, left.AtlasWidth - 1] == 5) && (right[j, 0] == 1 || right[j, 0] == 3 || right[j, 0] == 4 || right[j, 0] == 5)) {
-                    Tile tmp = left.TileByAtlas[new int[] { i, left.AtlasWidth - 1 }];
+                    Tile tmp = left.TileByAtlas.SingleOrDefault(t => (t.Key.First() == i) && (t.Key.Last() == left.AtlasWidth - 1)).Value;
                     tmp.Adjacents[2] = true;
                     tmp.StitchTile();
-                    tmp = right.TileByAtlas[new int[] { j, 0 }];
+                    tmp = right.TileByAtlas.SingleOrDefault(t => (t.Key.First() == j) && (t.Key.Last() == 0)).Value;
                     tmp.Adjacents[1] = true;
                     tmp.StitchTile();
                 }
