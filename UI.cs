@@ -106,13 +106,15 @@ namespace The_Bond_of_Stone {
 				case GameState.SplashScreen:
 					break;
 				case GameState.MainMenu:
-					highscoreButton.Update();
-					playButton.Update();
-					helpButton.Update();
-					if (MainMenuState == MenuState.None)
+					if (MainMenuState == MenuState.None) {
 						quitButton.Update();
-					if (MainMenuState == MenuState.HighScore)
+						highscoreButton.Update();
+						playButton.Update();
+						helpButton.Update();
+					}
+					if (MainMenuState == MenuState.HighScore) {
 						backButton.Update();
+					}
 					break;
 				case GameState.Playing:
 					break;
