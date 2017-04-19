@@ -142,6 +142,7 @@ namespace The_Bond_of_Stone {
                     break;
 
                 ////ADDDD
+                /*
                 case "034 000 188 255":
                     tileID = 22; //spawns an arrow trap facing up
                     break;
@@ -178,6 +179,7 @@ namespace The_Bond_of_Stone {
                 case "034 000 188 255":
                     tileID = 33; //spawns a sawblade facing right
                     break;
+                    */
             }
             return tileID;
         }

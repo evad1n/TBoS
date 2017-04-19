@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -62,6 +63,8 @@ namespace The_Bond_of_Stone {
         bool wallJumped;
         public bool canStartJump;
 
+        SoundEffectInstance wallSlideSound;
+
         //Debuffs
         public bool bounce = false;
         float bounceDuration = 0;
@@ -93,6 +96,8 @@ namespace The_Bond_of_Stone {
             Position = position;
 
             particleTimer = 0;
+
+            wallSlideSound = Sound.PlayerWallSlide.CreateInstance();
         }
 
         /// <summary>
@@ -113,8 +118,8 @@ namespace The_Bond_of_Stone {
             Walled = walledLeft || walledRight;
 
             //Determine canStartJump states (Yes, this is necessary)
-            isJumping = (keyboardState.IsKeyDown(Keys.Space) || 
-                keyboardState.IsKeyDown(Keys.W) || 
+            isJumping = (keyboardState.IsKeyDown(Keys.Space) ||
+                keyboardState.IsKeyDown(Keys.W) ||
                 keyboardState.IsKeyDown(Keys.Up));
 
             canStartJump = (keyboardState.IsKeyDown(Keys.Space) ||
@@ -125,15 +130,24 @@ namespace The_Bond_of_Stone {
                 prevKeyboardState.IsKeyDown(Keys.Up)) &&
                 !wallJumped;
 
-            if(canStartJump && Grounded)
-            {
+            if (canStartJump && Grounded) {
                 Sound.PlayerJump.Play();
-            } else if(canStartJump && Walled)
-            {
+            } else if (canStartJump && Walled) {
                 Sound.PlayerWallJump.Play();
             }
 
+            /*
+            if (Walled || Grounded)
+            {
+                if(wallSlideSound.State == SoundState.Stopped)
+                    wallSlideSound.Play();
+            }
+
+            if(!(Walled || Grounded))
+                wallSlideSound.Stop();
+
             ResolveDynamicEntityCollisions();
+            */
 
             if (!Alive) {
                     Walled = false;
@@ -143,14 +157,19 @@ namespace The_Bond_of_Stone {
             //Stuff that happens when you hit the ground
             if (!Grounded && !Walled)
                 airTime += elapsed;
-            else if (Grounded && velocity.Y >= maxFallSpeed/4) {
+            else if (Grounded && velocity.Y >= maxFallSpeed / 4)
+            {
+                Sound.PlayerLandHard.Play();
                 Game1.Camera.ScreenShake(airTime * 5, airTime);
                 airTime = 0;
             }
             else if (Grounded && !Walled)
                 airTime = 0;
             else
+            {
                 airTime = 0;
+                Sound.PlayerLandSoft.Play();
+            }
 
             //At the apex
             if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
@@ -225,10 +244,6 @@ namespace The_Bond_of_Stone {
                         if (s != null && Rect.Intersects(s.Rect)) {
                             //Take damage 
                             Game1.PlayerStats.TakeDamage(1, s);
-                            //If walls are spikes, do not walljump off of them.
-                            if (((this.Position.X - s.Position.X) / Game1.TILE_SIZE) / Game1.TILE_PIXEL_SIZE == 1) walledLeft = false;
-                            if (((this.Position.X - s.Position.X) / Game1.TILE_SIZE) / Game1.TILE_PIXEL_SIZE == -1) walledRight = false;
-                            Walled = walledLeft || walledRight;
                         }
                     } else if (e is HealthPickup) {
                         HealthPickup hp = (HealthPickup)e;
