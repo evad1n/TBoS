@@ -145,8 +145,6 @@ namespace The_Bond_of_Stone {
 
             if(!(Walled || Grounded))
                 wallSlideSound.Stop();
-
-            ResolveDynamicEntityCollisions();
             */
 
             if (!Alive) {
@@ -253,6 +251,8 @@ namespace The_Bond_of_Stone {
                     }
                 }
             }
+
+            ResolveDynamicEntityCollisions();
         }
 
         public void ResolveDynamicEntityCollisions()
