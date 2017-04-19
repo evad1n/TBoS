@@ -157,9 +157,6 @@ namespace The_Bond_of_Stone {
                         case MenuState.HighScore:
 							DrawHighScoreOverlay(spriteBatch);
 
-							highscoreButton.Draw(spriteBatch);
-							playButton.Draw(spriteBatch);
-							helpButton.Draw(spriteBatch);
 							backButton.Draw(spriteBatch);
 
 							break;
