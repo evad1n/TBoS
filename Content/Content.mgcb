@@ -2617,3 +2617,9 @@
 /processorParam:Quality=Best
 /build:audio/playerWalljump.wav
 
+#begin audio/playerWallslide.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/playerWallslide.wav
+

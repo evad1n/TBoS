@@ -22,6 +22,7 @@ namespace The_Bond_of_Stone
         public static SoundEffect PlayerLandSoft;
         public static SoundEffect PlayerTakeDamage;
         public static SoundEffect PlayerWallJump;
+        public static SoundEffect PlayerWallSlide;
 
         public void LoadContent(ContentManager Content)
         {
@@ -37,6 +38,7 @@ namespace The_Bond_of_Stone
             PlayerLandSoft = Content.Load<SoundEffect>(@"audio\playerLandSoft");
             PlayerTakeDamage = Content.Load<SoundEffect>(@"audio\playerTakeDamage");
             PlayerWallJump = Content.Load<SoundEffect>(@"audio\playerWalljump");
+            PlayerWallSlide = Content.Load<SoundEffect>(@"audio\playerWallslide");
         }
     }
 }
