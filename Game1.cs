@@ -471,6 +471,16 @@ namespace The_Bond_of_Stone {
 			ResetGame();
 		}
 
+		public void toMainMenu() {
+			State = GameState.MainMenu;
+			Interface.ChangeMenuState(MenuState.None);
+		}
+
+		public void toHSScreen() {
+			State = GameState.MainMenu;
+			Interface.ChangeMenuState(MenuState.HighScore);
+		}
+
 		#endregion
 	}
 }
