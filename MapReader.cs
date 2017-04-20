@@ -141,45 +141,42 @@ namespace The_Bond_of_Stone {
                     tileID = 21; //spawns a vertical flying enemy with a background tile
                     break;
 
-                ////ADDDD
-                /*
-                case "034 000 188 255":
+                case "177 104 255 255":
                     tileID = 22; //spawns an arrow trap facing up
                     break;
-                case "034 000 188 255":
+                case "141 083 204 255":
                     tileID = 23; //spawns an arrow trap facing right
                     break;
-                case "034 000 188 255":
+                case "106 062 153 255":
                     tileID = 24; //spawns an arrow trap facing down
                     break;
-                case "034 000 188 255":
+                case "122 072 175 255":
                     tileID = 25; //spawns an arrow trap facing left
                     break;
-                case "034 000 188 255":
+                case "223 255 104 255":
                     tileID = 26; //spawns a spear trap facing up
                     break;
-                case "034 000 188 255":
+                case "179 204 083 255":
                     tileID = 27; //spawns a spear trap facing right
                     break;
-                case "034 000 188 255":
+                case "134 153 062 255":
                     tileID = 28; //spawns a spear trap facing down
                     break;
-                case "034 000 188 255":
+                case "152 175 072 255":
                     tileID = 29; //spawns a spear trap facing left
                     break;
-                case "034 000 188 255":
+                case "086 255 114 255":
                     tileID = 30; //spawns a spear thrower without a background tile
                     break;
-                case "034 000 188 255":
+                case "046 137 060 255":
                     tileID = 31; //spawns a spear thrower with a background tile
                     break;
-                case "034 000 188 255":
+                case "159 143 089 255":
                     tileID = 32; //spawns a sawblade facing left
                     break;
-                case "034 000 188 255":
+                case "119 103 051 255":
                     tileID = 33; //spawns a sawblade facing right
                     break;
-                    */
             }
             return tileID;
         }
