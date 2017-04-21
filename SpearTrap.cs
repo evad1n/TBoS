@@ -12,9 +12,16 @@ namespace The_Bond_of_Stone
     {
         float rotation;
         float speed = 100f;
+
         bool attack = false;
+        bool retract = false;
+        bool wait = false;
         float attackTimer;
+        float retractTimer;
+        float waitTimer;
+
         Vector2 startPosition;
+        Vector2 endPosition;
         Vector2 direction;
 
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
@@ -22,6 +29,7 @@ namespace The_Bond_of_Stone
             this.Position = position;
             this.direction = direction;
             startPosition = position;
+            endPosition = startPosition + (direction * texture.Height * 3);
 
             //Calculate spear rotation
             rotation = (float)Math.Atan2(direction.Y, direction.X);
@@ -32,15 +40,30 @@ namespace The_Bond_of_Stone
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            attackTimer += elapsed;
+            bool ready = !attack && !retract && !wait;
 
-            if(attackTimer > 2f)
+            if(attackTimer > 0.2f)
             {
                 attack = false;
+                wait = true;
+                attackTimer = 0;
+            }
+
+            if(waitTimer > 0.5f)
+            {
+                wait = false;
+                waitTimer = 0;
+                retract = true;
+            }
+
+            if(retractTimer > 2f)
+            {
+                retract = false;
+                retractTimer = 0;
             }
 
             //Shoot timer
-            if(Vector2.DistanceSquared(Game1.PlayerStats.Player.Position, Position) < 1600)
+            if(Vector2.DistanceSquared(Game1.PlayerStats.Player.Position, Position) < 5000 && ready)
             {
                 attack = true;
                 attackTimer = 0;
@@ -48,13 +71,17 @@ namespace The_Bond_of_Stone
 
             if(attack)
             {
-                Vector2 move =  Move(Position, startPosition + (direction * texture.Height), speed);
-                Position = new Vector2(move.X, move.Y);
+                Position = Move(startPosition, endPosition, attackTimer / 0.2f);
+                attackTimer += elapsed;
             }
-            else
+            else if(retract)
             {
-                Vector2 move = Move(Position, startPosition, speed);
-                Position = new Vector2(move.X, move.Y);
+                Position = Move(endPosition, startPosition, retractTimer / 2f);
+                retractTimer += elapsed;
+            }
+            else if(wait)
+            {
+                waitTimer += elapsed;
             }
             
 
@@ -74,21 +101,19 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, rotation: rotation);
                 }
                 else
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, rotation: rotation);
             }
         }
 
-        public Vector2 Move(Vector2 start, Vector2 target, float speed)
+        public Vector2 Move(Vector2 start, Vector2 target, float amount)
         {
-            Vector2 v = target - start;
-            if (v.Length() != 0)
-            {
-                v.Normalize();
-            }
-            return v * speed;
+            float x = start.X + ((target.X - start.X) * amount);
+            float y = start.Y + ((target.Y - start.Y) * amount);
+
+            return new Vector2(x, y);
         }
     }
 }

@@ -246,7 +246,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
             {
-                Entities.enemies.Add(new TurretEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Spear, Vector2.Zero));
+                Entities.enemies.Add(new TurretEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Arrow, new Vector2(-1, 0)));
             }
 
             //Testing things
@@ -266,10 +266,10 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.F))
             {
-                Entities.enemies.Add(new FlyingEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), false));
+                Entities.enemies.Add(new FlyingEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), true));
             }
 
-            if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.I))
+            if (keyboardState.IsKeyDown(Keys.I) && prevKeyboardState.IsKeyUp(Keys.I))
             {
                 Player.CurrentChunk.Entities.Add(new SpearTrap(new Vector2(mouseState.Position.X, mouseState.Position.Y), new Vector2(-1,0)));
             }

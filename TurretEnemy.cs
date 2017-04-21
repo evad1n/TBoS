@@ -84,7 +84,7 @@ namespace The_Bond_of_Stone
 
             base.Update(gameTime);
 
-            if(direction != null)
+            if(direction != Vector2.Zero)
             {
                 if (player.Position.X < Position.X)
                 {

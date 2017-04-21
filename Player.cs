@@ -229,25 +229,43 @@ namespace The_Bond_of_Stone {
 
             //Collect coins if necessary
             if (CurrentChunk != null && CurrentChunk.Entities.Count > 0) {
-                foreach (Entity e in CurrentChunk.Entities) {
-                    if(e is CoinPickup) {
+                foreach (Entity e in CurrentChunk.Entities)
+                {
+                    if (e is CoinPickup)
+                    {
                         CoinPickup c = (CoinPickup)e;
 
                         if (c != null && Rect.Intersects(c.Rect))
                             c.Collect();
-                    }else if(e is Spike) {
+                    }
+                    else if (e is Spike)
+                    {
                         Spike s = (Spike)e;
 
                         //If the player is touching this spike...
-                        if (s != null && Rect.Intersects(s.Rect)) {
+                        if (s != null && Rect.Intersects(s.Rect))
+                        {
                             //Take damage 
                             Game1.PlayerStats.TakeDamage(1, s);
                         }
-                    } else if (e is HealthPickup) {
+                    }
+                    else if (e is HealthPickup)
+                    {
                         HealthPickup hp = (HealthPickup)e;
 
                         if (hp != null && Rect.Intersects(hp.Rect))
                             hp.Collect();
+                    }
+                    else if (e is SpearTrap)
+                    {
+                        SpearTrap s = (SpearTrap)e;
+
+                        //If the player is touching this spike...
+                        if (s != null && Rect.Intersects(s.Rect))
+                        {
+                            //Take damage 
+                            Game1.PlayerStats.TakeDamage(1, s);
+                        }
                     }
                 }
             }
