@@ -211,11 +211,11 @@ namespace The_Bond_of_Stone
                     velocity = Vector2.Zero;
                 }
 
-                if (!stuck)
-                {
-                    if (CurrentChunk != null)
-                        Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
-                }
+                //if (!stuck)
+                //{
+                //    if (CurrentChunk != null)
+                //        Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+                //}
             }
 
 
