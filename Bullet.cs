@@ -99,9 +99,6 @@ namespace The_Bond_of_Stone
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            previousChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X - 10, Position.Y));
-            nextChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X + 10, Position.Y));
-
             rotation += elapsed * rotationSpeed * Math.Sign(velocity.X);
 
             if (CurrentChunk != null && (Position.Y - Rect.Height < Game1.Camera.Rect.Top || Position.X - Rect.Width > Game1.Camera.Rect.Right || Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom + 500))
@@ -200,12 +197,12 @@ namespace The_Bond_of_Stone
 
             if(bounce)
             {
-
+                //stuff that could fix sawblade sucking
             }
             else
             {
                 //Check for collisions with level geometry
-                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect) || CollisionHelper.IsCollidingWithChunk(previousChunk, Rect) || CollisionHelper.IsCollidingWithChunk(nextChunk, Rect))
+                if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
                 {
                     stuck = true;
                     velocity = Vector2.Zero;
