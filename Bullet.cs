@@ -109,14 +109,15 @@ namespace The_Bond_of_Stone
                 Active = false;
             }
 
-            //Check collision directions
-            Grounded = CheckCardinalCollision(new Vector2(0, 10));
-            Right = CheckCardinalCollision(new Vector2(10, 0));
-            Left = CheckCardinalCollision(new Vector2(-10, 0));
-            Ceiling = CheckCardinalCollision(new Vector2(0, -10));
 
             if (bounce)
             {
+                //Check collision directions
+                Grounded = CheckCardinalCollision(new Vector2(0, 3));
+                Right = CheckCardinalCollision(new Vector2(3, 0));
+                Left = CheckCardinalCollision(new Vector2(-3, 0));
+                Ceiling = CheckCardinalCollision(new Vector2(0, -3));
+
                 //At the vertex set airtime to 0
                 if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
                 {
@@ -196,7 +197,6 @@ namespace The_Bond_of_Stone
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-            //Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if(bounce)
             {
@@ -210,12 +210,6 @@ namespace The_Bond_of_Stone
                     stuck = true;
                     velocity = Vector2.Zero;
                 }
-
-                //if (!stuck)
-                //{
-                //    if (CurrentChunk != null)
-                //        Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
-                //}
             }
 
 

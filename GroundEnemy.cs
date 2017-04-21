@@ -98,9 +98,6 @@ namespace The_Bond_of_Stone
             //Save the previous position
             Vector2 previousPosition = Position;
 
-            //Set the X and Y components of the velocity separately.
-            velocity.Y = velocity.Y + Game1.GRAVITY.Y * elapsed;
-
             if(velocity.X > 0)
             {
                 facing = SpriteEffects.FlipHorizontally;
@@ -112,9 +109,6 @@ namespace The_Bond_of_Stone
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-
-            if (CurrentChunk != null)
-                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
 
 
             GetAnimation(elapsed);

@@ -26,9 +26,9 @@ namespace The_Bond_of_Stone
 
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
-            this.Position = position;
+            Position = new Vector2(position.X + Game1.TILE_SIZE/2, position.Y + Game1.TILE_SIZE / 2);
             this.direction = direction;
-            startPosition = position;
+            startPosition = Position;
             endPosition = startPosition + (direction * texture.Height * 3);
 
             //Calculate spear rotation

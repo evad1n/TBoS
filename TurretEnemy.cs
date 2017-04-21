@@ -95,7 +95,7 @@ namespace The_Bond_of_Stone
 
             base.Update(gameTime);
 
-            if(direction != Vector2.Zero)
+            if(direction == Vector2.Zero)
             {
                 if (player.Position.X < Position.X)
                 {
@@ -111,20 +111,20 @@ namespace The_Bond_of_Stone
 
         public void Shoot()
         {
-
+            Vector2 shootPos = new Vector2(Position.X + Game1.TILE_SIZE / 2, Position.Y + Game1.TILE_SIZE / 2);
             switch (type)
             {
                 case Projectile.Sawblade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 200, Graphics.Sawblade, Position, 5, true, 5));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 200, Graphics.Sawblade, shootPos, 5, true, 5));
                     break;
                 case Projectile.Spear:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 700, Graphics.Spear, Position, 0, false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 700, Graphics.Spear, shootPos, 0, false, 20));
                     break;
                 case Projectile.Arrow:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 800, Graphics.Arrow, Position, 0, false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 800, Graphics.Arrow, shootPos, 0, false, 20));
                     break;
                 case Projectile.Grenade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 300, Graphics.Grenade, Position, 1, true, 15));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 300, Graphics.Grenade, shootPos, 1, true, 15));
                     break;
             }
         }

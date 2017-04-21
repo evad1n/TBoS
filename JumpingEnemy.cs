@@ -95,9 +95,6 @@ namespace The_Bond_of_Stone
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-
-            if (CurrentChunk != null)
-                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
         }
 
         void GetAnimation()
