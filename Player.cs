@@ -238,9 +238,19 @@ namespace The_Bond_of_Stone {
                         if (c != null && Rect.Intersects(c.Rect))
                             c.Collect();
                     }
-                    else if (e is Spike)
+                    else if (e is HealthPickup)
                     {
-                        Spike s = (Spike)e;
+                        HealthPickup hp = (HealthPickup)e;
+
+                        if (hp != null && Rect.Intersects(hp.Rect))
+                            hp.Collect();
+                    }
+                }
+                foreach (Entity e in CurrentChunk.Traps)
+                {
+                    if (e is SpearTrap)
+                    {
+                        SpearTrap s = (SpearTrap)e;
 
                         //If the player is touching this spike...
                         if (s != null && Rect.Intersects(s.Rect))
@@ -249,16 +259,9 @@ namespace The_Bond_of_Stone {
                             Game1.PlayerStats.TakeDamage(1, s);
                         }
                     }
-                    else if (e is HealthPickup)
+                    else if (e is Spike)
                     {
-                        HealthPickup hp = (HealthPickup)e;
-
-                        if (hp != null && Rect.Intersects(hp.Rect))
-                            hp.Collect();
-                    }
-                    else if (e is SpearTrap)
-                    {
-                        SpearTrap s = (SpearTrap)e;
+                        Spike s = (Spike)e;
 
                         //If the player is touching this spike...
                         if (s != null && Rect.Intersects(s.Rect))

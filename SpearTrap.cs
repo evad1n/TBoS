@@ -11,7 +11,6 @@ namespace The_Bond_of_Stone
     class SpearTrap : Entity
     {
         float rotation;
-        float speed = 100f;
 
         bool attack = false;
         bool retract = false;
@@ -24,6 +23,9 @@ namespace The_Bond_of_Stone
         Vector2 endPosition;
         Vector2 direction;
 
+        Texture2D trap;
+        Rectangle trapRect;
+
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
             Position = new Vector2(position.X + Game1.TILE_SIZE/2, position.Y + Game1.TILE_SIZE / 2);
@@ -34,6 +36,18 @@ namespace The_Bond_of_Stone
             //Calculate spear rotation
             rotation = (float)Math.Atan2(direction.Y, direction.X);
             rotation += MathHelper.ToRadians(90);
+
+            //Get rect and rotation for trap texture
+            if (MathHelper.ToDegrees(rotation) == 180 || MathHelper.ToDegrees(rotation) == 360)
+            {
+                trap = Graphics.SpearTrap[0];
+            }
+            else
+            {
+                trap = Graphics.SpearTrap[1];
+            }
+
+            trapRect = new Rectangle((int)startPosition.X, (int)position.Y + Game1.TILE_SIZE, trap.Width, trap.Height);
         }
 
         public void Update(GameTime gameTime)
@@ -89,7 +103,11 @@ namespace The_Bond_of_Stone
 
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
+            spriteBatch.Draw(trap, destinationRectangle: trapRect, color: color, rotation: rotation);
+        }
 
+        public void DrawSpear(SpriteBatch spriteBatch, Color color, int depth = 0)
+        {
             if (Active)
             {
                 if (LockToPixelGrid)

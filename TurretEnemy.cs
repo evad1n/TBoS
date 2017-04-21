@@ -16,6 +16,7 @@ namespace The_Bond_of_Stone
         float attackSpeed;
         Projectile type;
         Vector2 direction;
+        float rotation;
 
         Player player;
         int yOffset;
@@ -32,8 +33,8 @@ namespace The_Bond_of_Stone
                 return new Rectangle(
                     (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
                     (int)Math.Round(Position.Y / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
-                    Graphics.EnemySlugTextures[0].Width * Game1.PIXEL_SCALE,
-                    Graphics.EnemySlugTextures[0].Height * Game1.PIXEL_SCALE
+                    texture.Width * Game1.PIXEL_SCALE,
+                    texture.Height * Game1.PIXEL_SCALE
                     );
             }
         }
@@ -46,20 +47,33 @@ namespace The_Bond_of_Stone
             this.type = type;
             this.direction = direction;
 
+            rotation = (float)Math.Atan2(direction.Y, direction.X);
+
             //Set attack rate
             switch (type)
             {
                 case Projectile.Sawblade:
                     attackSpeed = 0.4f;
+                    texture = Graphics.SawbladeTrap;
                     break;
                 case Projectile.Spear:
                     attackSpeed = 0.7f;
+                    texture = Graphics.EnemyThrowerTextures[0];
                     break;
                 case Projectile.Arrow:
                     attackSpeed = 0.8f;
+                    if (MathHelper.ToDegrees(rotation) == 90 || MathHelper.ToDegrees(rotation) == 270)
+                    {
+                        texture = Graphics.ArrowTrap[0];
+                    }
+                    else
+                    {
+                        texture = Graphics.ArrowTrap[1];
+                    }
                     break;
                 case Projectile.Grenade:
                     attackSpeed = 0.5f;
+                    texture = Graphics.EnemyThrowerTextures[0];
                     break;
             }
         }
@@ -144,10 +158,10 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing, rotation: rotation);
                 }
                 else
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing, rotation: rotation);
             }
         }
     }

@@ -79,6 +79,9 @@ namespace The_Bond_of_Stone {
         //Linear list of entity data.
         public List<Entity> Entities = new List<Entity>();
 
+        //Linear list of trap entity data.
+        public List<Entity> Traps = new List<Entity>();
+
         //References to the start and end tiles of this chunk.
         public Tile StartTile { get; set; }
         public Tile EndTile { get; set; }
@@ -214,42 +217,42 @@ namespace The_Bond_of_Stone {
                     else if (atlas[y, x] == 22)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, -1)));
+                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, -1)));
                     }
                     else if (atlas[y, x] == 23)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(1, 0)));
+                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 24)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, 1)));
+                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, 1)));
                     }
                     else if (atlas[y, x] == 25)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(-1, 0)));
+                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(-1, 0)));
                     }
                     else if (atlas[y, x] == 26)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, -1)));
+                        Traps.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, -1)));
                     }
                     else if (atlas[y, x] == 27)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(1, 0)));
+                        Traps.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 28)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, 1)));
+                        Traps.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, 1)));
                     }
                     else if (atlas[y, x] == 29)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Entities.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(-1, 0)));
+                        Traps.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(-1, 0)));
                     }             
                     else if (atlas[y, x] == 30)
                     {
@@ -264,28 +267,28 @@ namespace The_Bond_of_Stone {
                     else if (atlas[y, x] == 32)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(-1, 0)));
+                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(-1, 0)));
                     }
                     else if (atlas[y, x] == 33)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(1, 0)));
+                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 10 || atlas[y, x] == 12)
                     {
                         if (atlas[y, x] == 10) //adding a vertical spike
-                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
+                            Traps.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
                         else //adding a horizontal spike
-                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
+                            Traps.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
 
                         tileToAdd.ID = atlas[y, x] = 0;
                     }
                     else if (atlas[y, x] == 11 || atlas[y, x] == 13)
                     {
                         if (atlas[y, x] == 11) //adding a vertical spike
-                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
+                            Traps.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(false, x, y, atlas)));
                         else //adding a horizontal spike
-                            Entities.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
+                            Traps.Add(new Spike(Graphics.Spike_Up[0], new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), GetSpikeRotation(true, x, y, atlas)));
 
                         tileToAdd.ID = atlas[y, x] = 2;
                     }
@@ -428,14 +431,17 @@ namespace The_Bond_of_Stone {
                     HealthPickup h = (HealthPickup)e;
                     h.Update(gameTime);
                 }
+            }
 
+            foreach(Entity e in Traps)
+            {
                 if (e is SpearTrap)
                 {
                     SpearTrap s = (SpearTrap)e;
                     s.Update(gameTime);
                 }
 
-                if(e is TurretEnemy)
+                if (e is TurretEnemy)
                 {
                     TurretEnemy t = (TurretEnemy)e;
                     t.Update(gameTime);
@@ -452,9 +458,10 @@ namespace The_Bond_of_Stone {
             foreach (Tile tile in foreground)
                 tile.Draw(sb, color);
 
-
-            //Draw chunks
-            //sb.Draw(Graphics.DebugTexture, rect, color);
+            foreach(Entity e in Traps)
+            {
+                e.Draw(sb, color);
+            }
         }
 
         public void DrawBackground(SpriteBatch sb, Color color)
@@ -464,14 +471,18 @@ namespace The_Bond_of_Stone {
             foreach (Tile tile in background)
                 tile.Draw(sb, color);
 
-            if (Entities.Count > 0)
-            {
-                foreach (Entity e in Entities)
-                    e.Draw(sb, Color.White);
-            }
+            foreach (Entity e in Entities)
+                e.Draw(sb, color);
 
-            //Draw chunks
-            //sb.Draw(Graphics.DebugTexture, rect, color);
+            //Draw spears behind walls
+            foreach (Entity e in Traps)
+            {
+                if(e is SpearTrap)
+                {
+                    SpearTrap s = (SpearTrap)e;
+                    s.DrawSpear(sb, color);
+                }
+            }
         }
 
         /// <summary>
