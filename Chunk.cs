@@ -214,22 +214,22 @@ namespace The_Bond_of_Stone {
                     else if (atlas[y, x] == 22)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, -1)));
+                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, -1)));
                     }
                     else if (atlas[y, x] == 23)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(1, 0)));
+                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 24)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, 1)));
+                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, 1)));
                     }
                     else if (atlas[y, x] == 25)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(-1, 0)));
+                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(-1, 0)));
                     }
                     else if (atlas[y, x] == 26)
                     {
@@ -264,12 +264,12 @@ namespace The_Bond_of_Stone {
                     else if (atlas[y, x] == 32)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(-1, 0)));
+                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(-1, 0)));
                     }
                     else if (atlas[y, x] == 33)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Game1.Entities.enemies.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(1, 0)));
+                        Entities.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 10 || atlas[y, x] == 12)
                     {
@@ -427,6 +427,18 @@ namespace The_Bond_of_Stone {
                 if (e is HealthPickup) {
                     HealthPickup h = (HealthPickup)e;
                     h.Update(gameTime);
+                }
+
+                if (e is SpearTrap)
+                {
+                    SpearTrap s = (SpearTrap)e;
+                    s.Update(gameTime);
+                }
+
+                if(e is TurretEnemy)
+                {
+                    TurretEnemy t = (TurretEnemy)e;
+                    t.Update(gameTime);
                 }
             }
 

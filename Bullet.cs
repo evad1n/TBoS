@@ -65,21 +65,22 @@ namespace The_Bond_of_Stone
 
             if(target == Vector2.Zero)
             {
+                target = Game1.PlayerStats.Player.Position;
+
                 //Account for spread
                 target += new Vector2(Game1.RandomObject.Next(spread));
-
-                //Calculate direction to find player
-                target = Game1.PlayerStats.Player.Position;
-                target = Move(Position, target, speed);
 
                 //Calculate bullet rotation
                 Vector2 dir = target - position;
                 dir.Normalize();
                 rotation = (float)Math.Atan2(dir.Y, dir.X);
                 rotation += MathHelper.ToRadians(90);
+
+                target = Move(Position, target, speed);
             }
             else
             {
+                Position += (target * 5);
 
                 //Calculate bullet rotation
                 rotation = (float)Math.Atan2(target.Y, target.X);
@@ -210,11 +211,11 @@ namespace The_Bond_of_Stone
                     velocity = Vector2.Zero;
                 }
 
-                if (!stuck)
-                {
-                    if (CurrentChunk != null)
-                        Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
-                }
+                //if (!stuck)
+                //{
+                //    if (CurrentChunk != null)
+                //        Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+                //}
             }
 
 

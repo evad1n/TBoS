@@ -76,15 +76,26 @@ namespace The_Bond_of_Stone
 
             //Shoot timer
             shootTimer += elapsed;
-            if(shootTimer > 1f / attackSpeed && Game1.PlayerStats.IsAlive)
+            if(shootTimer > 1f / attackSpeed)
             {
-                Shoot();
-                shootTimer = 0;
+                if(direction == Vector2.Zero)
+                {
+                    if(Game1.PlayerStats.IsAlive)
+                    {
+                        Shoot();
+                        shootTimer = 0;
+                    }
+                }
+                else
+                {
+                    Shoot();
+                    shootTimer = 0;
+                }
             }
 
             base.Update(gameTime);
 
-            if(direction != null)
+            if(direction != Vector2.Zero)
             {
                 if (player.Position.X < Position.X)
                 {

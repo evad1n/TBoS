@@ -130,8 +130,8 @@ namespace The_Bond_of_Stone {
             {
                 Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
                 knockback = Player.Position - e.Position;
-                //Propel upward
-                knockback *= 100;
+                knockback.Normalize();
+                knockback *= 1000;
                 Player.KnockBack(knockback);
                 invulnerable = true;
                 invulnerabilityTimer = 0f;

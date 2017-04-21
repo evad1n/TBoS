@@ -19,6 +19,7 @@ namespace The_Bond_of_Stone
 
         float timer = 0;
         const float pathTimer = 2;
+        bool horizontal;
 
         Vector2 direction;
 
@@ -46,6 +47,7 @@ namespace The_Bond_of_Stone
         {
             Texture = texture;
             Position = position;
+            this.horizontal = horizontal;
 
             timer = pathTimer / 2f;
 
@@ -57,6 +59,8 @@ namespace The_Bond_of_Stone
             {
                 direction = new Vector2(0, -1);
             }
+
+            velocity = direction * speed;
         }
 
         /// <summary>
@@ -75,16 +79,22 @@ namespace The_Bond_of_Stone
                 direction *= -1;
                 timer = 0;
             }
-
-            if (
-                (CheckCardinalCollision(new Vector2(-1, 0)) && velocity.X < 0) ||
-                (CheckCardinalCollision(new Vector2(1, 0)) && velocity.X > 0) ||
-                (CheckCardinalCollision(new Vector2(0, 1)) && velocity.Y > 0) ||
-                (CheckCardinalCollision(new Vector2(0, -1)) && velocity.Y < 0)
-                )
+            
+            if(horizontal)
             {
-                direction *= -1;
-                timer = 0;
+                if ((CheckCardinalCollision(new Vector2(-3, 0)) && velocity.X < 0) || (CheckCardinalCollision(new Vector2(3, 0)) && velocity.X > 0))
+                {
+                    direction *= -1;
+                    timer = 0;
+                }
+            }
+            else
+            {
+                if ((CheckCardinalCollision(new Vector2(0, 3)) && velocity.Y > 0) || (CheckCardinalCollision(new Vector2(0, -3)) && velocity.Y < 0))
+                {
+                    direction *= -1;
+                    timer = 0;
+                }
             }
 
             velocity = direction * speed;
@@ -121,8 +131,7 @@ namespace The_Bond_of_Stone
             Position += velocity * elapsed;
             Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
-            if (CurrentChunk != null)
-                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+
             
             GetAnimation(elapsed);
         }
