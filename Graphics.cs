@@ -37,11 +37,16 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] EnemySlugTextures;
         public static Texture2D[] EnemyFlyerTextures;
         public static Texture2D[] EnemyJumperTextures;
+        public static Texture2D[] EnemyThrowerTextures;
 
         public static Texture2D[] Spike_Up;
         public static Texture2D[] Spike_Down;
         public static Texture2D[] Spike_Left;
         public static Texture2D[] Spike_Right;
+
+        public static Texture2D[] ArrowTrap;
+        public static Texture2D[] SpearTrap;
+        public static Texture2D SawbladeTrap;
 
         public static Texture2D[] Titan_Tyche;
         public static Texture2D[] Titan_Nemesis;
@@ -105,11 +110,16 @@ namespace The_Bond_of_Stone {
             EnemySlugTextures = PopulateTextureArray("enemySlug", 5, @"graphics\entities\");
             EnemyFlyerTextures = PopulateTextureArray("enemyFlyer", 8, @"graphics\entities\");
             EnemyJumperTextures = PopulateTextureArray("enemyJumper", 2, @"graphics\entities\");
+            EnemyThrowerTextures = PopulateTextureArray("enemyThrower", 2, @"graphics\entities\");
 
             Spike_Up = PopulateTextureArray("spike_0", 3, @"graphics\entities\");
             Spike_Down = PopulateTextureArray("spike_2", 3, @"graphics\entities\");
             Spike_Left = PopulateTextureArray("spike_1", 3, @"graphics\entities\");
             Spike_Right = PopulateTextureArray("spike_3", 3, @"graphics\entities\");
+
+            ArrowTrap = PopulateTextureArray("arrowLauncher", 2, @"graphics\entities\");
+            SpearTrap = PopulateTextureArray("spearTrap", 2, @"graphics\entities\");
+            SawbladeTrap = Content.Load<Texture2D>(@"graphics\entities\sawbladeLauncher");
 
             Sawblade = Content.Load<Texture2D>(@"graphics\entities\sawblade_0");
             Spear = Content.Load<Texture2D>(@"graphics\entities\spear");
