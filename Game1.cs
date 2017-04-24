@@ -478,17 +478,20 @@ namespace The_Bond_of_Stone {
 
 		public void toPlayState() {
 			State = GameState.Playing;
+            Sound.ButtonClick.Play();
 			ResetGame();
 		}
 
 		public void toMainMenu() {
 			State = GameState.MainMenu;
-			Interface.ChangeMenuState(MenuState.None);
+            Sound.ButtonClick.Play();
+            Interface.ChangeMenuState(MenuState.None);
 		}
 
 		public void toHSScreen() {
 			State = GameState.MainMenu;
-			Interface.ChangeMenuState(MenuState.HighScore);
+            Sound.ButtonClick.Play();
+            Interface.ChangeMenuState(MenuState.HighScore);
 		}
 
 		#endregion

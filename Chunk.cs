@@ -222,7 +222,7 @@ namespace The_Bond_of_Stone {
                     else if (atlas[y, x] == 23)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(1, 0)));
+                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(-1, 0)));
                     }
                     else if (atlas[y, x] == 24)
                     {
@@ -232,7 +232,7 @@ namespace The_Bond_of_Stone {
                     else if (atlas[y, x] == 25)
                     {
                         tileToAdd.ID = atlas[y, x] = 3;
-                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(-1, 0)));
+                        Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 26)
                     {

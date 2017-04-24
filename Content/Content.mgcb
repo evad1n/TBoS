@@ -2701,3 +2701,9 @@
 /processorParam:Quality=Best
 /build:audio/playerWalk.wav
 
+#begin audio/buttonClick.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/buttonClick.wav
+

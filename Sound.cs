@@ -25,22 +25,30 @@ namespace The_Bond_of_Stone
         public static SoundEffect PlayerWallSlide;
         public static SoundEffect PlayerWalk;
 
+        public static SoundEffect ButtonClick;
+
         public void LoadContent(ContentManager Content)
         {
             this.Content = Content;
 
-            EnemyDeath = Content.Load<SoundEffect>(@"audio\enemyDeath");
-            MultiplierIncrease = Content.Load<SoundEffect>(@"audio\multiplierIncrease");
-            PickupCoin = Content.Load<SoundEffect>(@"audio\pickupCoin");
-            PickupGem = Content.Load<SoundEffect>(@"audio\pickupGem");
-            PlayerDeath = Content.Load<SoundEffect>(@"audio\playerDeath");
-            PlayerJump = Content.Load<SoundEffect>(@"audio\playerJump");
-            PlayerLandHard = Content.Load<SoundEffect>(@"audio\playerLandHard");
-            PlayerLandSoft = Content.Load<SoundEffect>(@"audio\playerLandSoft");
-            PlayerTakeDamage = Content.Load<SoundEffect>(@"audio\playerTakeDamage");
-            PlayerWallJump = Content.Load<SoundEffect>(@"audio\playerWalljump");
-            PlayerWallSlide = Content.Load<SoundEffect>(@"audio\playerWallslide");
-            PlayerWalk = Content.Load<SoundEffect>(@"audio\playerWalk");
+            EnemyDeath = Load("enemyDeath");
+            MultiplierIncrease = Load("multiplierIncrease");
+            PickupCoin = Load("pickupCoin");
+            PickupGem = Load("pickupGem");
+            PlayerDeath = Load("playerDeath");
+            PlayerJump = Load("playerJump");
+            PlayerLandHard = Load("playerLandHard");
+            PlayerLandSoft = Load("playerLandSoft");
+            PlayerTakeDamage = Load("playerTakeDamage");
+            PlayerWallJump = Load("playerWalljump");
+            PlayerWallSlide = Load("playerWallslide");
+            PlayerWalk = Load("playerWalk");
+
+            ButtonClick = Load("buttonClick");
+        }
+
+        SoundEffect Load(string name) {
+            return Content.Load<SoundEffect>(@"audio\" + name);
         }
     }
 }

@@ -117,7 +117,9 @@ namespace The_Bond_of_Stone
 
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
-            spriteBatch.Draw(trap, destinationRectangle: trapRect, color: color, rotation: rotation);
+            Rectangle r = new Rectangle(trapRect.X, trapRect.Y, trapRect.Width * Game1.PIXEL_SCALE, trapRect.Height * Game1.PIXEL_SCALE);
+
+            spriteBatch.Draw(trap, destinationRectangle: r, color: color, rotation: rotation);
         }
 
         public void DrawSpear(SpriteBatch spriteBatch, Color color, int depth = 0)

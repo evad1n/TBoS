@@ -62,12 +62,20 @@ namespace The_Bond_of_Stone
                     break;
                 case Projectile.Arrow:
                     attackSpeed = 0.8f;
-                    if (MathHelper.ToDegrees(rotation) == 90 || MathHelper.ToDegrees(rotation) == 270)
-                    {
+                    
+                    if(direction.X != 0) {
+                        if (direction.X > 0)
+                            facing = SpriteEffects.None;
+                        else
+                            facing = SpriteEffects.FlipHorizontally;
+
                         texture = Graphics.ArrowTrap[0];
-                    }
-                    else
-                    {
+                    } else if (direction.Y != 0) {
+                        if (direction.Y > 0)
+                            facing = SpriteEffects.None;
+                        else
+                            facing = SpriteEffects.FlipVertically;
+
                         texture = Graphics.ArrowTrap[1];
                     }
                     break;
@@ -132,10 +140,10 @@ namespace The_Bond_of_Stone
                     Game1.Entities.projectiles.Add(new Bullet(this, direction, 200, Graphics.Sawblade, shootPos, 5, type, true, 5));
                     break;
                 case Projectile.Spear:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 700, Graphics.Spear, shootPos, 0, type,false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 700, Graphics.Spear, shootPos, 0, type, false, 20));
                     break;
                 case Projectile.Arrow:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 800, Graphics.Arrow, shootPos, 0, type,false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 800, Graphics.Arrow, shootPos, 0, type, false, 20));
                     break;
                 case Projectile.Grenade:
                     Game1.Entities.projectiles.Add(new Bullet(this, direction, 300, Graphics.Grenade, shootPos, 1, type, true, 15));
