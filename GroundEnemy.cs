@@ -51,6 +51,7 @@ namespace The_Bond_of_Stone
         {
             Texture = texture;
             Position = position;
+            Position = new Vector2(Position.X, Position.Y + 5);
         }
 
         /// <summary>
