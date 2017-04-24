@@ -32,6 +32,7 @@ namespace The_Bond_of_Stone
         public Vector2 previousVelocity;
         public Vector2 origin;
         public Vector2 relativePosition;
+        
 
         Chunk previousChunk;
         Chunk nextChunk;
@@ -52,7 +53,7 @@ namespace The_Bond_of_Stone
         }
 
 
-        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, float rotationSpeed, bool bounce = false, int spread = 0) : base(texture, position)
+        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, float rotationSpeed, Projectile type, bool bounce = false, int spread = 0) : base(texture, position)
         {
             this.speed = speed;
             this.parent = parent;
@@ -240,6 +241,7 @@ namespace The_Bond_of_Stone
                 else
                     spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f), layerDepth: 0);
             }
+            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
         }
 
         public bool CheckCardinalCollision(Vector2 offset)

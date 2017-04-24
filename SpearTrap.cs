@@ -22,9 +22,23 @@ namespace The_Bond_of_Stone
         Vector2 startPosition;
         Vector2 endPosition;
         Vector2 direction;
+        Vector2 origin;
 
         Texture2D trap;
         Rectangle trapRect;
+
+        public new Rectangle Rect
+        {
+            get
+            {
+                return new Rectangle(
+                    (int)Position.X,
+                    (int)Position.Y,
+                    texture.Width * Game1.PIXEL_SCALE,
+                    texture.Height * Game1.PIXEL_SCALE
+                    );
+            }
+        }
 
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
@@ -47,6 +61,7 @@ namespace The_Bond_of_Stone
                 trap = Graphics.SpearTrap[1];
             }
 
+            origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
             trapRect = new Rectangle((int)startPosition.X, (int)position.Y + Game1.TILE_SIZE, trap.Width, trap.Height);
         }
 
@@ -97,8 +112,7 @@ namespace The_Bond_of_Stone
             {
                 waitTimer += elapsed;
             }
-            
-
+           
         }
 
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
@@ -113,17 +127,18 @@ namespace The_Bond_of_Stone
                 if (LockToPixelGrid)
                 {
                     Rectangle drawRect = new Rectangle(
-                        (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
-                        (int)Math.Round((Position.Y + Game1.PIXEL_SCALE) / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
+                        (int)Position.X,
+                        (int)Position.Y,
                         Texture.Width * Game1.PIXEL_SCALE,
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, rotation: rotation);
+                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, origin: Vector2.Zero, rotation: rotation);
                 }
                 else
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, rotation: rotation);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, origin: Vector2.Zero, rotation: rotation);
             }
+            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: trapRect, color: Color.Red, origin: Vector2.Zero, rotation: rotation);
         }
 
         public Vector2 Move(Vector2 start, Vector2 target, float amount)
