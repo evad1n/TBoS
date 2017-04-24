@@ -36,7 +36,7 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                yOffset = (Game1.TILE_PIXEL_SIZE - Graphics.EnemySlugTextures[0].Height) * 3;
+                yOffset = (Game1.TILE_PIXEL_SIZE - Graphics.EnemySlugTextures[0].Height) * Game1.PIXEL_SCALE;
 
                 return new Rectangle(
                     (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
@@ -58,8 +58,6 @@ namespace The_Bond_of_Stone
         /// Updates player collision and input states.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        /// <param name="keyboardState">Provides a snapshot of inputs.</param>
-        /// <param name="prevKeyboardState">Provides a snapshot of the previous frame's inputs.</param>
         public override void Update(GameTime gameTime)
         {
             //Update pathfinding colliders
@@ -148,7 +146,7 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
+                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, effects: facing);
                 }
                 else
                     spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
