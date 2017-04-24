@@ -67,6 +67,10 @@ namespace The_Bond_of_Stone
             {
                 target = Game1.PlayerStats.Player.Position;
 
+                //Attempt to throw from a position that doesn't result in hitting the ground everytime
+                int xDir = Math.Sign(target.X - Position.X);
+                Position += new Vector2(5 * xDir, 5);
+
                 //Account for spread
                 target += new Vector2(Game1.RandomObject.Next(spread));
 
