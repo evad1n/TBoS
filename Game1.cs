@@ -31,7 +31,7 @@ namespace The_Bond_of_Stone {
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
-        public static int TITAN_SPAWN_RATE = -1;
+        public static int TITAN_SPAWN_RATE = 25;
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;

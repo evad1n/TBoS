@@ -64,6 +64,7 @@ namespace The_Bond_of_Stone {
         public bool canStartJump;
 
         SoundEffectInstance wallSlideSound;
+        SoundEffectInstance walkSound;
 
         //Debuffs
         public bool bounce = false;
@@ -98,6 +99,7 @@ namespace The_Bond_of_Stone {
             particleTimer = 0;
 
             wallSlideSound = Sound.PlayerWallSlide.CreateInstance();
+            walkSound = Sound.PlayerWalk.CreateInstance();
         }
 
         /// <summary>
@@ -135,17 +137,7 @@ namespace The_Bond_of_Stone {
             } else if (canStartJump && Walled) {
                 Sound.PlayerWallJump.Play();
             }
-
-            /*
-            if (Walled || Grounded)
-            {
-                if(wallSlideSound.State == SoundState.Stopped)
-                    wallSlideSound.Play();
-            }
-
-            if(!(Walled || Grounded))
-                wallSlideSound.Stop();
-            */
+            
 
             if (!Alive) {
                     Walled = false;
@@ -157,16 +149,18 @@ namespace The_Bond_of_Stone {
                 airTime += elapsed;
             else if (Grounded && velocity.Y >= maxFallSpeed / 4)
             {
-                Sound.PlayerLandHard.Play();
-                Game1.Camera.ScreenShake(airTime * 5, airTime);
+                Game1.Camera.ScreenShake(airTime * 7.5f, airTime * 1.5f);
                 airTime = 0;
-            }
-            else if (Grounded && !Walled)
+
+                if (velocity.Y > 1000)
+                    Sound.PlayerLandHard.Play();
+                else
+                    Sound.PlayerLandSoft.Play();
+            } else if (Grounded && !Walled)
                 airTime = 0;
             else
             {
                 airTime = 0;
-                Sound.PlayerLandSoft.Play();
             }
 
             //At the apex
@@ -186,7 +180,7 @@ namespace The_Bond_of_Stone {
             else
                 maxFallSpeed = 1500;
 
-            //Create particles if necessary
+            //Create particles if necessary, also do some sound stuff
             particleTimer += elapsed;
             if (particleTimer >= particleFrequency) {
                 bool canSpawnBottom = 
@@ -199,7 +193,22 @@ namespace The_Bond_of_Stone {
                     CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X, Rect.Top, Rect.Width/2 + 1, 1)) &&
                     CollisionHelper.IsCollidingWithChunk(CurrentChunk, new Rectangle(Rect.Center.X, Rect.Bottom, Rect.Width/2 + 1, 1));
 
-                if (Grounded && canSpawnBottom && velocity.X != 0)
+                if ((canSpawnLeft || canSpawnRight) && velocity.Y != 0) {
+                    if (wallSlideSound.State == SoundState.Stopped)
+                        wallSlideSound.Play();
+
+                    Game1.Camera.ScreenShake(0.5f, 0.25f);
+
+                } else
+                    wallSlideSound.Stop();
+
+                if(canSpawnBottom && velocity.X != 0) {
+                    if (walkSound.State == SoundState.Stopped)
+                        walkSound.Play();
+                } else
+                    walkSound.Stop();
+
+            if (Grounded && canSpawnBottom && velocity.X != 0)
                     particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 7), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
                 else if (walledLeft && canSpawnLeft && velocity.Y != 0)
                     particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));

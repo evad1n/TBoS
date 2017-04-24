@@ -135,6 +135,7 @@ namespace The_Bond_of_Stone {
                 Player.KnockBack(knockback);
                 invulnerable = true;
                 invulnerabilityTimer = 0f;
+                Sound.PlayerTakeDamage.Play();
             }
 
             if (Health == 0)
