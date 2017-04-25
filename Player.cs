@@ -12,7 +12,7 @@ namespace The_Bond_of_Stone {
     /// <summary>
     /// The player class. Allows the player to move throughout the world and interprets collisions and entity interactions.
     /// 
-    /// By Dom Liotti
+    /// By Dom Liotti and Chip Butler
     /// </summary>
     public class Player : Entity {
 
@@ -369,7 +369,17 @@ namespace The_Bond_of_Stone {
 
             if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
             {
+            if (CurrentChunk != null && Game1.PlayerStats.IsAlive) {
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+                if ((Position.X - (Rect.Width/2) - CurrentChunk.Rect.X) < 0) {
+                    int currentIndex = Game1.Generator.Chunks.IndexOf(CurrentChunk);
+                    if(currentIndex > 0) Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, Game1.Generator.Chunks[currentIndex-1]);
+                }
+                if (Position.X + this.Rect.Width - CurrentChunk.Rect.X - CurrentChunk.Rect.Width > 0) {
+                    int currentIndex = Game1.Generator.Chunks.IndexOf(CurrentChunk);
+                    Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, Game1.Generator.Chunks[currentIndex+1] );
+                }
+            }
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, nextChunk);
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, previousChunk);
             }

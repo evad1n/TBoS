@@ -76,8 +76,7 @@ namespace The_Bond_of_Stone
             //Otherwise, there is no collision.
             return false;
         }
-
-
+        
         /// <summary>
         /// Returns whether the rect toCheck is intersecting with the any dynamic entities on the screen.
         /// </summary>
