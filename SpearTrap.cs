@@ -23,6 +23,7 @@ namespace The_Bond_of_Stone
         Vector2 endPosition;
         Vector2 direction;
         Vector2 origin;
+        Vector2 point;
 
         Texture2D trap;
         Rectangle trapRect;
@@ -32,20 +33,20 @@ namespace The_Bond_of_Stone
             get
             {
                 return new Rectangle(
-                    (int)Position.X,
-                    (int)Position.Y,
-                    texture.Width * Game1.PIXEL_SCALE,
-                    texture.Height * Game1.PIXEL_SCALE
-                    );
+                (int)Math.Round(point.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
+                (int)Math.Round(point.Y / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
+                Game1.hitBox.Width,
+                Game1.hitBox.Height
+                );
             }
         }
 
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
-            Position = new Vector2(position.X + Game1.TILE_SIZE/2, position.Y + Game1.TILE_SIZE / 2);
+            Position = new Vector2(position.X + 18, position.Y + Game1.TILE_SIZE / 2);
             this.direction = direction;
             startPosition = Position;
-            endPosition = startPosition + (direction * texture.Height * 3);
+            endPosition = startPosition + (direction * texture.Height * 3.5f);
 
             //Calculate spear rotation
             rotation = (float)Math.Atan2(direction.Y, direction.X);
@@ -68,6 +69,9 @@ namespace The_Bond_of_Stone
         public void Update(GameTime gameTime)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            origin = new Vector2(Position.X + texture.Width / 2, Position.Y + texture.Height / 2);
+            point = RotatePoint(Position, rotation, origin);
 
             bool ready = !attack && !retract && !wait;
 
@@ -135,12 +139,12 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, origin: Vector2.Zero, rotation: rotation);
+                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, scale: new Vector2(20), origin: Vector2.Zero, rotation: rotation);
                 }
                 else
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, origin: Vector2.Zero, rotation: rotation);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, scale: new Vector2(20), origin: Vector2.Zero, rotation: rotation);
             }
-            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: trapRect, color: Color.Red, origin: Vector2.Zero, rotation: rotation);
+            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red, origin: Vector2.Zero, rotation: rotation);
         }
 
         public Vector2 Move(Vector2 start, Vector2 target, float amount)
@@ -149,6 +153,19 @@ namespace The_Bond_of_Stone
             float y = start.Y + ((target.Y - start.Y) * amount);
 
             return new Vector2(x, y);
+        }
+
+        public Vector2 RotatePoint(Vector2 source, float rotation, Vector2 origin)
+        {
+            source = new Vector2(source.X - origin.X, source.Y - origin.Y);
+
+            double x = (Math.Cos(rotation) * source.X) + (-Math.Sin(rotation) * source.Y);
+            double y = (Math.Sin(rotation) * source.X) + (-Math.Cos(rotation) * source.Y);
+
+            Vector2 result = new Vector2((float)x, (float)y);
+            result = new Vector2(result.X + origin.X, result.Y + origin.Y);
+
+            return result;
         }
     }
 }

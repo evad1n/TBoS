@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
-    public enum Projectile { Sawblade, Spear, Arrow, Grenade};
+    public enum Projectile { Sawblade, Spear, Arrow};
 
     public class TurretEnemy : Enemy
     {
@@ -79,10 +79,6 @@ namespace The_Bond_of_Stone
                         texture = Graphics.ArrowTrap[1];
                     }
                     break;
-                case Projectile.Grenade:
-                    attackSpeed = 0.5f;
-                    texture = Graphics.EnemyThrowerTextures[0];
-                    break;
             }
         }
 
@@ -144,9 +140,6 @@ namespace The_Bond_of_Stone
                     break;
                 case Projectile.Arrow:
                     Game1.Entities.projectiles.Add(new Bullet(this, direction, 800, Graphics.Arrow, shootPos, 0, type, false, 20));
-                    break;
-                case Projectile.Grenade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 300, Graphics.Grenade, shootPos, 1, type, true, 15));
                     break;
             }
         }

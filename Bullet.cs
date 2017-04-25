@@ -32,23 +32,36 @@ namespace The_Bond_of_Stone
         public Vector2 previousVelocity;
         public Vector2 origin;
         public Vector2 relativePosition;
-        
 
-        Chunk previousChunk;
-        Chunk nextChunk;
+        Projectile type;
+       
 
         public new Rectangle Rect
         {
             get
-            {
-                origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
+            {        
+                Rectangle hitRect = RotateRect(Position, rotation, origin);
+                switch (type)
+                {
+                    case Projectile.Sawblade:
+                        return new Rectangle(
+                        (int)Position.X,
+                        (int)Position.Y,
+                        texture.Width * Game1.PIXEL_SCALE,
+                        texture.Height * Game1.PIXEL_SCALE
+                        );
+                    case Projectile.Spear:
+                        return hitRect;
+                    case Projectile.Arrow:
+                        return hitRect;
+                }
 
                 return new Rectangle(
-                    (int)Position.X,
-                    (int)Position.Y,
-                    (Texture.Height / 4) * Game1.PIXEL_SCALE,
-                    (Texture.Height / 4) * Game1.PIXEL_SCALE
-                    );
+                (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
+                (int)Math.Round(Position.Y / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
+                texture.Width * Game1.PIXEL_SCALE,
+                texture.Height * Game1.PIXEL_SCALE
+                );
             }
         }
 
@@ -62,7 +75,7 @@ namespace The_Bond_of_Stone
             Position = position;
             this.bounce = bounce;
             this.rotationSpeed = rotationSpeed;
-
+            this.type = type; 
 
             if(target == Vector2.Zero)
             {
@@ -81,11 +94,23 @@ namespace The_Bond_of_Stone
                 rotation = (float)Math.Atan2(dir.Y, dir.X);
                 rotation += MathHelper.ToRadians(90);
 
+
                 target = Move(Position, target, speed);
             }
             else
             {
-                Position += (target * 5);
+                switch (type)
+                {
+                    case Projectile.Sawblade:
+                        Position = new Vector2(Position.X, Position.Y - texture.Height);
+                        Position += (target * 20);
+                        break;
+                    case Projectile.Spear:
+                        break;
+                    case Projectile.Arrow:
+                        Position += (target * 5);
+                        break;
+                }
 
                 //Calculate bullet rotation
                 rotation = (float)Math.Atan2(target.Y, target.X);
@@ -103,6 +128,8 @@ namespace The_Bond_of_Stone
         public void Update(GameTime gameTime)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            origin = new Vector2(Position.X + texture.Width / 2, Position.Y + texture.Height / 2);
 
             rotation += elapsed * rotationSpeed * Math.Sign(velocity.X);
 
@@ -236,10 +263,13 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f), layerDepth: 0);
+                    drawRect.X += drawRect.Width / 2;
+                    drawRect.Y += drawRect.Height / 2;
+
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: new Vector2(texture.Width/2, texture.Height/2), rotation: rotation);
                 }
                 else
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, origin: origin, rotation: rotation, scale: new Vector2(0.2f), layerDepth: 0);
+                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
             }
             spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
         }
@@ -250,7 +280,7 @@ namespace The_Bond_of_Stone
             {
                 Rectangle check = Rect;
                 check.Offset(offset);
-                return CollisionHelper.IsCollidingWithChunk(CurrentChunk, check) || CollisionHelper.IsCollidingWithChunk(previousChunk, Rect) || CollisionHelper.IsCollidingWithChunk(nextChunk, Rect);
+                return CollisionHelper.IsCollidingWithChunk(CurrentChunk, check);
             }
             else
                 return false;
@@ -278,6 +308,22 @@ namespace The_Bond_of_Stone
             float r = MathHelper.ToDegrees(rotation);
             r = 180 - r;
             rotation += MathHelper.ToRadians(2 * r);
+        }
+
+        public Rectangle RotateRect(Vector2 pos, float rotation, Vector2 origin)
+        {
+            Rectangle result;
+
+            Vector2 source = new Vector2(pos.X - origin.X, pos.Y - origin.Y);
+
+            double x = (Math.Cos(rotation) * source.X) + (-Math.Sin(rotation) * source.Y);
+            double y = (Math.Sin(rotation) * source.X) + (Math.Cos(rotation) * source.Y);
+
+            source = new Vector2((float)x, (float)y);
+            source = new Vector2(source.X + (float)(Game1.hitBox.Width * Math.Cos(rotation)), source.Y + (float)(Game1.hitBox.Height * Math.Sin(rotation)));
+
+            result = new Rectangle((int)source.X, (int)source.Y, Game1.hitBox.Width, Game1.hitBox.Height);
+            return result;
         }
     }
 }

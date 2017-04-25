@@ -79,6 +79,9 @@ namespace The_Bond_of_Stone {
         public Vector2 velocity;
         Vector2 previousVelocity;
 
+        Chunk nextChunk;
+        Chunk previousChunk;
+
         public new Rectangle Rect
         {
             get
@@ -112,6 +115,8 @@ namespace The_Bond_of_Stone {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Alive = Game1.PlayerStats.IsAlive;
+            previousChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X - 24, Position.Y));
+            nextChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X + 24, Position.Y));
 
             //Check collision directions
             Grounded = CheckCardinalCollision(new Vector2(0, 3));
@@ -363,7 +368,11 @@ namespace The_Bond_of_Stone {
             Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
             if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
+            {
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
+                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, nextChunk);
+                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, previousChunk);
+            }
 
             //Reset the velocity vector.
             if (Position.X == previousPosition.X)

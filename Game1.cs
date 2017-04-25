@@ -35,6 +35,8 @@ namespace The_Bond_of_Stone {
 
         public static int TITAN_SPAWN_RATE = -1;
 
+        public static Rectangle hitBox = new Rectangle(0, 0, 10, 10);
+
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
         public float cameraSpeed = 1.5f;
@@ -253,7 +255,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
             {
-                Entities.enemies.Add(new TurretEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Sawblade, new Vector2(-1, 0)));
+                Entities.enemies.Add(new TurretEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Arrow, new Vector2(-1, 0)));
             }
 
             //Testing things
@@ -278,7 +280,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.I) && prevKeyboardState.IsKeyUp(Keys.I))
             {
-                Player.CurrentChunk.Entities.Add(new SpearTrap(new Vector2(mouseState.Position.X, mouseState.Position.Y), new Vector2(-1,0)));
+                Player.CurrentChunk.Traps.Add(new SpearTrap(new Vector2(mouseState.Position.X, mouseState.Position.Y), new Vector2(-1,0)));
             }
 
             if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
