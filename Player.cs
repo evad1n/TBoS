@@ -373,7 +373,6 @@ namespace The_Bond_of_Stone {
                 jumpTime = 0.0f;
             }
 
-
             GetAnimation(elapsed);
 
             //set the grounded-walled state
@@ -413,6 +412,7 @@ namespace The_Bond_of_Stone {
                 //If we're in the ascent of the jump...
                 if (0f < jumpTime && jumpTime <= maxJumpTime) {
                     velocityY = speedJump * (1.0f - (float)Math.Pow(jumpTime / maxJumpTime, jumpControlPower));
+
                 } else
                     jumpTime = 0f;
             } else
