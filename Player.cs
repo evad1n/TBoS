@@ -237,7 +237,7 @@ namespace The_Bond_of_Stone {
             }
 
             //Collect coins if necessary
-            if (CurrentChunk != null && CurrentChunk.Entities.Count > 0) {
+            if (CurrentChunk != null) {
                 foreach (Entity e in CurrentChunk.Entities)
                 {
                     if (e is CoinPickup)
