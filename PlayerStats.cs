@@ -172,10 +172,10 @@ namespace The_Bond_of_Stone {
 			if (isAlive) {
 				Game1.Score.mostRecentScore = Score;
 				Game1.Score.AddScore(Score);
-			}
+                Sound.PlayerDeath.Play();
+            }
             invulnColor = Color.White;
             isAlive = false;
-            Sound.PlayerDeath.Play();
 			
         }
 

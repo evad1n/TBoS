@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,8 @@ namespace The_Bond_of_Stone
 
         public static SoundEffect ButtonClick;
 
+        public static Song MusicTrack;
+
         public void LoadContent(ContentManager Content)
         {
             this.Content = Content;
@@ -45,6 +48,8 @@ namespace The_Bond_of_Stone
             PlayerWalk = Load("playerWalk");
 
             ButtonClick = Load("buttonClick");
+
+            MusicTrack = Content.Load<Song>(@"audio\music");
         }
 
         SoundEffect Load(string name) {

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 
@@ -31,7 +33,7 @@ namespace The_Bond_of_Stone {
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
-        public static int TITAN_SPAWN_RATE = 25;
+        public static int TITAN_SPAWN_RATE = -1;
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
@@ -55,6 +57,8 @@ namespace The_Bond_of_Stone {
         public static ScoreManager Score;
         public TitanManager Titans;
         Sound LoadedSound;
+
+        Song bgm;
 
         public static Player Player;
         public static PlayerStats PlayerStats;
@@ -132,6 +136,11 @@ namespace The_Bond_of_Stone {
             parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
             parallaxLayers[2] = new ParallaxLayer(Graphics.ParallaxLayers[2], Player, new Vector2(0.1f, 0f), GraphicsDevice.Viewport);
             parallaxLayers[3] = new ParallaxLayer(Graphics.ParallaxLayers[3], Player, new Vector2(0.123f, 0f), GraphicsDevice.Viewport);
+
+            bgm = Sound.MusicTrack;
+            MediaPlayer.Volume = 0.25f;
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(bgm);
         }
 
         /// <summary>
@@ -187,8 +196,6 @@ namespace The_Bond_of_Stone {
 
             Interface.Update(gameTime, State);
 
-            Titans.Update(gameTime);
-
             base.Update(gameTime);
         }
 
@@ -218,7 +225,6 @@ namespace The_Bond_of_Stone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdatePlaying(GameTime gameTime)
         {
-
             Player.Update(gameTime, keyboardState, prevKeyboardState);
             PlayerStats.Update(gameTime);
 
@@ -237,6 +243,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
                 State = GameState.Pause;
+                MediaPlayer.Volume = 0.05f;
             }
 
             if (keyboardState.IsKeyDown(Keys.B) && prevKeyboardState.IsKeyUp(Keys.B))
@@ -280,6 +287,8 @@ namespace The_Bond_of_Stone {
 
             Entities.Update(gameTime, State);
 
+            Titans.Update(gameTime);
+
             //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
             Generator.UpdateChunkGeneration();
 
@@ -292,9 +301,11 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdatePause(GameTime gameTime) {
+
             //Resume the game if the escape key is pressed again
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
                 State = GameState.Playing;
+                MediaPlayer.Volume = 0.25f;
             }
 
             if (keyboardState.IsKeyDown(Keys.Enter) && prevKeyboardState.IsKeyUp(Keys.Enter))

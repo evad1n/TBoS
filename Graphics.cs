@@ -102,7 +102,7 @@ namespace The_Bond_of_Stone {
             Deco_backgroundMiddle = PopulateTextureArray("deco_2", 3, @"graphics\deco\");
             Deco_backgroundBottom = PopulateTextureArray("deco_3", 3, @"graphics\deco\");
 
-            ParallaxLayers = PopulateTextureArray("parallax", 4, @"graphics\misc\");
+            ParallaxLayers = PopulateTextureArray("parallax", 5, @"graphics\misc\");
 
             PlayerTextures = PopulateTextureArray("player", 7, @"graphics\entities\");
             PlayerWalkTextures = PopulateTextureArray("playerWalk", 4, @"graphics\entities\");
