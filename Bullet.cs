@@ -18,7 +18,8 @@ namespace The_Bond_of_Stone
 
         public TurretEnemy parent;
         public bool bounce;
-        float airTime = 0f;
+        float airTime = 0;
+        float bounceTimer = 0;
         Vector2 target;       
 
         bool Grounded;
@@ -142,10 +143,10 @@ namespace The_Bond_of_Stone
             if (bounce)
             {
                 //Check collision directions
-                Grounded = CheckCardinalCollision(new Vector2(0, 3));
-                Right = CheckCardinalCollision(new Vector2(3, 0));
-                Left = CheckCardinalCollision(new Vector2(-3, 0));
-                Ceiling = CheckCardinalCollision(new Vector2(0, -3));
+                Grounded = CheckCardinalCollision(new Vector2(0, 1));
+                Right = CheckCardinalCollision(new Vector2(1, 0));
+                Left = CheckCardinalCollision(new Vector2(-1, 0));
+                Ceiling = CheckCardinalCollision(new Vector2(0, -1));
 
                 //At the vertex set airtime to 0
                 if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
@@ -153,28 +154,37 @@ namespace The_Bond_of_Stone
                     airTime = 0;
                 }
 
+                bounceTimer -= elapsed;
+
+                if(bounceTimer < 0)
+                {
+                    if (Grounded && velocity.Y < 0)
+                    {
+                        velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime / 2));
+                        Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
+                        airTime = 0;
+                        bounceTimer = 0.2f;
+                    }
+                    else if (Ceiling && velocity.Y > 0)
+                    {
+                        velocity = new Vector2(velocity.X, -velocity.Y);
+                        bounceTimer = 0.2f;
+                    }
+                    else if (Right && velocity.X > 0)
+                    {
+                        velocity = new Vector2(-velocity.X, velocity.Y);
+                        bounceTimer = 0.2f;
+                    }
+                    else if (Left && velocity.X < 0)
+                    {
+                        velocity = new Vector2(-velocity.X, velocity.Y);
+                        bounceTimer = 0.2f;
+                    }
+                }
+
                 //Increment airtime when not grounded
                 if (!Grounded)
                     airTime += elapsed;
-
-                if (Grounded && velocity.Y < 0)
-                {
-                    velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime/2));
-                    Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
-                    airTime = 0;
-                }
-                else if(Ceiling && velocity.Y > 0)
-                {
-                    velocity = new Vector2(velocity.X, -velocity.Y);
-                }
-                else if (Right && velocity.X > 0)
-                {
-                    velocity = new Vector2(-velocity.X, velocity.Y);
-                }
-                else if (Left && velocity.X < 0)
-                {
-                    velocity = new Vector2(-velocity.X, velocity.Y);
-                }
 
                 //Check for collisions with enemies
                 Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
@@ -227,11 +237,7 @@ namespace The_Bond_of_Stone
             //Move the player and correct for collisions
             Position += velocity * elapsed;
 
-            if(bounce)
-            {
-                //stuff that could fix sawblade sucking
-            }
-            else
+            if(!bounce)
             {
                 //Check for collisions with level geometry
                 if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
