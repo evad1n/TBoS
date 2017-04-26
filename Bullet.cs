@@ -41,7 +41,8 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                Rectangle hitRect =  RotateRect(new Rectangle((int)Position.X, (int)Position.Y, Game1.hitBox.Width, Game1.hitBox.Height), rotation, origin);
+                Rectangle hitRect = new Rectangle((int)Position.X, (int)Position.Y, Game1.hitBox.Width, Game1.hitBox.Height);
+                hitRect = hitRect.RotateRect(rotation, origin);
                 switch (type)
                 {
                     case Projectile.Sawblade:
@@ -79,7 +80,10 @@ namespace The_Bond_of_Stone
 
             if(target == Vector2.Zero)
             {
-                target = Game1.PlayerStats.Player.Position;
+                if (Game1.PlayerStats.IsAlive)
+                    target = Game1.PlayerStats.Player.Position;
+                else
+                    target = Game1.Camera.Origin;
 
                 //Attempt to throw from a position that doesn't result in hitting the ground everytime
                 int xDir = Math.Sign(target.X - Position.X);
@@ -95,7 +99,7 @@ namespace The_Bond_of_Stone
                 rotation += MathHelper.ToRadians(90);
 
 
-                target = Move(Position, target, speed);
+                target = Position.Move(target, speed);
             }
             else
             {
@@ -290,16 +294,6 @@ namespace The_Bond_of_Stone
                 return false;
         }
 
-        public Vector2 Move(Vector2 start, Vector2 target, float speed)
-        {
-            Vector2 v = target - start;
-            if (v.Length() != 0)
-            {
-                v.Normalize();
-            }
-            return v * speed;
-        }
-
         public void Kill()
         {
             //Bullet explosion or something
@@ -312,52 +306,6 @@ namespace The_Bond_of_Stone
             float r = MathHelper.ToDegrees(rotation);
             r = 180 - r;
             rotation += MathHelper.ToRadians(2 * r);
-        }
-
-        //He did the math
-        public Rectangle RotateRect(Rectangle rect, float rotation, Vector2 origin)
-        {
-            Rectangle result;
-
-            Vector2 topLeft = new Vector2(rect.X, rect.Y);
-            Vector2 topRight = new Vector2(rect.X + rect.Width, rect.Y);
-            Vector2 botLeft = new Vector2(rect.X, rect.Y + rect.Height);
-            Vector2 botRight = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
-
-            Matrix TranslateTo = Matrix.CreateTranslation(new Vector3(origin.X, origin.Y, 0));
-            Matrix TranslateBack = Matrix.CreateTranslation(new Vector3(-origin.X, -origin.Y, 0));
-            Matrix rotate = Matrix.CreateRotationZ(rotation);
-
-            //THE FOLLOWING LINE OF CODE DOESN'T WORK BECAUSE FUCK LOGIC
-            //Matrix rotationMatrix = rotate * TranslateTo * TranslateBack;
-
-            topLeft = Vector2.Transform(topLeft, TranslateBack);
-            topLeft = Vector2.Transform(topLeft, rotate);
-            topLeft = Vector2.Transform(topLeft, TranslateTo);
-
-            topRight = Vector2.Transform(topRight, TranslateBack);
-            topRight = Vector2.Transform(topRight, rotate);
-            topRight = Vector2.Transform(topRight, TranslateTo);
-
-            botLeft = Vector2.Transform(botLeft, TranslateBack);
-            botLeft = Vector2.Transform(botLeft, rotate);
-            botLeft = Vector2.Transform(botLeft, TranslateTo);
-
-            botRight = Vector2.Transform(botRight, TranslateBack);
-            botRight = Vector2.Transform(botRight, rotate);
-            botRight = Vector2.Transform(botRight, TranslateTo);
-
-            //topLeft = Vector2.Transform(topLeft, rotationMatrix);
-            //topRight = Vector2.Transform(topRight, rotationMatrix);
-            //botLeft = Vector2.Transform(botLeft, rotationMatrix);
-            //botRight = Vector2.Transform(botRight, rotationMatrix);
-
-            float left = Math.Min(Math.Min(topLeft.X, topRight.X), Math.Min(botLeft.X, botRight.X));
-            float top = Math.Min(Math.Min(topLeft.Y, topRight.Y), Math.Min(botLeft.Y, botRight.Y));
-
-            result = new Rectangle((int)left, (int)top, rect.Width, rect.Height);
-
-            return result;
         }
     }
 }

@@ -54,6 +54,12 @@ namespace The_Bond_of_Stone
             {
                 case Projectile.Sawblade:
                     attackSpeed = 0.4f;
+
+                    if (direction.X > 0)
+                        facing = SpriteEffects.None;
+                    else
+                        facing = SpriteEffects.FlipHorizontally;
+
                     texture = Graphics.SawbladeTrap;
                     break;
                 case Projectile.Arrow:
@@ -102,50 +108,13 @@ namespace The_Bond_of_Stone
             shootTimer += elapsed;
             if(shootTimer > 1f / attackSpeed)
             {
-                if(direction == Vector2.Zero)
-                {
-                    if(Game1.PlayerStats.IsAlive)
-                    {
-                        Shoot();
-                        shootTimer = 0;
-                    }
-                }
-                else
-                {
-                    Shoot();
-                    shootTimer = 0;
-                }
+                this.Shoot(type, direction);
+                shootTimer = 0;
             }
 
             base.Update(gameTime);
-
-            if(direction == Vector2.Zero)
-            {
-                if (player.Position.X < Position.X)
-                {
-                    facing = SpriteEffects.None;
-                }
-                else
-                {
-                    facing = SpriteEffects.FlipHorizontally;
-                }
-            }
         }
 
-
-        public void Shoot()
-        {
-            Vector2 shootPos = new Vector2(Position.X + Game1.TILE_SIZE / 2, Position.Y + Game1.TILE_SIZE / 2);
-            switch (type)
-            {
-                case Projectile.Sawblade:
-                    Game1.Entities.projectiles.Add(new Bullet(direction, 200, Graphics.Sawblade, shootPos, 5, type, true, 5));
-                    break;
-                case Projectile.Arrow:
-                    Game1.Entities.projectiles.Add(new Bullet(direction, 800, Graphics.Arrow, shootPos, 0, type, false, 20));
-                    break;
-            }
-        }
 
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
