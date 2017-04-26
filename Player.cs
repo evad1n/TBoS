@@ -327,7 +327,7 @@ namespace The_Bond_of_Stone {
                             stickies.Add(b);
                         }
 
-                        Game1.PlayerStats.TakeDamage(1, b.parent);
+                        Game1.PlayerStats.TakeDamage(1, b);
                     }
                 }
             }

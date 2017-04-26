@@ -31,19 +31,17 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                Rectangle r = new Rectangle((int)Position.X, (int)Position.Y, texture.Width, Game1.hitBox.Height);
+                Rectangle r = new Rectangle((int)Position.X, (int)Position.Y, Texture.Width * Game1.PIXEL_SCALE, Texture.Width * Game1.PIXEL_SCALE);
                 return r.RotateRect(rotation, origin);
             }
         }
 
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
-            Position = new Vector2(position.X + 18, position.Y + Game1.TILE_SIZE / 2);
+            Position = new Vector2(position.X + Game1.TILE_SIZE / 4, position.Y + Game1.TILE_SIZE / 4);
             this.direction = direction;
             startPosition = Position;
             endPosition = startPosition + (direction * texture.Height * 3.5f);
-
-            origin = new Vector2(Position.X + texture.Width / 2, Position.Y + texture.Height / 2);
 
             //Calculate spear rotation
             rotation = (float)Math.Atan2(direction.Y, direction.X);
@@ -66,7 +64,7 @@ namespace The_Bond_of_Stone
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            origin = new Vector2(Position.X + texture.Width / 2, Position.Y + texture.Height / 2);
+            origin = new Vector2(Position.X + (Texture.Width * Game1.PIXEL_SCALE / 2), Position.Y + (Texture.Width * Game1.PIXEL_SCALE / 2));
 
             bool ready = !attack && !retract && !wait;
 
@@ -122,26 +120,22 @@ namespace The_Bond_of_Stone
         {
             Rectangle r = new Rectangle(trapRect.X, trapRect.Y, trapRect.Width * Game1.PIXEL_SCALE, trapRect.Height * Game1.PIXEL_SCALE);
 
-            spriteBatch.Draw(trap, destinationRectangle: r, color: color, rotation: rotation);
+            spriteBatch.Draw(trap, destinationRectangle: r, color: color, origin: Vector2.Zero, rotation: rotation);
         }
 
         public void DrawSpear(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
+            Vector2 drawOrigin = new Vector2((Texture.Width * Game1.PIXEL_SCALE / 2), (Texture.Width * Game1.PIXEL_SCALE / 2));
             if (Active)
             {
-                if (LockToPixelGrid)
-                {
-                    Rectangle drawRect = new Rectangle(
-                        (int)Position.X,
-                        (int)Position.Y,
-                        Texture.Width * Game1.PIXEL_SCALE,
-                        Texture.Height * Game1.PIXEL_SCALE
-                        );
+                Rectangle drawRect = new Rectangle(
+                    (int)Position.X,
+                    (int)Position.Y,
+                    Texture.Width * Game1.PIXEL_SCALE,
+                    Texture.Height * Game1.PIXEL_SCALE
+                    );
 
-                    spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, scale: new Vector2(20), origin: Vector2.Zero, rotation: rotation);
-                }
-                else
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, scale: new Vector2(20), origin: Vector2.Zero, rotation: rotation);
+                spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, origin: drawOrigin, rotation: rotation);
             }
             spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
         }

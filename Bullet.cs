@@ -41,7 +41,7 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                Rectangle hitRect = new Rectangle((int)Position.X, (int)Position.Y, texture.Width, Game1.hitBox.Height);
+                Rectangle hitRect = new Rectangle((int)Position.X, (int)Position.Y, Game1.hitBox.Width, Game1.hitBox.Height);
                 hitRect = hitRect.RotateRect(rotation, origin);
                 switch (type)
                 {
