@@ -31,7 +31,8 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                return RotateRect(new Rectangle((int)Position.X, (int)Position.Y, Game1.hitBox.Width, Game1.hitBox.Height), rotation, origin);
+                Rectangle r = new Rectangle((int)Position.X, (int)Position.Y, texture.Width, Game1.hitBox.Height);
+                return r.RotateRect(rotation, origin);
             }
         }
 
@@ -71,12 +72,12 @@ namespace The_Bond_of_Stone
 
             if (attack)
             {
-                Position = Move(startPosition, endPosition, attackTimer / 0.2f);
+                Position = Position.TimedMove(endPosition, attackTimer / 0.2f);
                 attackTimer += elapsed;
             }
             else if (retract)
             {
-                Position = Move(endPosition, startPosition, retractTimer / 1.9f);
+                Position = Position.TimedMove(startPosition, retractTimer / 1.9f);
                 retractTimer += elapsed;
             }
             else if (wait)
@@ -111,7 +112,7 @@ namespace The_Bond_of_Stone
             if(Vector2.DistanceSquared(Game1.PlayerStats.Player.Position, Position) < 5000 && ready)
             {
                 attack = true;
-                NotifyNearby(Position);
+                NotifyNearby();
                 attackTimer = 0;
             }
            
@@ -145,57 +146,11 @@ namespace The_Bond_of_Stone
             spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
         }
 
-        public Vector2 Move(Vector2 start, Vector2 target, float amount)
-        {
-            float x = start.X + ((target.X - start.X) * amount);
-            float y = start.Y + ((target.Y - start.Y) * amount);
-
-            return new Vector2(x, y);
-        }
-
-        //He did the math
-        public Rectangle RotateRect(Rectangle rect, float rotation, Vector2 origin)
-        {
-            Rectangle result;
-
-            Vector2 topLeft = new Vector2(rect.X, rect.Y);
-            Vector2 topRight = new Vector2(rect.X + rect.Width, rect.Y);
-            Vector2 botLeft = new Vector2(rect.X, rect.Y + rect.Height);
-            Vector2 botRight = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
-
-            Matrix TranslateTo = Matrix.CreateTranslation(new Vector3(origin.X, origin.Y, 0));
-            Matrix TranslateBack = Matrix.CreateTranslation(new Vector3(-origin.X, -origin.Y, 0));
-            Matrix rotate = Matrix.CreateRotationZ(rotation);
-
-            topLeft = Vector2.Transform(topLeft, TranslateBack);
-            topLeft = Vector2.Transform(topLeft, rotate);
-            topLeft = Vector2.Transform(topLeft, TranslateTo);
-
-            topRight = Vector2.Transform(topRight, TranslateBack);
-            topRight = Vector2.Transform(topRight, rotate);
-            topRight = Vector2.Transform(topRight, TranslateTo);
-
-            botLeft = Vector2.Transform(botLeft, TranslateBack);
-            botLeft = Vector2.Transform(botLeft, rotate);
-            botLeft = Vector2.Transform(botLeft, TranslateTo);
-
-            botRight = Vector2.Transform(botRight, TranslateBack);
-            botRight = Vector2.Transform(botRight, rotate);
-            botRight = Vector2.Transform(botRight, TranslateTo);
-
-            float left = Math.Min(Math.Min(topLeft.X, topRight.X), Math.Min(botLeft.X, botRight.X));
-            float top = Math.Min(Math.Min(topLeft.Y, topRight.Y), Math.Min(botLeft.Y, botRight.Y));
-
-            result = new Rectangle((int)left, (int)top, rect.Width, rect.Height);
-
-            return result;
-        }
-
-        public void NotifyNearby(Vector2 pos)
+        public void NotifyNearby()
         {
             foreach(Entity e in Game1.Player.CurrentChunk.Traps)
             {
-                if(e is SpearTrap && Vector2.DistanceSquared(pos, e.Position) < 50000)
+                if(e is SpearTrap && Vector2.DistanceSquared(Position, e.Position) < 50000)
                 {
                     ((SpearTrap)e).attack = true;
                 }

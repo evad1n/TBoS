@@ -86,19 +86,8 @@ namespace The_Bond_of_Stone
             shootTimer += elapsed;
             if (shootTimer > 1f / attackSpeed)
             {
-                if (direction == Vector2.Zero)
-                {
-                    if (Game1.PlayerStats.IsAlive)
-                    {
-                        Shoot();
-                        shootTimer = 0;
-                    }
-                }
-                else
-                {
-                    Shoot();
-                    shootTimer = 0;
-                }
+                this.Shoot(Projectile.Spear, Vector2.Zero);
+                shootTimer = 0;
             }
 
             if (horizontal)
@@ -155,12 +144,6 @@ namespace The_Bond_of_Stone
             Position += velocity * elapsed;
 
             GetAnimation(elapsed);
-        }
-
-        public void Shoot()
-        {
-            Vector2 shootPos = new Vector2(Position.X + texture.Width / 2, Position.Y + texture.Height / 2);
-            Game1.Entities.projectiles.Add(new Bullet(Vector2.Zero, 700, Graphics.Spear, shootPos, 0, Projectile.Spear, false, 20));
         }
 
         void GetAnimation(float elapsed)

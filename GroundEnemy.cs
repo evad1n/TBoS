@@ -20,8 +20,7 @@ namespace The_Bond_of_Stone
 
         Chunk nextChunk;
         Rectangle gapRect;
-        Rectangle wallRect;
-        int yOffset;
+        int yOffset = (Game1.TILE_PIXEL_SIZE - Graphics.EnemySlugTextures[0].Height) * Game1.PIXEL_SCALE;
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
@@ -36,7 +35,6 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                yOffset = (Game1.TILE_PIXEL_SIZE - Graphics.EnemySlugTextures[0].Height) * Game1.PIXEL_SCALE;
 
                 return new Rectangle(
                     (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
@@ -62,14 +60,13 @@ namespace The_Bond_of_Stone
         {
             //Update pathfinding colliders
             gapRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y - (yOffset) + Game1.TILE_SIZE, Game1.TILE_SIZE, Game1.TILE_SIZE);
-            wallRect = Rect;
             nextChunk = Game1.Generator.GetEntityChunkID(gapRect);
 
             //Check collision directions
             Grounded = CheckCardinalCollision(new Vector2(0, 3));
 
             //Check for pathfinding (gaps and walls)
-            if ((!CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) || CollisionHelper.IsCollidingWithChunk(nextChunk, wallRect)) && Grounded)
+            if ((!CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) || CollisionHelper.IsCollidingWithChunk(nextChunk, Rect)) && Grounded)
             {
                 direction *= -1;
             }

@@ -57,16 +57,6 @@ namespace The_Bond_of_Stone
             Game1.Camera.ScreenShake(4f, 0.3f);
         }
 
-        public Vector2 Move(Vector2 start, Vector2 target, float speed)
-        {
-            Vector2 v = target - start;
-            if (v.Length() != 0)
-            {
-                v.Normalize();
-            }
-            return v * speed;
-        }
-
         public virtual void Kill()
         {
             Sound.EnemyDeath.Play();
