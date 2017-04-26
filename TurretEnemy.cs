@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace The_Bond_of_Stone
 {
-    public enum Projectile { Sawblade, Spear, Arrow};
+    public enum Projectile { Sawblade, Spear, Arrow };
 
     public class TurretEnemy : Enemy
     {
@@ -55,10 +55,6 @@ namespace The_Bond_of_Stone
                 case Projectile.Sawblade:
                     attackSpeed = 0.4f;
                     texture = Graphics.SawbladeTrap;
-                    break;
-                case Projectile.Spear:
-                    attackSpeed = 0.7f;
-                    texture = Graphics.EnemyThrowerTextures[0];
                     break;
                 case Projectile.Arrow:
                     attackSpeed = 0.8f;
@@ -133,13 +129,10 @@ namespace The_Bond_of_Stone
             switch (type)
             {
                 case Projectile.Sawblade:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 200, Graphics.Sawblade, shootPos, 5, type, true, 5));
-                    break;
-                case Projectile.Spear:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 700, Graphics.Spear, shootPos, 0, type, false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(direction, 200, Graphics.Sawblade, shootPos, 5, type, true, 5));
                     break;
                 case Projectile.Arrow:
-                    Game1.Entities.projectiles.Add(new Bullet(this, direction, 800, Graphics.Arrow, shootPos, 0, type, false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(direction, 800, Graphics.Arrow, shootPos, 0, type, false, 20));
                     break;
             }
         }
@@ -159,10 +152,10 @@ namespace The_Bond_of_Stone
                         Texture.Height * Game1.PIXEL_SCALE
                         );
 
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing, rotation: rotation);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
                 }
                 else
-                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing, rotation: rotation);
+                    spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, effects: facing);
             }
         }
     }

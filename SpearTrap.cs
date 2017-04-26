@@ -23,7 +23,6 @@ namespace The_Bond_of_Stone
         Vector2 endPosition;
         Vector2 direction;
         Vector2 origin;
-        Vector2 point;
 
         Texture2D trap;
         Rectangle trapRect;
@@ -32,12 +31,7 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                return new Rectangle(
-                (int)Math.Round(point.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
-                (int)Math.Round(point.Y / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
-                Game1.hitBox.Width,
-                Game1.hitBox.Height
-                );
+                return RotateRect(new Rectangle((int)Position.X, (int)Position.Y, Game1.hitBox.Width, Game1.hitBox.Height), rotation, origin);
             }
         }
 
@@ -47,6 +41,8 @@ namespace The_Bond_of_Stone
             this.direction = direction;
             startPosition = Position;
             endPosition = startPosition + (direction * texture.Height * 3.5f);
+
+            origin = new Vector2(Position.X + texture.Width / 2, Position.Y + texture.Height / 2);
 
             //Calculate spear rotation
             rotation = (float)Math.Atan2(direction.Y, direction.X);
@@ -62,7 +58,6 @@ namespace The_Bond_of_Stone
                 trap = Graphics.SpearTrap[1];
             }
 
-            origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
             trapRect = new Rectangle((int)startPosition.X, (int)position.Y + Game1.TILE_SIZE, trap.Width, trap.Height);
         }
 
@@ -71,15 +66,30 @@ namespace The_Bond_of_Stone
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             origin = new Vector2(Position.X + texture.Width / 2, Position.Y + texture.Height / 2);
-            point = RotatePoint(Position, rotation, origin);
 
             bool ready = !attack && !retract && !wait;
 
-            if(attackTimer > 0.2f)
+            if (attack)
+            {
+                Position = Move(startPosition, endPosition, attackTimer / 0.2f);
+                attackTimer += elapsed;
+            }
+            else if (retract)
+            {
+                Position = Move(endPosition, startPosition, retractTimer / 1.9f);
+                retractTimer += elapsed;
+            }
+            else if (wait)
+            {
+                waitTimer += elapsed;
+            }
+
+            if (attackTimer > 0.21f)
             {
                 attack = false;
                 wait = true;
                 attackTimer = 0;
+                waitTimer = 0;
             }
 
             if(waitTimer > 0.5f)
@@ -87,34 +97,22 @@ namespace The_Bond_of_Stone
                 wait = false;
                 waitTimer = 0;
                 retract = true;
+                retractTimer = 0;
             }
 
             if(retractTimer > 2f)
             {
                 retract = false;
                 retractTimer = 0;
+                attackTimer = 0;
             }
 
             //Shoot timer
             if(Vector2.DistanceSquared(Game1.PlayerStats.Player.Position, Position) < 5000 && ready)
             {
                 attack = true;
+                NotifyNearby(Position);
                 attackTimer = 0;
-            }
-
-            if(attack)
-            {
-                Position = Move(startPosition, endPosition, attackTimer / 0.2f);
-                attackTimer += elapsed;
-            }
-            else if(retract)
-            {
-                Position = Move(endPosition, startPosition, retractTimer / 2f);
-                retractTimer += elapsed;
-            }
-            else if(wait)
-            {
-                waitTimer += elapsed;
             }
            
         }
@@ -144,7 +142,7 @@ namespace The_Bond_of_Stone
                 else
                     spriteBatch.Draw(Texture, destinationRectangle: Rect, color: color, scale: new Vector2(20), origin: Vector2.Zero, rotation: rotation);
             }
-            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red, origin: Vector2.Zero, rotation: rotation);
+            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
         }
 
         public Vector2 Move(Vector2 start, Vector2 target, float amount)
@@ -155,17 +153,53 @@ namespace The_Bond_of_Stone
             return new Vector2(x, y);
         }
 
-        public Vector2 RotatePoint(Vector2 source, float rotation, Vector2 origin)
+        //He did the math
+        public Rectangle RotateRect(Rectangle rect, float rotation, Vector2 origin)
         {
-            source = new Vector2(source.X - origin.X, source.Y - origin.Y);
+            Rectangle result;
 
-            double x = (Math.Cos(rotation) * source.X) + (-Math.Sin(rotation) * source.Y);
-            double y = (Math.Sin(rotation) * source.X) + (-Math.Cos(rotation) * source.Y);
+            Vector2 topLeft = new Vector2(rect.X, rect.Y);
+            Vector2 topRight = new Vector2(rect.X + rect.Width, rect.Y);
+            Vector2 botLeft = new Vector2(rect.X, rect.Y + rect.Height);
+            Vector2 botRight = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
 
-            Vector2 result = new Vector2((float)x, (float)y);
-            result = new Vector2(result.X + origin.X, result.Y + origin.Y);
+            Matrix TranslateTo = Matrix.CreateTranslation(new Vector3(origin.X, origin.Y, 0));
+            Matrix TranslateBack = Matrix.CreateTranslation(new Vector3(-origin.X, -origin.Y, 0));
+            Matrix rotate = Matrix.CreateRotationZ(rotation);
+
+            topLeft = Vector2.Transform(topLeft, TranslateBack);
+            topLeft = Vector2.Transform(topLeft, rotate);
+            topLeft = Vector2.Transform(topLeft, TranslateTo);
+
+            topRight = Vector2.Transform(topRight, TranslateBack);
+            topRight = Vector2.Transform(topRight, rotate);
+            topRight = Vector2.Transform(topRight, TranslateTo);
+
+            botLeft = Vector2.Transform(botLeft, TranslateBack);
+            botLeft = Vector2.Transform(botLeft, rotate);
+            botLeft = Vector2.Transform(botLeft, TranslateTo);
+
+            botRight = Vector2.Transform(botRight, TranslateBack);
+            botRight = Vector2.Transform(botRight, rotate);
+            botRight = Vector2.Transform(botRight, TranslateTo);
+
+            float left = Math.Min(Math.Min(topLeft.X, topRight.X), Math.Min(botLeft.X, botRight.X));
+            float top = Math.Min(Math.Min(topLeft.Y, topRight.Y), Math.Min(botLeft.Y, botRight.Y));
+
+            result = new Rectangle((int)left, (int)top, rect.Width, rect.Height);
 
             return result;
+        }
+
+        public void NotifyNearby(Vector2 pos)
+        {
+            foreach(Entity e in Game1.Player.CurrentChunk.Traps)
+            {
+                if(e is SpearTrap && Vector2.DistanceSquared(pos, e.Position) < 50000)
+                {
+                    ((SpearTrap)e).attack = true;
+                }
+            }
         }
     }
 }

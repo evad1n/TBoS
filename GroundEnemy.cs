@@ -62,7 +62,7 @@ namespace The_Bond_of_Stone
         {
             //Update pathfinding colliders
             gapRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y - (yOffset) + Game1.TILE_SIZE, Game1.TILE_SIZE, Game1.TILE_SIZE);
-            wallRect = new Rectangle(Rect.X + (Game1.TILE_SIZE/3 * direction), Rect.Y - yOffset, Game1.TILE_SIZE, Game1.TILE_SIZE);
+            wallRect = Rect;
             nextChunk = Game1.Generator.GetEntityChunkID(gapRect);
 
             //Check collision directions
