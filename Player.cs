@@ -115,14 +115,24 @@ namespace The_Bond_of_Stone {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Alive = Game1.PlayerStats.IsAlive;
-            previousChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X - 24, Position.Y));
-            nextChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X + 24, Position.Y));
+            previousChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X - 3 * Game1.TILE_SIZE, Position.Y));
+            nextChunk = Game1.Generator.GetEntityChunkID(new Vector2(Position.X + 3 * Game1.TILE_SIZE, Position.Y));
 
-            //Check collision directions
-            Grounded = CheckCardinalCollision(new Vector2(0, 3));
-            walledLeft = CheckCardinalCollision(new Vector2(-6, 0));
-            walledRight = CheckCardinalCollision(new Vector2(6, 0));
+            //Check collision booleans
+            Grounded = CheckCardinalCollision(new Vector2(0, 3), CurrentChunk);
+
+            if(nextChunk != null && nextChunk != CurrentChunk && Rect.X + Rect.Width > nextChunk.Rect.Left)
+                walledLeft = CheckCardinalCollision(new Vector2(-6, 0), CurrentChunk) || CheckCardinalCollision(new Vector2(-6, 0), nextChunk);
+            else
+                walledLeft = CheckCardinalCollision(new Vector2(-6, 0), CurrentChunk);
+
+            if (previousChunk != null && previousChunk != CurrentChunk && Rect.X < previousChunk.Rect.Right)
+                walledRight = CheckCardinalCollision(new Vector2(6, 0), CurrentChunk) || CheckCardinalCollision(new Vector2(6, 0), previousChunk);
+            else
+                walledRight = CheckCardinalCollision(new Vector2(6, 0), CurrentChunk);
+
             Walled = walledLeft || walledRight;
+
 
             //Determine canStartJump states (Yes, this is necessary)
             isJumping = (keyboardState.IsKeyDown(Keys.Space) ||
@@ -369,19 +379,13 @@ namespace The_Bond_of_Stone {
 
             if (CurrentChunk != null && Game1.PlayerStats.IsAlive)
             {
-            if (CurrentChunk != null && Game1.PlayerStats.IsAlive) {
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
-                if ((Position.X - (Rect.Width/2) - CurrentChunk.Rect.X) < 0) {
-                    int currentIndex = Game1.Generator.Chunks.IndexOf(CurrentChunk);
-                    if(currentIndex > 0) Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, Game1.Generator.Chunks[currentIndex-1]);
-                }
-                if (Position.X + this.Rect.Width - CurrentChunk.Rect.X - CurrentChunk.Rect.Width > 0) {
-                    int currentIndex = Game1.Generator.Chunks.IndexOf(CurrentChunk);
-                    Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, Game1.Generator.Chunks[currentIndex+1] );
-                }
-            }
-                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, nextChunk);
-                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, previousChunk);
+
+                if (walledLeft)
+                    Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, previousChunk);
+
+                if (walledRight)
+                    Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, nextChunk);
             }
 
             //Reset the velocity vector.
@@ -478,7 +482,7 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="offset">The direction of the check.</param>
         /// <returns>Boolean is true when the player's rect offset by "offset" is colliding with the level.</returns>
-        public bool CheckCardinalCollision(Vector2 offset) {
+        public bool CheckCardinalCollision(Vector2 offset, Chunk chunk) {
             if (CurrentChunk != null) {
                 Rectangle check = Rect;
                 check.Offset(offset);
