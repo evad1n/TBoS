@@ -166,10 +166,10 @@ namespace The_Bond_of_Stone {
                     tileID = 29; //spawns a spear trap facing left
                     break;
                 case "086 255 114 255":
-                    tileID = 30; //spawns a spear thrower without a background tile
+                    tileID = 30; //spawns a flying spear thrower without a background tile
                     break;
                 case "046 137 060 255":
-                    tileID = 31; //spawns a spear thrower with a background tile
+                    tileID = 31; //spawns a flying spear thrower with a background tile
                     break;
                 case "159 143 089 255":
                     tileID = 32; //spawns a sawblade facing left

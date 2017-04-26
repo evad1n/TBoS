@@ -40,8 +40,8 @@ namespace The_Bond_of_Stone
         public new Rectangle Rect
         {
             get
-            {        
-                Rectangle hitRect = RotateRect(Position, rotation, origin);
+            {
+                Rectangle hitRect =  RotateRect(new Rectangle((int)Position.X, (int)Position.Y, Game1.hitBox.Width, Game1.hitBox.Height), rotation, origin);
                 switch (type)
                 {
                     case Projectile.Sawblade:
@@ -51,7 +51,7 @@ namespace The_Bond_of_Stone
                         texture.Width * Game1.PIXEL_SCALE,
                         texture.Height * Game1.PIXEL_SCALE
                         );
-                    case Projectile.Spear:
+                    case Projectile.Spear:                                                                          
                         return hitRect;
                     case Projectile.Arrow:
                         return hitRect;
@@ -67,10 +67,9 @@ namespace The_Bond_of_Stone
         }
 
 
-        public Bullet(TurretEnemy parent, Vector2 target, float speed, Texture2D texture, Vector2 position, float rotationSpeed, Projectile type, bool bounce = false, int spread = 0) : base(texture, position)
+        public Bullet(Vector2 target, float speed, Texture2D texture, Vector2 position, float rotationSpeed, Projectile type, bool bounce = false, int spread = 0) : base(texture, position)
         {
             this.speed = speed;
-            this.parent = parent;
             this.target = target;
             Texture = texture;
             Position = position;
@@ -103,13 +102,12 @@ namespace The_Bond_of_Stone
                 switch (type)
                 {
                     case Projectile.Sawblade:
-                        Position = new Vector2(Position.X, Position.Y - texture.Height);
-                        Position += (target * 20);
+                        Position = new Vector2(Position.X + (texture.Width * Math.Sign(target.X - Position.X)), Position.Y);
                         break;
                     case Projectile.Spear:
                         break;
                     case Projectile.Arrow:
-                        Position += (target * 5);
+                        Position += (target * 50);
                         break;
                 }
 
@@ -160,25 +158,25 @@ namespace The_Bond_of_Stone
                 {
                     if (Grounded && velocity.Y < 0)
                     {
-                        velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime / 2));
+                        velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime / 10));
                         Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
                         airTime = 0;
-                        bounceTimer = 0.2f;
+                        bounceTimer = 0.07f;
                     }
                     else if (Ceiling && velocity.Y > 0)
                     {
                         velocity = new Vector2(velocity.X, -velocity.Y);
-                        bounceTimer = 0.2f;
+                        bounceTimer = 0.07f;
                     }
                     else if (Right && velocity.X > 0)
                     {
                         velocity = new Vector2(-velocity.X, velocity.Y);
-                        bounceTimer = 0.2f;
+                        bounceTimer = 0.07f;
                     }
                     else if (Left && velocity.X < 0)
                     {
                         velocity = new Vector2(-velocity.X, velocity.Y);
-                        bounceTimer = 0.2f;
+                        bounceTimer = 0.07f;
                     }
                 }
 
@@ -316,19 +314,49 @@ namespace The_Bond_of_Stone
             rotation += MathHelper.ToRadians(2 * r);
         }
 
-        public Rectangle RotateRect(Vector2 pos, float rotation, Vector2 origin)
+        //He did the math
+        public Rectangle RotateRect(Rectangle rect, float rotation, Vector2 origin)
         {
             Rectangle result;
 
-            Vector2 source = new Vector2(pos.X - origin.X, pos.Y - origin.Y);
+            Vector2 topLeft = new Vector2(rect.X, rect.Y);
+            Vector2 topRight = new Vector2(rect.X + rect.Width, rect.Y);
+            Vector2 botLeft = new Vector2(rect.X, rect.Y + rect.Height);
+            Vector2 botRight = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
 
-            double x = (Math.Cos(rotation) * source.X) + (-Math.Sin(rotation) * source.Y);
-            double y = (Math.Sin(rotation) * source.X) + (Math.Cos(rotation) * source.Y);
+            Matrix TranslateTo = Matrix.CreateTranslation(new Vector3(origin.X, origin.Y, 0));
+            Matrix TranslateBack = Matrix.CreateTranslation(new Vector3(-origin.X, -origin.Y, 0));
+            Matrix rotate = Matrix.CreateRotationZ(rotation);
 
-            source = new Vector2((float)x, (float)y);
-            source = new Vector2(source.X + (float)(Game1.hitBox.Width * Math.Cos(rotation)), source.Y + (float)(Game1.hitBox.Height * Math.Sin(rotation)));
+            //THE FOLLOWING LINE OF CODE DOESN'T WORK BECAUSE FUCK LOGIC
+            //Matrix rotationMatrix = rotate * TranslateTo * TranslateBack;
 
-            result = new Rectangle((int)source.X, (int)source.Y, Game1.hitBox.Width, Game1.hitBox.Height);
+            topLeft = Vector2.Transform(topLeft, TranslateBack);
+            topLeft = Vector2.Transform(topLeft, rotate);
+            topLeft = Vector2.Transform(topLeft, TranslateTo);
+
+            topRight = Vector2.Transform(topRight, TranslateBack);
+            topRight = Vector2.Transform(topRight, rotate);
+            topRight = Vector2.Transform(topRight, TranslateTo);
+
+            botLeft = Vector2.Transform(botLeft, TranslateBack);
+            botLeft = Vector2.Transform(botLeft, rotate);
+            botLeft = Vector2.Transform(botLeft, TranslateTo);
+
+            botRight = Vector2.Transform(botRight, TranslateBack);
+            botRight = Vector2.Transform(botRight, rotate);
+            botRight = Vector2.Transform(botRight, TranslateTo);
+
+            //topLeft = Vector2.Transform(topLeft, rotationMatrix);
+            //topRight = Vector2.Transform(topRight, rotationMatrix);
+            //botLeft = Vector2.Transform(botLeft, rotationMatrix);
+            //botRight = Vector2.Transform(botRight, rotationMatrix);
+
+            float left = Math.Min(Math.Min(topLeft.X, topRight.X), Math.Min(botLeft.X, botRight.X));
+            float top = Math.Min(Math.Min(topLeft.Y, topRight.Y), Math.Min(botLeft.Y, botRight.Y));
+
+            result = new Rectangle((int)left, (int)top, rect.Width, rect.Height);
+
             return result;
         }
     }

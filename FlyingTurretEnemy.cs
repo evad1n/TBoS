@@ -13,9 +13,11 @@ namespace The_Bond_of_Stone
     /// 
     /// By Will Dickinson
     /// </summary>
-    class FlyingEnemy : Enemy
+    class FlyingTurretEnemy : Enemy
     {
         float speed = 120;
+        float shootTimer = 0;
+        float attackSpeed = 0.7f;
 
         float timer = 0;
         const float pathTimer = 2;
@@ -43,7 +45,7 @@ namespace The_Bond_of_Stone
             }
         }
 
-        public FlyingEnemy(Vector2 position, bool horizontal) : base(Graphics.EnemyFlyerTextures[0], position)
+        public FlyingTurretEnemy(Vector2 position, bool horizontal) : base(Graphics.EnemyFlyerTextures[0], position)
         {
             Texture = texture;
             Position = position;
@@ -51,7 +53,7 @@ namespace The_Bond_of_Stone
 
             timer = pathTimer / 2f;
 
-            if(horizontal)
+            if (horizontal)
             {
                 direction = new Vector2(-1, 0);
             }
@@ -80,6 +82,25 @@ namespace The_Bond_of_Stone
                 timer = 0;
             }
 
+            //Shoot timer
+            shootTimer += elapsed;
+            if (shootTimer > 1f / attackSpeed)
+            {
+                if (direction == Vector2.Zero)
+                {
+                    if (Game1.PlayerStats.IsAlive)
+                    {
+                        Shoot();
+                        shootTimer = 0;
+                    }
+                }
+                else
+                {
+                    Shoot();
+                    shootTimer = 0;
+                }
+            }
+
             if (horizontal)
             {
                 if ((CheckCardinalCollision(new Vector2(-3, 0)) && velocity.X < 0) || (CheckCardinalCollision(new Vector2(3, 0)) && velocity.X > 0))
@@ -99,7 +120,10 @@ namespace The_Bond_of_Stone
 
             velocity = direction * speed;
 
-            base.Update(gameTime);
+            if (CurrentChunk != null && (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom + 500))
+            {
+                Active = false;
+            }
 
             //Apply the physics
             ApplyPhysics(gameTime);
@@ -118,16 +142,25 @@ namespace The_Bond_of_Stone
             //Save the previous position
             Vector2 previousPosition = Position;
 
-            if (velocity.X > 0) {
+            if (velocity.X > 0)
+            {
                 facing = SpriteEffects.FlipHorizontally;
-            } else {
+            }
+            else
+            {
                 facing = SpriteEffects.None;
             }
 
             //Move the player and correct for collisions
             Position += velocity * elapsed;
-            
+
             GetAnimation(elapsed);
+        }
+
+        public void Shoot()
+        {
+            Vector2 shootPos = new Vector2(Position.X + texture.Width / 2, Position.Y + texture.Height / 2);
+            Game1.Entities.projectiles.Add(new Bullet(Vector2.Zero, 700, Graphics.Spear, shootPos, 0, Projectile.Spear, false, 20));
         }
 
         void GetAnimation(float elapsed)
@@ -148,7 +181,6 @@ namespace The_Bond_of_Stone
         //This is necessary for altering the player's hitbox. This method lops off the bottom pixel from the hitbox.
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
-
             if (Active)
             {
                 if (LockToPixelGrid)

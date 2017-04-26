@@ -49,6 +49,7 @@
     <Compile Include="Entity.cs" />
     <Compile Include="EntityManager.cs" />
     <Compile Include="FlyingEnemy.cs" />
+    <Compile Include="FlyingTurretEnemy.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="CoinPickup.cs" />
     <Compile Include="Graphics.cs" />
