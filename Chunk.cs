@@ -257,19 +257,29 @@ namespace The_Bond_of_Stone {
                     else if (atlas[y, x] == 30)
                     {
                         tileToAdd.ID = atlas[y, x] = 0;
-                        Traps.Add(new FlyingTurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
+                        Game1.Entities.enemies.Add(new FlyingTurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
                     }
                     else if (atlas[y, x] == 31)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
-                        Traps.Add(new FlyingTurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                        Game1.Entities.enemies.Add(new FlyingTurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), true));
                     }
                     else if (atlas[y, x] == 32)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 0;
+                        Game1.Entities.enemies.Add(new FlyingTurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                    }
+                    else if (atlas[y, x] == 33)
+                    {
+                        tileToAdd.ID = atlas[y, x] = 2;
+                        Game1.Entities.enemies.Add(new FlyingTurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), false));
+                    }
+                    else if (atlas[y, x] == 34)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
                         Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(-1, 0)));
                     }
-                    else if (atlas[y, x] == 33)
+                    else if (atlas[y, x] == 35)
                     {
                         tileToAdd.ID = atlas[y, x] = 2;
                         Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(1, 0)));

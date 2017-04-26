@@ -39,13 +39,13 @@ namespace The_Bond_of_Stone
                 return new Rectangle(
                     (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
                     (int)Math.Round(Position.Y / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
-                    Graphics.EnemyFlyerTextures[0].Width * Game1.PIXEL_SCALE,
-                    Graphics.EnemyFlyerTextures[0].Height * Game1.PIXEL_SCALE
+                    Graphics.EnemyThrowerTextures[0].Width * Game1.PIXEL_SCALE,
+                    Graphics.EnemyThrowerTextures[0].Height * Game1.PIXEL_SCALE
                     );
             }
         }
 
-        public FlyingTurretEnemy(Vector2 position, bool horizontal) : base(Graphics.EnemyFlyerTextures[0], position)
+        public FlyingTurretEnemy(Vector2 position, bool horizontal) : base(Graphics.EnemyThrowerTextures[0], position)
         {
             Texture = texture;
             Position = position;
@@ -109,10 +109,7 @@ namespace The_Bond_of_Stone
 
             velocity = direction * speed;
 
-            if (CurrentChunk != null && (Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom + 500))
-            {
-                Active = false;
-            }
+            base.Update(gameTime);
 
             //Apply the physics
             ApplyPhysics(gameTime);
@@ -155,7 +152,7 @@ namespace The_Bond_of_Stone
                 if (animTimer >= animSpeed)
                 {
                     animFrame = (animFrame + 1) % animFramesTotal;
-                    Texture = Graphics.EnemyFlyerTextures[animFrame];
+                    Texture = Graphics.EnemyThrowerTextures[animFrame];
                     animTimer = 0f;
                 }
             }
