@@ -101,7 +101,7 @@ namespace The_Bond_of_Stone
                     Game1.Entities.projectiles.Add(new Bullet(direction, 200, Graphics.Sawblade, shootPos, 5, type, true, 5));
                     break;
                 case Projectile.Spear:
-                    Game1.Entities.projectiles.Add(new Bullet(direction, 700, Graphics.Spear, shootPos, 0, Projectile.Spear, false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(direction, 700, Graphics.Spear, shootPos, 0, Projectile.Spear, false, 20, e));
                     break;
                 case Projectile.Arrow:
                     Game1.Entities.projectiles.Add(new Bullet(direction, 800, Graphics.Arrow, shootPos, 0, type, false, 20));

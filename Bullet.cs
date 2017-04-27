@@ -16,7 +16,7 @@ namespace The_Bond_of_Stone
         public bool facingLeft = false;
         public float stuckRotation;
 
-        public TurretEnemy parent;
+        public Enemy parent;
         public bool bounce;
         float airTime = 0;
         float bounceTimer = 0;
@@ -68,7 +68,7 @@ namespace The_Bond_of_Stone
         }
 
 
-        public Bullet(Vector2 target, float speed, Texture2D texture, Vector2 position, float rotationSpeed, Projectile type, bool bounce = false, int spread = 0) : base(texture, position)
+        public Bullet(Vector2 target, float speed, Texture2D texture, Vector2 position, float rotationSpeed, Projectile type, bool bounce = false, int spread = 0, Enemy parent = null) : base(texture, position)
         {
             this.speed = speed;
             this.target = target;
@@ -76,9 +76,10 @@ namespace The_Bond_of_Stone
             Position = position;
             this.bounce = bounce;
             this.rotationSpeed = rotationSpeed;
-            this.type = type; 
+            this.type = type;
+            this.parent = parent;
 
-            if(target == Vector2.Zero)
+            if (target == Vector2.Zero)
             {
                 if (Game1.PlayerStats.IsAlive)
                     target = Game1.PlayerStats.Player.Position;
@@ -254,30 +255,22 @@ namespace The_Bond_of_Stone
 
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
-            if(sticky)
+            if (sticky)
             {
-                color = Game1.PlayerStats.invulnColor;
+                color = Game1.PlayerStats.invulnColor; 
             }
+
             //If this is active, draw it.
             if (Active)
             {
-                //We can "lock" entities to the virtual pixel grid (looks pretty nice)
-                if (LockToPixelGrid)
-                {
-                    Rectangle drawRect = new Rectangle(
-                        (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
-                        (int)Math.Round(Position.Y / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE,
-                        Texture.Width * Game1.PIXEL_SCALE,
-                        Texture.Height * Game1.PIXEL_SCALE
-                        );
+                Rectangle drawRect = new Rectangle(
+                (int)Position.X,
+                (int)Position.Y,
+                Texture.Width * Game1.PIXEL_SCALE,
+                Texture.Height * Game1.PIXEL_SCALE 
+                );
 
-                    drawRect.X += drawRect.Width / 2;
-                    drawRect.Y += drawRect.Height / 2;
-
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: new Vector2(texture.Width/2, texture.Height/2), rotation: rotation);
-                }
-                else
-                    spriteBatch.Draw(texture: Texture, destinationRectangle: Rect, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
+                spriteBatch.Draw(texture: Texture, position: Position, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
             }
             spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
         }

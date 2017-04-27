@@ -31,14 +31,25 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                Rectangle r = new Rectangle((int)Position.X, (int)Position.Y, Texture.Width * Game1.PIXEL_SCALE, Texture.Width * Game1.PIXEL_SCALE);
-                return r.RotateRect(rotation, origin);
+                if(rotation != 0)
+                {
+                    Rectangle r = new Rectangle((int)Position.X, (int)Position.Y, Texture.Width * Game1.PIXEL_SCALE, Texture.Width * Game1.PIXEL_SCALE);
+                    r = r.RotateRect(rotation, origin);
+                    r.X += texture.Width * Game1.PIXEL_SCALE / 2;
+                    r.Y += texture.Height * Game1.PIXEL_SCALE / 2;
+                    return r;
+                }
+                else
+                {
+                    return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width * Game1.PIXEL_SCALE, Texture.Width * Game1.PIXEL_SCALE);
+                }
+
             }
         }
 
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
-            Position = new Vector2(position.X + Game1.TILE_SIZE / 4, position.Y + Game1.TILE_SIZE / 4);
+            Position = new Vector2(position.X + Game1.TILE_SIZE / 2, position.Y + Game1.TILE_SIZE / 2);
             this.direction = direction;
             startPosition = Position;
             endPosition = startPosition + (direction * texture.Height * 3.5f);
@@ -120,12 +131,11 @@ namespace The_Bond_of_Stone
         {
             Rectangle r = new Rectangle(trapRect.X, trapRect.Y, trapRect.Width * Game1.PIXEL_SCALE, trapRect.Height * Game1.PIXEL_SCALE);
 
-            spriteBatch.Draw(trap, destinationRectangle: r, color: color, origin: Vector2.Zero, rotation: rotation);
+            spriteBatch.Draw(trap, destinationRectangle: r, color: color, origin: new Vector2(trap.Width/2, trap.Height/2), rotation: rotation);
         }
 
         public void DrawSpear(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
-            Vector2 drawOrigin = new Vector2((Texture.Width * Game1.PIXEL_SCALE / 2), (Texture.Width * Game1.PIXEL_SCALE / 2));
             if (Active)
             {
                 Rectangle drawRect = new Rectangle(
@@ -135,7 +145,10 @@ namespace The_Bond_of_Stone
                     Texture.Height * Game1.PIXEL_SCALE
                     );
 
-                spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, origin: drawOrigin, rotation: rotation);
+                //drawRect.X += texture.Width * Game1.PIXEL_SCALE / 2;
+                //drawRect.Y += texture.Height * Game1.PIXEL_SCALE / 2;
+
+                spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
             }
             spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
         }

@@ -171,10 +171,10 @@ namespace The_Bond_of_Stone {
                 case "046 137 060 255":
                     tileID = 31; //spawns a horizontal flying spear thrower with a background tile
                     break;
-                case "186 255 114 255":
+                case "044 183 155 255":
                     tileID = 32; //spawns a vertical flying spear thrower without a background tile
                     break;
-                case "146 137 060 255":
+                case "045 135 118 255":
                     tileID = 33; //spawns a vertical flying spear thrower with a background tile
                     break;
                 case "159 143 089 255":
