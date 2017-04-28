@@ -22,37 +22,45 @@ namespace The_Bond_of_Stone
         /// <returns></returns>
         public static Rectangle RotateRect(this Rectangle rect, float rotation, Vector2 origin)
         {
+            rotation = MathHelper.ToRadians(360) - rotation;
             Rectangle result;
 
             Vector2 topLeft = new Vector2(rect.X, rect.Y);
             Vector2 topRight = new Vector2(rect.X + rect.Width, rect.Y);
-            Vector2 botLeft = new Vector2(rect.X, rect.Y - rect.Height);
-            Vector2 botRight = new Vector2(rect.X + rect.Width, rect.Y - rect.Height);
+            Vector2 botLeft = new Vector2(rect.X, rect.Y + rect.Height);
+            Vector2 botRight = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
 
             Matrix TranslateTo = Matrix.CreateTranslation(new Vector3(origin.X, origin.Y, 0));
             Matrix TranslateBack = Matrix.CreateTranslation(new Vector3(-origin.X, -origin.Y, 0));
             Matrix rotate = Matrix.CreateRotationZ(rotation);
+            Matrix switchY = Matrix.CreateScale(1, -1, 0);
 
             topLeft = Vector2.Transform(topLeft, TranslateBack);
+            topLeft = Vector2.Transform(topLeft, switchY);
             topLeft = Vector2.Transform(topLeft, rotate);
+            topLeft = Vector2.Transform(topLeft, switchY);
             topLeft = Vector2.Transform(topLeft, TranslateTo);
 
             topRight = Vector2.Transform(topRight, TranslateBack);
+            topRight = Vector2.Transform(topRight, switchY);
             topRight = Vector2.Transform(topRight, rotate);
+            topRight = Vector2.Transform(topRight, switchY);
             topRight = Vector2.Transform(topRight, TranslateTo);
 
             botLeft = Vector2.Transform(botLeft, TranslateBack);
+            botLeft = Vector2.Transform(botLeft, switchY);
             botLeft = Vector2.Transform(botLeft, rotate);
+            botLeft = Vector2.Transform(botLeft, switchY);
             botLeft = Vector2.Transform(botLeft, TranslateTo);
 
             botRight = Vector2.Transform(botRight, TranslateBack);
+            botRight = Vector2.Transform(botRight, switchY);
             botRight = Vector2.Transform(botRight, rotate);
+            botRight = Vector2.Transform(botRight, switchY);
             botRight = Vector2.Transform(botRight, TranslateTo);
 
             float left = Math.Min(Math.Min(topLeft.X, topRight.X), Math.Min(botLeft.X, botRight.X));
             float top = Math.Min(Math.Min(topLeft.Y, topRight.Y), Math.Min(botLeft.Y, botRight.Y));
-
-            top += rect.Height;
 
             result = new Rectangle((int)Math.Round(left), (int)Math.Round(top), rect.Width, rect.Height);
 

@@ -48,13 +48,12 @@ namespace The_Bond_of_Stone
                 switch (type)
                 {
                     case Projectile.Sawblade:
-                        return hitRect;
-                        //return new Rectangle(
-                        //(int)Position.X,
-                        //(int)Position.Y,
-                        //texture.Width * Game1.PIXEL_SCALE,
-                        //texture.Height * Game1.PIXEL_SCALE
-                        //);
+                        return new Rectangle(
+                        (int)Position.X,
+                        (int)Position.Y,
+                        texture.Width * Game1.PIXEL_SCALE,
+                        texture.Height * Game1.PIXEL_SCALE
+                        );
                     case Projectile.Spear:                                                                          
                         return hitRect;
                     case Projectile.Arrow:
@@ -300,8 +299,11 @@ namespace The_Bond_of_Stone
             int y = (int)(Position.Y);
             spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
 
-            Rectangle r = new Rectangle(3, 3, 1, 1);
-            r = r.RotateRect(MathHelper.ToRadians(90), new Vector2(4, 4));
+            Rectangle r = new Rectangle(2, -2, 1, 1);
+            r = r.RotateRect(MathHelper.ToRadians(90), new Vector2(3, -1));
+
+            r = new Rectangle(2, -2, 1, 1);
+            r = r.RotateRect(MathHelper.ToRadians(90), new Vector2(3, -3));
         }
 
         public bool CheckCardinalCollision(Vector2 offset)

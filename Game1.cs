@@ -280,7 +280,7 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.I) && prevKeyboardState.IsKeyUp(Keys.I))
             {
-                Player.CurrentChunk.Traps.Add(new SpearTrap(new Vector2(mouseState.Position.X, mouseState.Position.Y), new Vector2(0,-1)));
+                Player.CurrentChunk.Traps.Add(new SpearTrap(new Vector2(mouseState.Position.X, mouseState.Position.Y), new Vector2(-1, 0)));
             }
 
             if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
