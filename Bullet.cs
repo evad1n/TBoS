@@ -31,7 +31,6 @@ namespace The_Bond_of_Stone
 
         public Vector2 velocity;
         public Vector2 previousVelocity;
-        public Vector2 origin;
         public Vector2 relativePosition;
 
         Projectile type;
@@ -44,7 +43,7 @@ namespace The_Bond_of_Stone
                 int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width/2;
                 int y = (int)(Position.Y);
                 Rectangle hitRect = new Rectangle(x, y, Game1.hitBox.Width, Game1.hitBox.Height);
-                hitRect = hitRect.RotateRect(rotation, origin);
+                hitRect = hitRect.RotateRect(rotation, Origin);
 
                 switch (type)
                 {
@@ -86,6 +85,14 @@ namespace The_Bond_of_Stone
                 drawRect.Y += drawRect.Height / 2;
 
                 return drawRect;
+            }
+        }
+
+        public Vector2 Origin
+        {
+            get
+            {
+                return new Vector2(Position.X + drawRect.Width / 2, Position.Y + drawRect.Height / 2);
             }
         }
 
@@ -155,11 +162,9 @@ namespace The_Bond_of_Stone
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            origin = new Vector2(drawRect.X + drawRect.Width/2, drawRect.Y + drawRect.Height/2);
-
             rotation += elapsed * rotationSpeed * Math.Sign(velocity.X);
 
-            if (CurrentChunk != null && (Position.Y - drawRect.Height < Game1.Camera.Rect.Top || Position.X - drawRect.Width > Game1.Camera.Rect.Right || Position.X + drawRect.Width < Game1.Camera.Rect.Left || Position.Y - drawRect.Height > Game1.Camera.Rect.Bottom + 500))
+            if (CurrentChunk != null && (Position.Y + drawRect.Height < Game1.Camera.Rect.Top || Position.X - drawRect.Width > Game1.Camera.Rect.Right || Position.X + drawRect.Width < Game1.Camera.Rect.Left || Position.Y - drawRect.Height > Game1.Camera.Rect.Bottom + 500))
             {
                 Active = false;
             }
@@ -289,7 +294,11 @@ namespace The_Bond_of_Stone
                 spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
             }
             spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
-            spriteBatch.Draw(Graphics.BlackTexture, position: origin, color: Color.Black);
+            spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
+            int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
+            int y = (int)(Position.Y);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
 
             Rectangle r = new Rectangle(3, 3, 1, 1);
             r = r.RotateRect(MathHelper.ToRadians(90), new Vector2(4, 4));
