@@ -26,8 +26,8 @@ namespace The_Bond_of_Stone
 
             Vector2 topLeft = new Vector2(rect.X, rect.Y);
             Vector2 topRight = new Vector2(rect.X + rect.Width, rect.Y);
-            Vector2 botLeft = new Vector2(rect.X, rect.Y + rect.Height);
-            Vector2 botRight = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
+            Vector2 botLeft = new Vector2(rect.X, rect.Y - rect.Height);
+            Vector2 botRight = new Vector2(rect.X + rect.Width, rect.Y - rect.Height);
 
             Matrix TranslateTo = Matrix.CreateTranslation(new Vector3(origin.X, origin.Y, 0));
             Matrix TranslateBack = Matrix.CreateTranslation(new Vector3(-origin.X, -origin.Y, 0));
@@ -52,7 +52,9 @@ namespace The_Bond_of_Stone
             float left = Math.Min(Math.Min(topLeft.X, topRight.X), Math.Min(botLeft.X, botRight.X));
             float top = Math.Min(Math.Min(topLeft.Y, topRight.Y), Math.Min(botLeft.Y, botRight.Y));
 
-            result = new Rectangle((int)left, (int)top, rect.Width, rect.Height);
+            top += rect.Height;
+
+            result = new Rectangle((int)Math.Round(left), (int)Math.Round(top), rect.Width, rect.Height);
 
             return result;
         }

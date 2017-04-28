@@ -31,25 +31,35 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                if(rotation != 0)
-                {
-                    Rectangle r = new Rectangle((int)Position.X, (int)Position.Y, Texture.Width * Game1.PIXEL_SCALE, Texture.Width * Game1.PIXEL_SCALE);
-                    r = r.RotateRect(rotation, origin);
-                    r.X += texture.Width * Game1.PIXEL_SCALE / 2;
-                    r.Y += texture.Height * Game1.PIXEL_SCALE / 2;
-                    return r;
-                }
-                else
-                {
-                    return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width * Game1.PIXEL_SCALE, Texture.Width * Game1.PIXEL_SCALE);
-                }
+                int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
+                int y = (int)(Position.Y);
+                Rectangle hitRect = new Rectangle(x, y, Game1.hitBox.Width, Game1.hitBox.Height);
+                return hitRect.RotateRect(rotation, origin);
+            }
+        }
 
+        public Rectangle drawRect
+        {
+            get
+            {
+                Rectangle drawRect = new Rectangle(
+                (int)Position.X,
+                (int)Position.Y,
+                Texture.Width * Game1.PIXEL_SCALE,
+                Texture.Height * Game1.PIXEL_SCALE
+                );
+
+                drawRect.X += drawRect.Width / 2;
+                drawRect.Y += drawRect.Height / 2;
+
+                return drawRect;
             }
         }
 
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
             Position = new Vector2(position.X + Game1.TILE_SIZE / 2, position.Y + Game1.TILE_SIZE / 2);
+            Position = new Vector2(Position.X - (direction.X * Game1.TILE_SIZE), Position.Y - (direction.Y * Game1.TILE_SIZE));
             this.direction = direction;
             startPosition = Position;
             endPosition = startPosition + (direction * texture.Height * 3.5f);
@@ -75,7 +85,7 @@ namespace The_Bond_of_Stone
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            origin = new Vector2(Position.X + (Texture.Width * Game1.PIXEL_SCALE / 2), Position.Y + (Texture.Width * Game1.PIXEL_SCALE / 2));
+            origin = new Vector2(drawRect.X + drawRect.Width / 2, drawRect.Y + drawRect.Height / 2);
 
             bool ready = !attack && !retract && !wait;
 
@@ -138,19 +148,10 @@ namespace The_Bond_of_Stone
         {
             if (Active)
             {
-                Rectangle drawRect = new Rectangle(
-                    (int)Position.X,
-                    (int)Position.Y,
-                    Texture.Width * Game1.PIXEL_SCALE,
-                    Texture.Height * Game1.PIXEL_SCALE
-                    );
-
-                //drawRect.X += texture.Width * Game1.PIXEL_SCALE / 2;
-                //drawRect.Y += texture.Height * Game1.PIXEL_SCALE / 2;
-
-                spriteBatch.Draw(Texture, destinationRectangle: drawRect, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
+                spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
             }
             spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            spriteBatch.Draw(Graphics.BlackTexture, position: origin, color: Color.Black);
         }
 
         public void NotifyNearby()

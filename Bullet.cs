@@ -41,17 +41,21 @@ namespace The_Bond_of_Stone
         {
             get
             {
-                Rectangle hitRect = new Rectangle((int)Position.X, (int)Position.Y, Game1.hitBox.Width, Game1.hitBox.Height);
+                int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width/2;
+                int y = (int)(Position.Y);
+                Rectangle hitRect = new Rectangle(x, y, Game1.hitBox.Width, Game1.hitBox.Height);
                 hitRect = hitRect.RotateRect(rotation, origin);
+
                 switch (type)
                 {
                     case Projectile.Sawblade:
-                        return new Rectangle(
-                        (int)Position.X,
-                        (int)Position.Y,
-                        texture.Width * Game1.PIXEL_SCALE,
-                        texture.Height * Game1.PIXEL_SCALE
-                        );
+                        return hitRect;
+                        //return new Rectangle(
+                        //(int)Position.X,
+                        //(int)Position.Y,
+                        //texture.Width * Game1.PIXEL_SCALE,
+                        //texture.Height * Game1.PIXEL_SCALE
+                        //);
                     case Projectile.Spear:                                                                          
                         return hitRect;
                     case Projectile.Arrow:
@@ -64,6 +68,24 @@ namespace The_Bond_of_Stone
                 texture.Width * Game1.PIXEL_SCALE,
                 texture.Height * Game1.PIXEL_SCALE
                 );
+            }
+        }
+
+        public Rectangle drawRect
+        {
+            get
+            {
+                Rectangle drawRect = new Rectangle(
+                (int)Position.X,
+                (int)Position.Y,
+                Texture.Width * Game1.PIXEL_SCALE,
+                Texture.Height * Game1.PIXEL_SCALE
+                );
+
+                drawRect.X += drawRect.Width / 2;
+                drawRect.Y += drawRect.Height / 2;
+
+                return drawRect;
             }
         }
 
@@ -133,11 +155,11 @@ namespace The_Bond_of_Stone
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            origin = new Vector2(Position.X + texture.Width / 2, Position.Y + texture.Height / 2);
+            origin = new Vector2(drawRect.X + drawRect.Width/2, drawRect.Y + drawRect.Height/2);
 
             rotation += elapsed * rotationSpeed * Math.Sign(velocity.X);
 
-            if (CurrentChunk != null && (Position.Y - Rect.Height < Game1.Camera.Rect.Top || Position.X - Rect.Width > Game1.Camera.Rect.Right || Position.X + Rect.Width < Game1.Camera.Rect.Left || Position.Y - Rect.Height > Game1.Camera.Rect.Bottom + 500))
+            if (CurrentChunk != null && (Position.Y - drawRect.Height < Game1.Camera.Rect.Top || Position.X - drawRect.Width > Game1.Camera.Rect.Right || Position.X + drawRect.Width < Game1.Camera.Rect.Left || Position.Y - drawRect.Height > Game1.Camera.Rect.Bottom + 500))
             {
                 Active = false;
             }
@@ -255,6 +277,7 @@ namespace The_Bond_of_Stone
 
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
+            //rotation = MathHelper.ToRadians(-90);
             if (sticky)
             {
                 color = Game1.PlayerStats.invulnColor; 
@@ -263,16 +286,13 @@ namespace The_Bond_of_Stone
             //If this is active, draw it.
             if (Active)
             {
-                Rectangle drawRect = new Rectangle(
-                (int)Position.X,
-                (int)Position.Y,
-                Texture.Width * Game1.PIXEL_SCALE,
-                Texture.Height * Game1.PIXEL_SCALE 
-                );
-
-                spriteBatch.Draw(texture: Texture, position: Position, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
+                spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
             }
             spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            spriteBatch.Draw(Graphics.BlackTexture, position: origin, color: Color.Black);
+
+            Rectangle r = new Rectangle(3, 3, 1, 1);
+            r = r.RotateRect(MathHelper.ToRadians(90), new Vector2(4, 4));
         }
 
         public bool CheckCardinalCollision(Vector2 offset)
