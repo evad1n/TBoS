@@ -22,8 +22,11 @@ namespace The_Bond_of_Stone
         Vector2 startPosition;
         Vector2 endPosition;
         Vector2 direction;
+
+        //Trap texture
         Texture2D trap;
         Rectangle trapRect;
+        SpriteEffects facing = SpriteEffects.None;
 
         public new Rectangle Rect
         {
@@ -68,19 +71,39 @@ namespace The_Bond_of_Stone
             Position = new Vector2(Position.X - (direction.X * Game1.TILE_SIZE), Position.Y - (direction.Y * Game1.TILE_SIZE));
             this.direction = direction;
             startPosition = Position;
-            endPosition = startPosition + (direction * texture.Height * 3.5f);
+            endPosition = startPosition + (direction * texture.Height * 2f);
 
             //Calculate spear rotation
             rotation = (float)Math.Atan2(direction.Y, direction.X);
             rotation += MathHelper.ToRadians(90);
 
             //Get rect and rotation for trap texture
-            if (MathHelper.ToDegrees(rotation) == 180 || MathHelper.ToDegrees(rotation) == 360)
+            if (direction.X != 0)
             {
+                if (direction.X > 0)
+                {
+                    facing = SpriteEffects.FlipHorizontally;
+                    Position = new Vector2(Position.X + Game1.PIXEL_SCALE, Position.Y);
+                }
+                else
+                {
+                    facing = SpriteEffects.None;
+                    Position = new Vector2(Position.X - Game1.PIXEL_SCALE, Position.Y);
+                }
                 trap = Graphics.SpearTrap[0];
             }
-            else
+            else if (direction.Y != 0)
             {
+                if (direction.Y > 0)
+                {
+                    facing = SpriteEffects.FlipVertically;
+                    Position = new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE);
+                }
+                else
+                {
+                    facing = SpriteEffects.None;
+                    Position = new Vector2(Position.X, Position.Y - Game1.PIXEL_SCALE);
+                }
                 trap = Graphics.SpearTrap[1];
             }
 
@@ -145,7 +168,7 @@ namespace The_Bond_of_Stone
         {
             Rectangle r = new Rectangle(trapRect.X, trapRect.Y, trapRect.Width * Game1.PIXEL_SCALE, trapRect.Height * Game1.PIXEL_SCALE);
 
-            spriteBatch.Draw(trap, destinationRectangle: r, color: color, origin: new Vector2(trap.Width/2, trap.Height/2), rotation: rotation);
+            //spriteBatch.Draw(trap, destinationRectangle: r, color: color, effects: facing);
         }
 
         public void DrawSpear(SpriteBatch spriteBatch, Color color, int depth = 0)
@@ -154,12 +177,14 @@ namespace The_Bond_of_Stone
             {
                 spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
             }
-            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
-            spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
-            spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
-            int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
-            int y = (int)(Position.Y);
-            spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x,y), color: Color.White);
+
+            //Debug view
+            //spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            //spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
+            //int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
+            //int y = (int)(Position.Y);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x,y), color: Color.White);
         }
 
         public void NotifyNearby()

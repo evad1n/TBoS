@@ -292,18 +292,15 @@ namespace The_Bond_of_Stone
             {
                 spriteBatch.Draw(texture: Texture, destinationRectangle: drawRect, color: color, origin: new Vector2(texture.Width / 2, texture.Height / 2), rotation: rotation);
             }
-            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
-            spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
-            spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
-            int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
-            int y = (int)(Position.Y);
-            spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
 
-            Rectangle r = new Rectangle(2, -2, 1, 1);
-            r = r.RotateRect(MathHelper.ToRadians(90), new Vector2(3, -1));
 
-            r = new Rectangle(2, -2, 1, 1);
-            r = r.RotateRect(MathHelper.ToRadians(90), new Vector2(3, -3));
+            //Debug view
+            //spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            //spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
+            //int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
+            //int y = (int)(Position.Y);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
         }
 
         public bool CheckCardinalCollision(Vector2 offset)
