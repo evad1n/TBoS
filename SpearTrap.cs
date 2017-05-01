@@ -67,8 +67,8 @@ namespace The_Bond_of_Stone
 
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
-            Position = new Vector2(position.X + Game1.TILE_SIZE / 2, position.Y + Game1.TILE_SIZE / 2);
-            Position = new Vector2(Position.X - (direction.X * Game1.TILE_SIZE), Position.Y - (direction.Y * Game1.TILE_SIZE));
+            Position = new Vector2(position.X + Game1.TILE_SIZE / 2, position.Y - Game1.TILE_SIZE / 2);
+            Position = new Vector2(Position.X - (direction.X * Game1.TILE_SIZE/2), Position.Y - (direction.Y * Game1.TILE_SIZE/2));
             this.direction = direction;
             startPosition = Position;
             endPosition = startPosition + (direction * texture.Height * 2f);
@@ -191,7 +191,7 @@ namespace The_Bond_of_Stone
         {
             foreach(Entity e in Game1.Player.CurrentChunk.Traps)
             {
-                if(e is SpearTrap && Vector2.DistanceSquared(Position, e.Position) < 50000)
+                if(e is SpearTrap && Vector2.DistanceSquared(Position, e.Position) < 20000)
                 {
                     ((SpearTrap)e).attack = true;
                 }

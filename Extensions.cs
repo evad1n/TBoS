@@ -104,7 +104,7 @@ namespace The_Bond_of_Stone
         /// </summary>
         public static void Shoot(this Enemy e, Projectile type, Vector2 direction)
         {
-            Vector2 shootPos = new Vector2(e.Position.X + Game1.TILE_SIZE / 2, e.Position.Y + Game1.TILE_SIZE / 2);
+            Vector2 shootPos = new Vector2(e.Position.X, e.Position.Y);
             switch (type)
             {
                 case Projectile.Sawblade:
