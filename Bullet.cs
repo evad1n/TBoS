@@ -34,6 +34,8 @@ namespace The_Bond_of_Stone
         public Vector2 relativePosition;
 
         Projectile type;
+
+        float inactiveTimer = 5f;
        
 
         public new Rectangle Rect
@@ -166,6 +168,16 @@ namespace The_Bond_of_Stone
             if (CurrentChunk != null && (Position.Y + drawRect.Height < Game1.Camera.Rect.Top || Position.X - drawRect.Width > Game1.Camera.Rect.Right || Position.X + drawRect.Width < Game1.Camera.Rect.Left || Position.Y - drawRect.Height > Game1.Camera.Rect.Bottom + 500))
             {
                 Active = false;
+            }
+
+            if (stuck)
+            {
+                if(inactiveTimer > 0)
+                {
+                    inactiveTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (inactiveTimer <= 0)
+                        Active = false;
+                }
             }
 
 
