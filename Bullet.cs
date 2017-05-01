@@ -142,7 +142,7 @@ namespace The_Bond_of_Stone
                     case Projectile.Spear:
                         break;
                     case Projectile.Arrow:
-                        Position += (target * 50);
+                        Position = new Vector2(Position.X + (target.X * Game1.TILE_SIZE / 2), Position.Y + (target.Y * Game1.TILE_SIZE / 2));
                         break;
                 }
 
