@@ -68,24 +68,24 @@ namespace The_Bond_of_Stone
                     if(direction.X != 0) {
                         if (direction.X > 0)
                         {
-                            facing = SpriteEffects.FlipHorizontally;
+                            facing = SpriteEffects.None;
                             Position = new Vector2(Position.X + Game1.PIXEL_SCALE, Position.Y);
                         }
                         else
                         {
-                            facing = SpriteEffects.None;
+                            facing = SpriteEffects.FlipHorizontally;
                             Position = new Vector2(Position.X - Game1.PIXEL_SCALE, Position.Y);
                         }
                         texture = Graphics.ArrowTrap[0];
                     } else if (direction.Y != 0) {
                         if (direction.Y > 0)
                         {
-                            facing = SpriteEffects.FlipVertically;
+                            facing = SpriteEffects.None;
                             Position = new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE);
                         }
                         else
                         {
-                            facing = SpriteEffects.None;
+                            facing = SpriteEffects.FlipHorizontally;
                             Position = new Vector2(Position.X, Position.Y - Game1.PIXEL_SCALE);
                         }
                         texture = Graphics.ArrowTrap[1];

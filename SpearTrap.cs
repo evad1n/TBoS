@@ -118,20 +118,28 @@ namespace The_Bond_of_Stone
 
             if (attack)
             {
-                Position = Position.TimedMove(endPosition, attackTimer / 0.2f);
                 attackTimer += elapsed;
+
+                if (attackTimer > 0.2f)
+                    attackTimer = 0.2f;
+
+                Position = Position.TimedMove(endPosition, attackTimer / 0.2f);
             }
             else if (retract)
             {
-                Position = Position.TimedMove(startPosition, retractTimer / 1.9f);
                 retractTimer += elapsed;
+
+                if (retractTimer > 2f)
+                    retractTimer = 2f;
+
+                Position = Position.TimedMove(startPosition, retractTimer / 2f);
             }
             else if (wait)
             {
                 waitTimer += elapsed;
             }
 
-            if (attackTimer > 0.21f)
+            if (attackTimer == 0.2f)
             {
                 attack = false;
                 wait = true;
@@ -147,7 +155,7 @@ namespace The_Bond_of_Stone
                 retractTimer = 0;
             }
 
-            if(retractTimer > 2f)
+            if(retractTimer == 2f)
             {
                 retract = false;
                 retractTimer = 0;
