@@ -82,6 +82,7 @@ namespace The_Bond_of_Stone {
         public static Texture2D BlackTexture;
         public static Texture2D DebugTexture;
         public static Texture2D[] ParallaxLayers;
+        public static Texture2D SkyTexture;
         public static Texture2D Overlay;
 
         /// <summary>
@@ -103,6 +104,7 @@ namespace The_Bond_of_Stone {
             Deco_backgroundBottom = PopulateTextureArray("deco_3", 3, @"graphics\deco\");
 
             ParallaxLayers = PopulateTextureArray("parallax", 4, @"graphics\misc\");
+            SkyTexture = Content.Load<Texture2D>(@"graphics\misc\sky");
 
             PlayerTextures = PopulateTextureArray("player", 7, @"graphics\entities\");
             PlayerWalkTextures = PopulateTextureArray("playerWalk", 4, @"graphics\entities\");
