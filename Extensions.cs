@@ -108,13 +108,13 @@ namespace The_Bond_of_Stone
             switch (type)
             {
                 case Projectile.Sawblade:
-                    Game1.Entities.projectiles.Add(new Bullet(direction, 200, Graphics.Sawblade, shootPos, 5, type, true, 5));
+                    Game1.Entities.projectiles.Add(new Bullet(direction, 200, Graphics.Sawblade, shootPos, 5, type, true, 0));
                     break;
                 case Projectile.Spear:
                     Game1.Entities.projectiles.Add(new Bullet(direction, 700, Graphics.Spear, shootPos, 0, Projectile.Spear, false, 20, e));
                     break;
                 case Projectile.Arrow:
-                    Game1.Entities.projectiles.Add(new Bullet(direction, 400, Graphics.Arrow, shootPos, 0, type, false, 20));
+                    Game1.Entities.projectiles.Add(new Bullet(direction, 600, Graphics.Arrow, shootPos, 0, type, false, 0));
                     break;
             }
         }
