@@ -33,7 +33,7 @@ namespace The_Bond_of_Stone {
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
-        public static int TITAN_SPAWN_RATE = 25;
+        public static int TITAN_SPAWN_RATE = -1;
 
         public static Rectangle hitBox = new Rectangle(0, 0, 10, 10);
 
@@ -80,7 +80,7 @@ namespace The_Bond_of_Stone {
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
         /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// and initialize them as well.z
         /// </summary>
         protected override void Initialize() {
             State = GameState.SplashScreen;
@@ -136,8 +136,8 @@ namespace The_Bond_of_Stone {
 
 			parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(0.5f, 0f), GraphicsDevice.Viewport);
             parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
-            parallaxLayers[2] = new ParallaxLayer(Graphics.ParallaxLayers[2], Player, new Vector2(0.1f, 0f), GraphicsDevice.Viewport);
-            parallaxLayers[3] = new ParallaxLayer(Graphics.ParallaxLayers[3], Player, new Vector2(0.123f, 0f), GraphicsDevice.Viewport);
+            parallaxLayers[2] = new ParallaxLayer(Graphics.ParallaxLayers[2], Player, new Vector2(0.025f, 0f), GraphicsDevice.Viewport);
+            parallaxLayers[3] = new ParallaxLayer(Graphics.ParallaxLayers[3], Player, new Vector2(0.075f, 0f), GraphicsDevice.Viewport);
 
             bgm = Sound.MusicTrack;
             MediaPlayer.Volume = 0.25f;
@@ -346,6 +346,11 @@ namespace The_Bond_of_Stone {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            //Draw the sky
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
+            spriteBatch.Draw(Graphics.SkyTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+            spriteBatch.End();
+
             //Organizational: Draw according to the current game state
             switch (State) {
                 case GameState.SplashScreen:
@@ -391,7 +396,7 @@ namespace The_Bond_of_Stone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPlaying(GameTime gameTime, Color color) {
 
-            //Draw the suns
+            //Draw the parallax layers in the background.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             parallaxLayers[2].Draw(spriteBatch);
             parallaxLayers[3].Draw(spriteBatch);
@@ -405,7 +410,7 @@ namespace The_Bond_of_Stone {
                 spriteBatch.End();
             }
 
-            //Draw the parallax layers in the background.
+            //Draw the parallax layers in the midground.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             parallaxLayers[0].Draw(spriteBatch);
             parallaxLayers[1].Draw(spriteBatch);
