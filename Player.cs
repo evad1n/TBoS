@@ -66,10 +66,6 @@ namespace The_Bond_of_Stone {
         SoundEffectInstance wallSlideSound;
         SoundEffectInstance walkSound;
 
-        //Debuffs
-        public bool bounce = false;
-        float bounceDuration = 0;
-
         public bool Alive;
         public bool Grounded;
         public bool Walled;
@@ -331,8 +327,7 @@ namespace The_Bond_of_Stone {
                             //Save rotation and relative position for stuck projectiles
                             b.sticky = true;
                             b.stuck = true;
-                            b.relativePosition = b.Position - Position;
-                            b.relativePosition.X = MathHelper.Clamp(b.relativePosition.X, -3, 3);
+                            b.relativePosition = b.Position - new Vector2(b.Rect.X, b.Rect.Y);
                             b.stuckRotation = b.rotation;
                             stickies.Add(b);
                         }

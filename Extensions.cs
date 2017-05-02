@@ -104,17 +104,19 @@ namespace The_Bond_of_Stone
         /// </summary>
         public static void Shoot(this Enemy e, Projectile type, Vector2 direction)
         {
-            Vector2 shootPos = new Vector2(e.Position.X, e.Position.Y);
+            Vector2 Position = new Vector2(e.Position.X, e.Position.Y);
             switch (type)
             {
                 case Projectile.Sawblade:
-                    Game1.Entities.projectiles.Add(new Bullet(direction, 200, Graphics.Sawblade, shootPos, 5, type, true, 0));
+                    Position = new Vector2(Position.X + (1.5f * Game1.TILE_SIZE * Math.Sign(direction.X)), Position.Y);
+                    Game1.Entities.projectiles.Add(new Bullet(direction, 200, Graphics.Sawblade, Position, 5, type, true, 0));
                     break;
                 case Projectile.Spear:
-                    Game1.Entities.projectiles.Add(new Bullet(direction, 700, Graphics.Spear, shootPos, 0, Projectile.Spear, false, 20, e));
+                    Game1.Entities.projectiles.Add(new Bullet(direction, 700, Graphics.Spear, Position, 0, Projectile.Spear, false, 20, e));
                     break;
                 case Projectile.Arrow:
-                    Game1.Entities.projectiles.Add(new Bullet(direction, 600, Graphics.Arrow, shootPos, 0, type, false, 0));
+                    Position = new Vector2(Position.X + (Game1.TILE_SIZE * Math.Sign(direction.X)), Position.Y + (Game1.TILE_SIZE * Math.Sign(direction.Y)));
+                    Game1.Entities.projectiles.Add(new Bullet(direction, 600, Graphics.Arrow, Position, 0, type, false, 0));
                     break;
             }
         }
