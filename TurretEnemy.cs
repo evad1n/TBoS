@@ -63,30 +63,26 @@ namespace The_Bond_of_Stone
                     texture = Graphics.SawbladeTrap;
                     break;
                 case Projectile.Arrow:
-                    attackSpeed = 0.8f;
+                    attackSpeed = 1.5f;
                     
                     if(direction.X != 0) {
                         if (direction.X > 0)
                         {
                             facing = SpriteEffects.FlipHorizontally;
-                            Position = new Vector2(Position.X + Game1.TILE_SIZE, Position.Y);
                         }
                         else
                         {
                             facing = SpriteEffects.None;
-                            Position = new Vector2(Position.X - Game1.TILE_SIZE, Position.Y);
                         }
                         texture = Graphics.ArrowTrap[0];
                     } else if (direction.Y != 0) {
                         if (direction.Y > 0)
                         {
                             facing = SpriteEffects.FlipVertically;
-                            Position = new Vector2(Position.X, Position.Y + Game1.TILE_SIZE);
                         }
                         else
                         {
                             facing = SpriteEffects.None;
-                            Position = new Vector2(Position.X, Position.Y - Game1.TILE_SIZE);
                         }
                         texture = Graphics.ArrowTrap[1];
                     }
