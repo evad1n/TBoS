@@ -60,6 +60,14 @@ namespace The_Bond_of_Stone
         public virtual void Kill()
         {
             Sound.EnemyDeath.Play();
+
+            int particlesToMake = Game1.RandomObject.Next(1, 6);
+
+            for(int i = 0; i < particlesToMake; i++)
+            {
+                Game1.Entities.particles.Add(new DynamicParticle(Graphics.EnemyParticles[0], Graphics.EnemyParticles, new Vector2(Rect.Center.X, Rect.Center.Y), 2.25f, new Vector2(200, Game1.RandomObject.Next(-750, 0))));
+            }
+
             Active = false;
         }
     }

@@ -39,7 +39,7 @@ namespace The_Bond_of_Stone {
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
-        public float cameraSpeed = 1.5f;
+        public const float CAMERA_SPEED = 1f;
 
         public static int ScreenWidth { get; set; }
         public static int ScreenHeight { get; set; }
@@ -125,7 +125,7 @@ namespace The_Bond_of_Stone {
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
             PlayerStats = new PlayerStats(Player, 6);
             Interface = new UI(PlayerStats, GraphicsDevice.Viewport, this);
-            Camera = new Camera(GraphicsDevice, Player, cameraSpeed);
+            Camera = new Camera(GraphicsDevice, Player, CAMERA_SPEED);
             Generator = new LevelGenerator(graphics, chunkStartPos);
             Score = new ScoreManager();
             Entities = new EntityManager(Camera);
@@ -437,6 +437,8 @@ namespace The_Bond_of_Stone {
             //Draw foreground tiles
             foreach (Chunk map in Generator.Chunks)
                 map.DrawForeground(spriteBatch, color);
+
+            Entities.DrawParticles(spriteBatch, State);
 
             Player.Draw(spriteBatch, PlayerStats.invulnColor);
 
