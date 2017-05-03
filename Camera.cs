@@ -74,7 +74,7 @@ namespace The_Bond_of_Stone {
             //Game over pathfinding code
             else
             {
-                gameOverPath += Move(gameOverPath, new Vector2(gameOverPath.X, nextChunk.Rect.Top + nextChunk.Rect.Height / 2), Speed);
+                gameOverPath += Move(gameOverPath, new Vector2(gameOverPath.X, nextChunk.Rect.Top + nextChunk.Rect.Height / 4), Speed);
                 Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, gameOverPath.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / 0.5f));
             }
 

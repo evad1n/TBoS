@@ -96,7 +96,9 @@ namespace The_Bond_of_Stone {
         {
             get
             {
-                return new Vector2(Position.X + Texture.Width * Game1.PIXEL_SCALE, Position.Y + Texture.Height * Game1.PIXEL_SCALE);
+                int x = (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE;
+                int y = (int)Math.Round((Position.Y + Game1.PIXEL_SCALE) / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE;
+                return new Vector2(x + (Texture.Width/2 * Game1.PIXEL_SCALE), y + (Texture.Height/2 * Game1.PIXEL_SCALE));
             }
         }
 
@@ -240,7 +242,7 @@ namespace The_Bond_of_Stone {
             //Update positions of sticky projectiles
             foreach(Bullet b in stickies)
             {
-                b.Position = (Position + b.relativePosition);
+                b.Position = (Center + b.relativePosition);
                 if(prevFacing != facing)
                 {
                     b.Flip();
@@ -336,9 +338,7 @@ namespace The_Bond_of_Stone {
                             //Save rotation and relative position for stuck projectiles
                             b.sticky = true;
                             b.stuck = true;
-                            b.relativePosition = (Center - new Vector2(b.Rect.X, b.Rect.Y));
-                            b.relativePosition += (b.Position - Position);
-                            b.relativePosition += (Position - Center);
+                            b.relativePosition = (b.Position - new Vector2(b.Rect.X, b.Rect.Y));
                             b.stuckRotation = b.rotation;
                             stickies.Add(b);
                         }
