@@ -1,0 +1,13 @@
+HELP
+
+Long ago, the Titan Nemesis slew the Titan Tyche in a great battle. 
+The Tychans were cast out into the sea, save a few who managed to escape on the floating remains of Tyche which were scattered to the heavens. 
+Their last hope in reclaiming their homeland is to recover the magical Bonds of Tyche hidden away in these scattered remains before they can be
+destroyed by the Nemesians.
+
+Use the left and right arrow or A and D keys to move left and right.
+Use the spacebar, the up arrow key, or the W key to jump.
+Move against a wall while midair to wall jump.
+Step on the heads of the Nemesians to destroy them.
+Collect coins to increase your score multiplier. Miss a coin, and your multiplier goes away.
+Collect Bonds of Tyche (Red gems) to restore some health.

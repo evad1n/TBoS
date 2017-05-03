@@ -40,6 +40,7 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] EnemyThrowerTextures;
 
         public static Texture2D[] EnemyParticles;
+        public static Texture2D[] PlayerHitParticles;
 
         public static Texture2D[] Spike_Up;
         public static Texture2D[] Spike_Down;
@@ -67,13 +68,14 @@ namespace The_Bond_of_Stone {
         public static Texture2D Logo;
         public static Texture2D[] SplashScreenGraphics;
         public static Texture2D Title;
-        public static Texture2D[] MainMenuGraphics;
         public static Texture2D MenuBackground;
         public static Texture2D[] Icons;
 
         public static Texture2D[] HighScoreTextures;
 
 		public static Texture2D[] MenuButtons;
+
+        public static Texture2D HelpBackground;
 
 		public static SpriteFont Font_Main;
         public static SpriteFont Font_Small;
@@ -117,6 +119,7 @@ namespace The_Bond_of_Stone {
             EnemyThrowerTextures = PopulateTextureArray("enemyThrower", 8, @"graphics\entities\");
 
             EnemyParticles = PopulateTextureArray("enemyParticles", 4, @"graphics\entities\");
+            PlayerHitParticles = PopulateTextureArray("playerHitParticles", 4, @"graphics\entities\");
 
             Spike_Up = PopulateTextureArray("spike_0", 3, @"graphics\entities\");
             Spike_Down = PopulateTextureArray("spike_2", 3, @"graphics\entities\");
@@ -153,6 +156,8 @@ namespace The_Bond_of_Stone {
             Icons = PopulateTextureArray("icons", 2, @"graphics\ui\");
 
 			MenuButtons = PopulateTextureArray("menuButton", 13, @"graphics\ui\");
+
+            HelpBackground = Content.Load<Texture2D>(@"graphics\ui\helpBackground");
 
 			Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");

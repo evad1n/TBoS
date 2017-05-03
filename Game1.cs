@@ -33,13 +33,13 @@ namespace The_Bond_of_Stone {
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
-        public static int TITAN_SPAWN_RATE = -1;
+        public static int TITAN_SPAWN_RATE = 20;
 
         public static Rectangle hitBox = new Rectangle(0, 0, 10, 10);
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
-        public const float CAMERA_SPEED = 1f;
+        public const float CAMERA_SPEED = 1.25f;
 
         public static int ScreenWidth { get; set; }
         public static int ScreenHeight { get; set; }
@@ -509,6 +509,13 @@ namespace The_Bond_of_Stone {
             Interface.ChangeMenuState(MenuState.HighScore);
 		}
 
-		#endregion
-	}
+        public void toHelpScreen()
+        {
+            State = GameState.MainMenu;
+            Sound.ButtonClick.Play();
+            Interface.ChangeMenuState(MenuState.Help);
+        }
+
+        #endregion
+    }
 }

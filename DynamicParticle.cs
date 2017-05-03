@@ -10,11 +10,9 @@ namespace The_Bond_of_Stone
 {
     public class DynamicParticle : Particle
     {
-
-        Texture2D[] textures;
         Vector2 velocity;
 
-        static int gravity = 500;
+        static int gravity = 750;
 
         public DynamicParticle(Texture2D texture, Texture2D[] textures, Vector2 position, float lifespan, Vector2 startingVelocity, bool lockToPixelGrid = true, bool active = true) : base(texture, position, lifespan, lockToPixelGrid, active)
         {

@@ -109,6 +109,7 @@ namespace The_Bond_of_Stone {
         public void TakeDamage(int damage) {
             if(damage > 0 && !invulnerable)
             {
+                MakeParticles();
                 Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
                 invulnerable = true;
                 invulnerabilityTimer = 0f;
@@ -128,6 +129,8 @@ namespace The_Bond_of_Stone {
             Vector2 knockback;
             if (!invulnerable)
             {
+                MakeParticles();
+
                 Health = MathHelper.Clamp(Health - damage, 0, MaxHealth);
                 knockback = Player.Position - e.Position;
                 knockback.Normalize();
@@ -140,6 +143,16 @@ namespace The_Bond_of_Stone {
 
             if (Health == 0)
                 Die();
+        }
+
+        void MakeParticles()
+        {
+            int particlesToMake = Game1.RandomObject.Next(1, 4);
+
+            for (int i = 0; i < particlesToMake; i++)
+            {
+                Game1.Entities.particles.Add(new DynamicParticle(Graphics.PlayerHitParticles[0], Graphics.PlayerHitParticles, new Vector2(Player.Rect.Center.X, Player.Rect.Center.Y), 5f, new Vector2(500, Game1.RandomObject.Next(-500, -200))));
+            }
         }
 
         public void TickScore() {
