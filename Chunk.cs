@@ -328,6 +328,7 @@ namespace The_Bond_of_Stone {
             for (int x = 0; x < atlas.GetLength(1); x++) { //Execute for each tile
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     int thisID = Tiles[i].ID; //Current tile ID
+                    Tile t = Tiles[i];//Current tile
 
                     //if this isn't an air tile (which we don't stitch)
                     if (thisID != 0) {
@@ -392,16 +393,16 @@ namespace The_Bond_of_Stone {
                                 switch (a)
                                 {
                                     case 0:
-                                        Tiles[i].ID = atlas[y - 1, x];
+                                        Tiles[i].ID = atlas[y, x] = atlas[y - 1, x];
                                         break;
                                     case 1:
-                                        Tiles[i].ID = atlas[y, x - 1];
+                                        Tiles[i].ID = atlas[y, x] = atlas[y, x - 1];
                                         break;
                                     case 2:
-                                        Tiles[i].ID = atlas[y, x + 1];
+                                        Tiles[i].ID = atlas[y, x] = atlas[y, x + 1];
                                         break;
                                     default:
-                                        Tiles[i].ID = atlas[y + 1, x];
+                                        Tiles[i].ID = atlas[y, x] = atlas[y + 1, x];
                                         break;
                                 }
                                 break;

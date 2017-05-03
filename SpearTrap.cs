@@ -23,18 +23,13 @@ namespace The_Bond_of_Stone
         Vector2 endPosition;
         Vector2 direction;
 
-        //Trap texture
-        Texture2D trap;
-        Rectangle trapRect;
-        SpriteEffects facing = SpriteEffects.None;
-
         public new Rectangle Rect
         {
             get
             {
                 int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
                 int y = (int)(Position.Y);
-                Rectangle hitRect = new Rectangle(x, y, Game1.hitBox.Width, Game1.hitBox.Height);
+                Rectangle hitRect = new Rectangle(x, y + 15, Game1.hitBox.Width, Game1.hitBox.Height);
                 return hitRect.RotateRect(rotation, Origin);
             }
         }
@@ -68,7 +63,7 @@ namespace The_Bond_of_Stone
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
             Position = new Vector2(position.X + Game1.TILE_SIZE / 2, position.Y - Game1.TILE_SIZE / 2);
-            Position = new Vector2(Position.X - (direction.X * Game1.TILE_SIZE/2), Position.Y - (direction.Y * Game1.TILE_SIZE/2));
+            Position = new Vector2(Position.X - (0.1f * direction.X * Game1.TILE_SIZE/2), Position.Y - (0.1f * direction.Y * Game1.TILE_SIZE/2));
             this.direction = direction;
             startPosition = Position;
             endPosition = startPosition + (direction * texture.Height * 2f);
@@ -148,12 +143,12 @@ namespace The_Bond_of_Stone
             }
 
             //Debug view
-            //spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
-            //spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
-            //int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
-            //int y = (int)(Position.Y);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x,y), color: Color.White);
+            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
+            int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
+            int y = (int)(Position.Y);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
         }
 
         public void NotifyNearby()

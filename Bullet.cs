@@ -262,8 +262,13 @@ namespace The_Bond_of_Stone
                 if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
                 {
                     stuck = true;
+                    Position += velocity * elapsed;
                     velocity = Vector2.Zero;
                 }
+            }
+            else
+            {
+
             }
 
 
@@ -285,12 +290,12 @@ namespace The_Bond_of_Stone
 
 
             //Debug view
-            //spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
-            //spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
-            //int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
-            //int y = (int)(Position.Y);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
+            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
+            int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
+            int y = (int)(Position.Y);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
         }
 
         public bool CheckCardinalCollision(Vector2 offset)
