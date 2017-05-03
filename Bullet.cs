@@ -33,9 +33,9 @@ namespace The_Bond_of_Stone
         public Vector2 previousVelocity;
         public Vector2 relativePosition;
 
-        Projectile type;
+        private const float bounceInterval = 0.15f;
 
-        float inactiveTimer = 5f;
+        Projectile type;
        
 
         public new Rectangle Rect
@@ -134,18 +134,6 @@ namespace The_Bond_of_Stone
             }
             else
             {
-                switch (type)
-                {
-                    case Projectile.Sawblade:
-                        Position = new Vector2(Position.X + (texture.Width * Math.Sign(target.X - Position.X)), Position.Y);
-                        break;
-                    case Projectile.Spear:
-                        break;
-                    case Projectile.Arrow:
-                        Position = new Vector2(Position.X + (target.X * Game1.TILE_SIZE / 2), Position.Y + (target.Y * Game1.TILE_SIZE / 2));
-                        break;
-                }
-
                 //Calculate bullet rotation
                 rotation = (float)Math.Atan2(target.Y, target.X);
                 rotation += MathHelper.ToRadians(90);
@@ -170,24 +158,14 @@ namespace The_Bond_of_Stone
                 Active = false;
             }
 
-            if (stuck)
-            {
-                if(inactiveTimer > 0)
-                {
-                    inactiveTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if (inactiveTimer <= 0)
-                        Active = false;
-                }
-            }
-
 
             if (bounce)
             {
                 //Check collision directions
-                Grounded = CheckCardinalCollision(new Vector2(0, 1));
-                Right = CheckCardinalCollision(new Vector2(1, 0));
-                Left = CheckCardinalCollision(new Vector2(-1, 0));
-                Ceiling = CheckCardinalCollision(new Vector2(0, -1));
+                Grounded = CheckCardinalCollision(new Vector2(0, 10));
+                Right = CheckCardinalCollision(new Vector2(10, 0));
+                Left = CheckCardinalCollision(new Vector2(-10, 0));
+                Ceiling = CheckCardinalCollision(new Vector2(0, -10));
 
                 //At the vertex set airtime to 0
                 if (previousVelocity.Y < 0 && (velocity.Y > 0 || velocity.Y == 0))
@@ -204,22 +182,22 @@ namespace The_Bond_of_Stone
                         velocity = new Vector2(velocity.X, -(Game1.GRAVITY.Y * airTime / 10));
                         Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
                         airTime = 0;
-                        bounceTimer = 0.07f;
+                        bounceTimer = bounceInterval;
                     }
                     else if (Ceiling && velocity.Y > 0)
                     {
                         velocity = new Vector2(velocity.X, -velocity.Y);
-                        bounceTimer = 0.07f;
+                        bounceTimer = bounceInterval;
                     }
                     else if (Right && velocity.X > 0)
                     {
                         velocity = new Vector2(-velocity.X, velocity.Y);
-                        bounceTimer = 0.07f;
+                        bounceTimer = bounceInterval;
                     }
                     else if (Left && velocity.X < 0)
                     {
                         velocity = new Vector2(-velocity.X, velocity.Y);
-                        bounceTimer = 0.07f;
+                        bounceTimer = bounceInterval;
                     }
                 }
 
@@ -284,8 +262,13 @@ namespace The_Bond_of_Stone
                 if (CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
                 {
                     stuck = true;
+                    Position += velocity * elapsed;
                     velocity = Vector2.Zero;
                 }
+            }
+            else
+            {
+
             }
 
 
@@ -307,12 +290,12 @@ namespace The_Bond_of_Stone
 
 
             //Debug view
-            //spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
-            //spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
-            //int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
-            //int y = (int)(Position.Y);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
+            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
+            int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
+            int y = (int)(Position.Y);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
         }
 
         public bool CheckCardinalCollision(Vector2 offset)

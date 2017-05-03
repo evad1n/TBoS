@@ -23,18 +23,13 @@ namespace The_Bond_of_Stone
         Vector2 endPosition;
         Vector2 direction;
 
-        //Trap texture
-        Texture2D trap;
-        Rectangle trapRect;
-        SpriteEffects facing = SpriteEffects.None;
-
         public new Rectangle Rect
         {
             get
             {
                 int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
                 int y = (int)(Position.Y);
-                Rectangle hitRect = new Rectangle(x, y, Game1.hitBox.Width, Game1.hitBox.Height);
+                Rectangle hitRect = new Rectangle(x, y + 15, Game1.hitBox.Width, Game1.hitBox.Height);
                 return hitRect.RotateRect(rotation, Origin);
             }
         }
@@ -68,7 +63,7 @@ namespace The_Bond_of_Stone
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
             Position = new Vector2(position.X + Game1.TILE_SIZE / 2, position.Y - Game1.TILE_SIZE / 2);
-            Position = new Vector2(Position.X - (direction.X * Game1.TILE_SIZE/2), Position.Y - (direction.Y * Game1.TILE_SIZE/2));
+            Position = new Vector2(Position.X - (0.1f * direction.X * Game1.TILE_SIZE/2), Position.Y - (0.1f * direction.Y * Game1.TILE_SIZE/2));
             this.direction = direction;
             startPosition = Position;
             endPosition = startPosition + (direction * texture.Height * 2f);
@@ -76,38 +71,6 @@ namespace The_Bond_of_Stone
             //Calculate spear rotation
             rotation = (float)Math.Atan2(direction.Y, direction.X);
             rotation += MathHelper.ToRadians(90);
-
-            //Get rect and rotation for trap texture
-            if (direction.X != 0)
-            {
-                if (direction.X > 0)
-                {
-                    facing = SpriteEffects.FlipHorizontally;
-                    Position = new Vector2(Position.X + Game1.PIXEL_SCALE, Position.Y);
-                }
-                else
-                {
-                    facing = SpriteEffects.None;
-                    Position = new Vector2(Position.X - Game1.PIXEL_SCALE, Position.Y);
-                }
-                trap = Graphics.SpearTrap[0];
-            }
-            else if (direction.Y != 0)
-            {
-                if (direction.Y > 0)
-                {
-                    facing = SpriteEffects.FlipVertically;
-                    Position = new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE);
-                }
-                else
-                {
-                    facing = SpriteEffects.None;
-                    Position = new Vector2(Position.X, Position.Y - Game1.PIXEL_SCALE);
-                }
-                trap = Graphics.SpearTrap[1];
-            }
-
-            trapRect = new Rectangle((int)startPosition.X, (int)position.Y + Game1.TILE_SIZE, trap.Width, trap.Height);
         }
 
         public void Update(GameTime gameTime)
@@ -172,13 +135,6 @@ namespace The_Bond_of_Stone
            
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
-        {
-            Rectangle r = new Rectangle(trapRect.X, trapRect.Y, trapRect.Width * Game1.PIXEL_SCALE, trapRect.Height * Game1.PIXEL_SCALE);
-
-            //spriteBatch.Draw(trap, destinationRectangle: r, color: color, effects: facing);
-        }
-
         public void DrawSpear(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
             if (Active)
@@ -187,21 +143,23 @@ namespace The_Bond_of_Stone
             }
 
             //Debug view
-            //spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
-            //spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
-            //int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
-            //int y = (int)(Position.Y);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x,y), color: Color.White);
+            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
+            int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
+            int y = (int)(Position.Y);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
         }
 
         public void NotifyNearby()
         {
             foreach(Entity e in Game1.Player.CurrentChunk.Traps)
             {
-                if(e is SpearTrap && Vector2.DistanceSquared(Position, e.Position) < 20000)
+                if(e is SpearTrap && Vector2.DistanceSquared(Position, e.Position) < 5000)
                 {
                     ((SpearTrap)e).attack = true;
+                    if(!((SpearTrap)e).attack)
+                        ((SpearTrap)e).NotifyNearby();
                 }
             }
         }

@@ -248,11 +248,6 @@ namespace The_Bond_of_Stone {
                 MediaPlayer.Volume = 0.05f;
             }
 
-            if (keyboardState.IsKeyDown(Keys.B) && prevKeyboardState.IsKeyUp(Keys.B))
-            {
-                Player.bounce = true;
-            }
-
             if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
             {
                 Entities.enemies.Add(new TurretEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Sawblade, new Vector2(-1, 0)));
