@@ -39,7 +39,7 @@ namespace The_Bond_of_Stone {
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
-        public const float CAMERA_SPEED = 1.25f;
+        public const float CAMERA_SPEED = 1.6f;
 
         public static int ScreenWidth { get; set; }
         public static int ScreenHeight { get; set; }
@@ -227,6 +227,9 @@ namespace The_Bond_of_Stone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdatePlaying(GameTime gameTime)
         {
+            if (KeyPressed(Keys.R))
+                ResetGame();
+
             Player.Update(gameTime, keyboardState, prevKeyboardState);
             PlayerStats.Update(gameTime);
 
@@ -246,40 +249,6 @@ namespace The_Bond_of_Stone {
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
                 State = GameState.Pause;
                 MediaPlayer.Volume = 0.05f;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
-            {
-                Entities.enemies.Add(new TurretEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Sawblade, new Vector2(-1, 0)));
-            }
-
-            //Testing things
-			if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P)) {
-				PlayerStats.TickScore();
-            }
-
-            if (keyboardState.IsKeyDown(Keys.G) && prevKeyboardState.IsKeyUp(Keys.G))
-            {
-                Entities.enemies.Add(new GroundEnemy(new Vector2(Player.Position.X + 20, Player.Position.Y)));
-            }
-
-            if (keyboardState.IsKeyDown(Keys.J) && prevKeyboardState.IsKeyUp(Keys.J))
-            {
-                Entities.enemies.Add(new JumpingEnemy(new Vector2(Player.Position.X + 20, Player.Position.Y)));
-            }
-
-            if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.F))
-            {
-                Entities.enemies.Add(new FlyingEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), true));
-            }
-
-            if (keyboardState.IsKeyDown(Keys.I) && prevKeyboardState.IsKeyUp(Keys.I))
-            {
-                Player.CurrentChunk.Traps.Add(new SpearTrap(new Vector2(mouseState.Position.X, mouseState.Position.Y), new Vector2(-1, 0)));
-            }
-
-            if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
-                Camera.ScreenShake(3, 0.25f);
             }
 
             Entities.Update(gameTime, State);
@@ -310,10 +279,8 @@ namespace The_Bond_of_Stone {
                 State = GameState.MainMenu;
             }
 
-            if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R))
-            {
+            if (KeyPressed(Keys.R))
                 ResetGame();
-            }
         }
 
         /// <summary>
@@ -321,7 +288,6 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateGameOver(GameTime gameTime) {
-            //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
             Player.Update(gameTime, keyboardState, prevKeyboardState);
             Camera.Update(gameTime);
 
@@ -334,8 +300,7 @@ namespace The_Bond_of_Stone {
 
             Entities.Update(gameTime, State);
 
-            //Reset on an ESC key press.
-            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+            if (KeyPressed(Keys.Escape) || KeyPressed(Keys.R))
                 ResetGame();
         }
 

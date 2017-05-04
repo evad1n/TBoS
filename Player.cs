@@ -24,18 +24,16 @@ namespace The_Bond_of_Stone {
 
         float drag = .48f; //speed reduction (need this)
 
-        float goombaForce = -650;
-        float knockbackTimer = 0;
-        bool knockback = false;
-
-        bool jumpedThisFrame = false;
-        bool walljumpedThisFrame = false;
+        float goombaForce = -750;
 
         //Particle production
         float particleFrequency = 0.065f;
 		float particleLifetime = 4.5f;
         float particleTimer;
         List<Particle> particles = new List<Particle>();
+
+        float dynamicParticleFrequency = 0.2f;
+        float dynamicParticleTimer;
 
         //Projectile effects
         List<Bullet> stickies = new List<Bullet>();
@@ -156,6 +154,7 @@ namespace The_Bond_of_Stone {
 
             if (canStartJump && Grounded) {
                 Sound.PlayerJump.Play();
+                MakeJumpParticles(new Vector2(0, 1));
             } else if (canStartJump && Walled) {
                 Sound.PlayerWallJump.Play();
             }
@@ -175,9 +174,15 @@ namespace The_Bond_of_Stone {
                 airTime = 0;
 
                 if (velocity.Y > 1000)
+                {
+                    MakeJumpParticles(new Vector2(0, 1), 6);
                     Sound.PlayerLandHard.Play();
+                }
                 else
+                {
+                    MakeJumpParticles(new Vector2(0, 1), 2);
                     Sound.PlayerLandSoft.Play();
+                }
             } else if (Grounded && !Walled)
                 airTime = 0;
             else
@@ -203,6 +208,9 @@ namespace The_Bond_of_Stone {
                 maxFallSpeed = 1500;
 
             //Create particles if necessary, also do some sound stuff
+            dynamicParticleTimer += elapsed;
+            
+
             particleTimer += elapsed;
             if (particleTimer >= particleFrequency) {
                 bool canSpawnBottom = 
@@ -230,12 +238,27 @@ namespace The_Bond_of_Stone {
                 } else
                     walkSound.Stop();
 
-            if (Grounded && canSpawnBottom && velocity.X != 0)
+                if (Grounded && canSpawnBottom && velocity.X != 0)
+                {
                     particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 7), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
+
+                    if (dynamicParticleTimer >= dynamicParticleFrequency)
+                        MakeJumpParticles(new Vector2(0, 1), 2);
+                }
                 else if (walledLeft && canSpawnLeft && velocity.Y != 0)
+                {
                     particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
+
+                    if (dynamicParticleTimer >= dynamicParticleFrequency)
+                        MakeJumpParticles(new Vector2(1, 0), 2);
+                }
                 else if (walledRight && canSpawnRight && velocity.Y != 0)
+                {
                     particles.Add(new Particle(Graphics.Effect_PlayerParticlesRight[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesRight.Length)], new Vector2(Position.X + Game1.PIXEL_SCALE * 4, Position.Y), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
+
+                    if (dynamicParticleTimer >= dynamicParticleFrequency)
+                        MakeJumpParticles(new Vector2(-1, 0), 2);
+                }
                 particleTimer = 0;
             }
             
@@ -305,6 +328,35 @@ namespace The_Bond_of_Stone {
             }
 
             ResolveDynamicEntityCollisions();
+        }
+
+        public void MakeJumpParticles(Vector2 dir, int maxNum = 4)
+        {
+            int particlesToMake = Game1.RandomObject.Next(1, maxNum);
+            Vector2 position, direction;
+
+            if (dir.X < 0)
+                position = new Vector2(Rect.Right, Rect.Center.Y);
+            else if (dir.X > 0)
+                position = new Vector2(Rect.Left, Rect.Center.Y);
+            else
+                position = new Vector2(Rect.Center.X, Rect.Bottom - 5 * Game1.PIXEL_SCALE);
+
+            for (int i = 0; i < particlesToMake; i++)
+            {
+                if (dir.Y != 0)
+                    direction = new Vector2(25, Game1.RandomObject.Next(0, 50));
+                else
+                    direction = new Vector2(10, 0);
+
+                Game1.Entities.particles.Add(
+                        new DynamicParticle(
+                            Graphics.PlayerJumpParticles[0],
+                            Graphics.PlayerJumpParticles,
+                            position,
+                            0.75f,
+                            direction, -50, true));
+            }
         }
 
         public void ResolveDynamicEntityCollisions()

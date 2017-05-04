@@ -25,7 +25,7 @@ namespace The_Bond_of_Stone
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
         float walkingTimer = 0;
-        float walkFrameSpeed = 0.05f;
+        float walkFrameSpeed = 0.075f;
         int walkFrame = 0;
         int walkFramesTotal = 5;
 
