@@ -613,10 +613,8 @@ namespace The_Bond_of_Stone {
 
         public void KnockBack(Vector2 boom)
         {
-            Debug.WriteLine("knockback: " + boom);
             velocity.X = 2 * boom.X;
             velocity.Y = MathHelper.Clamp(boom.Y, -700, 700);
-            Debug.WriteLine("Velocity: " + velocity);
             Game1.Camera.ScreenShake(4f, 0.3f);
         }
     }

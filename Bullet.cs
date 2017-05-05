@@ -268,7 +268,7 @@ namespace The_Bond_of_Stone
             }
             else
             {
-                //Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, CurrentChunk);
+                Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
             }
 
 
