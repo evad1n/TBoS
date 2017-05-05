@@ -251,6 +251,11 @@ namespace The_Bond_of_Stone {
                 MediaPlayer.Volume = 0.05f;
             }
 
+            if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P))
+            {
+                Camera.initialSpeed = 0;
+            }
+
             Entities.Update(gameTime, State);
 
             Titans.Update(gameTime);

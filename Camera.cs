@@ -18,7 +18,7 @@ namespace The_Bond_of_Stone {
         float smoothingTimer = 0f;
 
         //Game-specific memebers
-        float initialSpeed;
+        public float initialSpeed;
         public float Speed { get; set; }
         public Entity Target { get; set; }
         float smoothing = 0.3f;
