@@ -176,7 +176,7 @@ namespace The_Bond_of_Stone {
 
                 if (velocity.Y > 1000)
                 {
-                    MakeJumpParticles(new Vector2(0, 1), 6);
+                    MakeJumpParticles(new Vector2(0, 2), 10);
                     Sound.PlayerLandHard.Play();
                 }
                 else
@@ -347,8 +347,10 @@ namespace The_Bond_of_Stone {
             {
                 if (dir.Y != 0)
                     direction = new Vector2(25, Game1.RandomObject.Next(0, 50));
+                else if (dir.Y == 1)
+                    direction = new Vector2(50, Game1.RandomObject.Next(0, 50));
                 else
-                    direction = new Vector2(10, 0);
+                    direction = new Vector2(50, Game1.RandomObject.Next(0, 75));
 
                 Game1.Entities.particles.Add(
                         new DynamicParticle(

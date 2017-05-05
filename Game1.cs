@@ -39,7 +39,7 @@ namespace The_Bond_of_Stone {
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
-        public const float CAMERA_SPEED = 1.6f;
+        public const float CAMERA_SPEED = 1.35f;
 
         public static int ScreenWidth { get; set; }
         public static int ScreenHeight { get; set; }
