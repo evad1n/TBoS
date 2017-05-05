@@ -62,8 +62,33 @@ namespace The_Bond_of_Stone
 
         public SpearTrap(Vector2 position, Vector2 direction) : base (Graphics.Spear, position)
         {
-            Position = new Vector2(position.X + Game1.TILE_SIZE / 2, position.Y - Game1.TILE_SIZE / 2);
-            Position = new Vector2(Position.X - (0.1f * direction.X * Game1.TILE_SIZE/2), Position.Y - (0.1f * direction.Y * Game1.TILE_SIZE/2));
+            Position = position;
+
+            //Right
+            if (direction.X > 0)
+            {
+                Position = new Vector2(Position.X, Position.Y - (Game1.TILE_SIZE / 2));
+                Position = new Vector2(Position.X + 8, Position.Y);
+            }
+            //Left
+            else if (direction.X < 0)
+            {
+                Position = new Vector2(Position.X, Position.Y - (Game1.TILE_SIZE / 2));
+                Position = new Vector2(Position.X + 8, Position.Y);
+            }
+            //Down
+            else if (direction.Y > 0)
+            {
+                Position = new Vector2(Position.X + (Game1.TILE_SIZE / 2), Position.Y);
+                Position = new Vector2(Position.X, Position.Y - 10);
+            }
+            //Up
+            else if (direction.Y < 0)
+            {
+                Position = new Vector2(Position.X + (Game1.TILE_SIZE / 2), Position.Y);
+                Position = new Vector2(Position.X, Position.Y - 10);
+            }
+
             this.direction = direction;
             startPosition = Position;
             endPosition = startPosition + (direction * texture.Height * 2f);
