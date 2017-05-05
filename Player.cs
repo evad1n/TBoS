@@ -318,7 +318,7 @@ namespace The_Bond_of_Stone {
                         Spike s = (Spike)e;
 
                         //If the player is touching this spike...
-                        if (s != null && Rect.Intersects(s.Rect))
+                        if (s != null && Rect.Intersects(s.HitRectangle))
                         {
                             //Take damage 
                             Game1.PlayerStats.TakeDamage(1, s);

@@ -11,13 +11,15 @@ namespace The_Bond_of_Stone
     public enum FacingDirection { Up, Left, Down, Right };
 
     /// <summary>
-    /// A static hazard which hurts the player if it comes in contact with the "business end"
+    /// A static hazard which hurts the player if it comes in contact with it
     /// 
     /// By Dom Liotti
     /// </summary>
     class Spike : Entity
     {
         public FacingDirection Facing;
+
+        public Rectangle HitRectangle;
 
         public Spike(Texture2D texture, Vector2 position, FacingDirection direction) : base(texture, position) {
             Texture = texture;
@@ -34,11 +36,12 @@ namespace The_Bond_of_Stone
             } else if (Facing == FacingDirection.Down) {
                 Texture = Graphics.Spike_Down[Game1.RandomObject.Next(0, Graphics.Spike_Down.Length)];
                 Position = new Vector2(Position.X, Position.Y - Game1.PIXEL_SCALE);
-               
             } else if (Facing == FacingDirection.Right) {
                 Texture = Graphics.Spike_Right[Game1.RandomObject.Next(0, Graphics.Spike_Right.Length)];
                 Position = new Vector2(Position.X - Game1.PIXEL_SCALE, Position.Y);
             }
+
+            HitRectangle = new Rectangle((int)Position.X + Game1.PIXEL_SCALE, (int)Position.Y + Game1.PIXEL_SCALE, Rect.Width - Game1.PIXEL_SCALE * 2, Rect.Height - Game1.PIXEL_SCALE * 2);
         }
 
         //Overloaded to draw with rotation
