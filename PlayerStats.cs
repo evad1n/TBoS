@@ -32,6 +32,9 @@ namespace The_Bond_of_Stone {
 
 		float distance;
 
+        float healthRegenTimer = 0.5f;
+        float regenTime;
+
         public float Distance {
             get { return distance / Game1.TILE_SIZE; }
         }
@@ -62,12 +65,29 @@ namespace The_Bond_of_Stone {
             else
                 invulnColor = new Color(1, 1, 1, 0f);
 
+            
+
             //Calculate scoring, time, and distance
             if (Player.Rect.Right > distance) {
 				Score += (int)((Math.Round((distance - lastDistance) * elapsed, 1)) * ScoreMultiplier * 100);
 				
                 lastDistance = distance;
                 distance = Player.Rect.Right;
+            }
+
+            //Regenerate health when standing on a health tile.
+            if(Player.IsTouchingTile(18) && Player.Walled && Player.Grounded)
+            {
+                //Adjust the regen timer, add health if applicable
+                if (regenTime < healthRegenTimer)
+                {
+                    regenTime += elapsed;
+                    if (regenTime >= healthRegenTimer)
+                    {
+                        regenTime = 0;
+                        TakeDamage(-1);
+                    }
+                }
             }
 
             Time += elapsed;
@@ -104,6 +124,8 @@ namespace The_Bond_of_Stone {
             }
                 
         }
+
+        
 
         //removes health from the player. If the health is 0, kills the player.
         public void TakeDamage(int damage) {
