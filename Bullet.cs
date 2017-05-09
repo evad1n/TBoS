@@ -34,7 +34,11 @@ namespace The_Bond_of_Stone
         public Vector2 relativePosition;
 
         Projectile type;
-       
+
+        //Matrix rotation stuff
+        //Rotates around y-axis
+        Matrix m = new Matrix(new Vector4(-1, 0, 0, 0), new Vector4(0, 1, 0, 0), new Vector4(0, 0, 1, 0), new Vector4(0, 0, 0, 1));
+
 
         public new Rectangle Rect
         {
@@ -157,8 +161,9 @@ namespace The_Bond_of_Stone
             }
 
 
-            if (bounce)
+            if (bounce && !stuck)
             {
+
                 //Check collision directions
                 Grounded = CheckCardinalCollision(new Vector2(0, 3));
                 Right = CheckCardinalCollision(new Vector2(3, 0));
@@ -264,11 +269,11 @@ namespace The_Bond_of_Stone
             else
             {
                 Position = CollisionHelper.DetailedCollisionCorrection(previousPosition, Position, Rect, CurrentChunk);
-            }
 
-            if(previousPosition == Position)
-            {
-                Debug.WriteLine("velocity: " + velocity);
+                if(previousPosition == Position)
+                {
+                    stuck = true;
+                }
             }
         }
 
@@ -288,12 +293,9 @@ namespace The_Bond_of_Stone
 
 
             //Debug view
-            //spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
-            //spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
-            //int x = (int)(Position.X + (texture.Width * 0.5f * Game1.PIXEL_SCALE)) - Game1.hitBox.Width / 2;
-            //int y = (int)(Position.Y);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: new Vector2(x, y), color: Color.White);
+            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
+            spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
         }
 
         public bool CheckCardinalCollision(Vector2 offset)
@@ -320,6 +322,7 @@ namespace The_Bond_of_Stone
             float r = MathHelper.ToDegrees(rotation);
             r = 180 - r;
             rotation += MathHelper.ToRadians(2 * r);
+            relativePosition = new Vector2(-relativePosition.X, relativePosition.Y);
         }
     }
 }

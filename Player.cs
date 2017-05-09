@@ -97,7 +97,7 @@ namespace The_Bond_of_Stone {
             {
                 int x = (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE;
                 int y = (int)Math.Round((Position.Y + Game1.PIXEL_SCALE) / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE;
-                return new Vector2(x + (Texture.Width/2 * Game1.PIXEL_SCALE), y + (Texture.Height/2 * Game1.PIXEL_SCALE));
+                return new Vector2(x + (Texture.Width * Game1.PIXEL_SCALE / 2), y + (Texture.Height * Game1.PIXEL_SCALE / 2));
             }
         }
 
@@ -266,11 +266,11 @@ namespace The_Bond_of_Stone {
             //Update positions of sticky projectiles
             foreach(Bullet b in stickies)
             {
-                b.Position = (Center + b.relativePosition);
                 if(prevFacing != facing)
                 {
                     b.Flip();
                 }
+                b.Position = (Center + b.relativePosition) + new Vector2((b.Position.X - b.Origin.X), 0);
             }
 
 
