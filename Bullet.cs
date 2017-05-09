@@ -204,18 +204,22 @@ namespace The_Bond_of_Stone
             }
             else
             {
-                //Check for collisions with enemies
-                Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
-
-                if (e != null && e != parent && !stuck)
+                if(!stuck)
                 {
-                    e.Kill();
-                    Kill();
+                    //Check for collisions with enemies
+                    Enemy e = CollisionHelper.IsCollidingWithEnemy(CurrentChunk, Rect);
+
+                    if (e != null && e != parent)
+                    {
+                        e.Kill();
+                        Kill();
+                    }
                 }
             }
 
             //Apply the physics
-            ApplyPhysics(gameTime);
+            if(!stuck)
+                ApplyPhysics(gameTime);
 
 
         }
