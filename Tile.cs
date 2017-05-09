@@ -119,6 +119,10 @@ namespace The_Bond_of_Stone {
                         Texture = Graphics.Tiles_gold[bmv];
                         break;
 
+                    case 18:
+                        Texture = Graphics.Tiles_Bond[bmv];
+                        break;
+
                     default:
                         Texture = Graphics.EmptyTexture;
                         break;

@@ -342,6 +342,44 @@ namespace The_Bond_of_Stone {
 
                         //Construct the Adjacents array for this tile
                         //(i.e. add the cardinal tile IDs to this tile's Adjacents array in the order North West East South
+
+                        /*
+                       for (int tX = -1; tX <= 1; tX++) {
+                           for (int tY = -1; tY <= 1; tY++) {
+                               if ((y != 0 && x != 0) || (y == 0 && x == 0))
+                                   continue;
+
+                               //If this adjacent tile is in the tile atlas...
+                               if (y + tY >= 0 && x + tX >= 0 && y + tY < atlas.GetLength(0) && x + tX < atlas.GetLength(1))
+                               {
+                                   //save the ID of this adjacent tile
+                                   int index = atlas[y + tY, x + tX];
+
+                                   if (index == thisID || (!stitchOnlySameID && index != 0) || CollisionHelper.IsSolidTile(thisID) && CollisionHelper.IsSolidTile(index)) {
+                                       int adjIndex = 0;
+
+                                       if (tY > 0)
+                                           adjIndex = 3;
+                                       else if (tY < 0)
+                                           adjIndex = 0;
+                                       else if (tX < 0)
+                                           adjIndex = 1;
+                                       else if (tX > 0)
+                                           adjIndex = 2;
+
+                                       Tiles[i].Adjacents[adjIndex] = true;
+                                   }
+
+                                   if (index == 2)
+                                   {
+                                       bkdCount++;
+                                       adjCount++;
+                                   }
+                               }
+                           }
+                       }
+                       */
+
                         if (y - 1 >= 0 && (atlas[y - 1, x] == thisID ||
                             (!stitchOnlySameID && atlas[y - 1, x] != 0) ||
                             (thisID == 1 || thisID == 3 || thisID == 4 || thisID == 5 || thisID == 6) && (atlas[y - 1, x] == 1 || atlas[y - 1, x] == 3 || atlas[y - 1, x] == 4 || atlas[y - 1, x] == 5 || atlas[y - 1, x] == 6)))
