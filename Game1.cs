@@ -253,7 +253,10 @@ namespace The_Bond_of_Stone {
 
             if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P))
             {
-                Camera.initialSpeed = 0;
+                if (Camera.initialSpeed == CAMERA_SPEED)
+                    Camera.initialSpeed = 0;
+                else
+                    Camera.initialSpeed = CAMERA_SPEED;
             }
 
             Entities.Update(gameTime, State);
