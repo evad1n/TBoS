@@ -51,7 +51,7 @@ namespace The_Bond_of_Stone
             switch (type)
             {
                 case Projectile.Sawblade:
-                    attackSpeed = 0.4f;
+                    attackSpeed = 0.2f;
 
                     if (direction.X > 0)
                     {

@@ -16,6 +16,7 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] Tiles_ground;
         public static Texture2D[] Tiles_gold;
         public static Texture2D[] Tiles_background;
+        public static Texture2D[] Tiles_Bond;
 
         public static Texture2D[] Deco_groundTop;
         public static Texture2D[] Deco_groundBottom;
@@ -100,6 +101,7 @@ namespace The_Bond_of_Stone {
             Tiles_ground = PopulateTextureArray("tile_1", 16, @"graphics\tile\");
             Tiles_gold = PopulateTextureArray("tile_5", 16, @"graphics\tile\");
             Tiles_background = PopulateTextureArray("tile_2", 16, @"graphics\tile\");
+            Tiles_Bond = PopulateTextureArray("tile_3", 16, @"graphics\tile\");
 
             Deco_groundTop = PopulateTextureArray("deco_0", 12, @"graphics\deco\");
             Deco_groundBottom = PopulateTextureArray("deco_1", 3, @"graphics\deco\");
