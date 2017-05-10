@@ -293,9 +293,9 @@ namespace The_Bond_of_Stone
 
 
             //Debug view
-            spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
-            spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
-            spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
+            //spriteBatch.Draw(Graphics.DebugTexture, destinationRectangle: Rect, color: Color.Red);
+            //spriteBatch.Draw(Graphics.BlackTexture, position: Origin, color: Color.Black);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], position: Position, color: Color.Blue);
         }
 
         public bool CheckCardinalCollision(Vector2 offset)
