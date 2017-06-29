@@ -14,6 +14,8 @@ namespace The_Bond_of_Stone
 
 		public int mostRecentScore;
 
+        const bool RESET_SCORES = false;
+
         public ScoreManager() {
             //Read from the hs.dat file and populate the highscore list
             using(BinaryReader reader = new BinaryReader(File.Open("hs.dat", FileMode.OpenOrCreate))) {
@@ -27,6 +29,19 @@ namespace The_Bond_of_Stone
 
                     pos += sizeof(int);
                 }
+            }
+
+            if (RESET_SCORES) {
+                Score[0] = 1000000;
+                Score[1] = 500000;
+                Score[2] = 250000;
+                Score[3] = 100000;
+                Score[4] = 75000;
+                Score[5] = 50000;
+                Score[6] = 25000;
+                Score[7] = 20000;
+                Score[8] = 15000;
+                Score[9] = 10000;
             }
         }
         

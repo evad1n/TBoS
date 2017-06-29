@@ -18,7 +18,7 @@ namespace The_Bond_of_Stone
         /// <summary>
         /// solidIDs array holds the IDs of tiles which the player is not able to move through.
         /// </summary>
-        static int[] solidIDs = { 1, 3, 4, 5 };
+        static int[] solidIDs = { 1, 3, 4, 5, 18 };
 
         /// <summary>
         /// Determines how detailed collision checking will be. higher values = higher precision.
@@ -199,6 +199,26 @@ namespace The_Bond_of_Stone
             if (solidIDs.Contains(id))
                 return true;
             return false;
+        }
+
+        public static int TileIDAtPosition(Chunk chunk, Rectangle toCheck) {
+            Rectangle rect;
+
+            if (chunk != null) {
+                //Check each tile in this chunk
+                foreach (Tile t in chunk.Tiles) {
+                    //Save the rectangle of this tile as it should be represented on the collision grid.
+                    rect = new Rectangle(t.Rect.X - Game1.TILE_SIZE / 2, t.Rect.Y - Game1.TILE_SIZE / 2, t.Rect.Width, t.Rect.Height);
+
+                    //If this tile is intersecting with the rectangle to check against, there is a collision. Return the ID of the tile.
+                    if (!IsPassable(t.ID) && rect.Intersects(toCheck))
+                        return t.ID;
+                }
+
+            } else
+                return -1;
+
+            return -1;
         }
     }
 }

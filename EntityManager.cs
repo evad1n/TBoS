@@ -12,6 +12,9 @@ namespace The_Bond_of_Stone
         public List<Bullet> projectiles;
         List<Entity> garbageEntities;
         List<Bullet> garbageProjectiles;
+        
+        public List<DynamicParticle> particles;
+        List<DynamicParticle> garbageParticles;
 
         Camera camera;
 
@@ -20,12 +23,14 @@ namespace The_Bond_of_Stone
             this.camera = camera;
             enemies = new List<Enemy>();
             projectiles = new List<Bullet>();
+            particles = new List<DynamicParticle>();
         }
 
         public void Update(GameTime gametime, GameState state)
         {
             garbageEntities = new List<Entity>();
             garbageProjectiles = new List<Bullet>();
+            garbageParticles = new List<DynamicParticle>();
 
             switch (state)
             {
@@ -51,11 +56,24 @@ namespace The_Bond_of_Stone
                         }
                     }
 
+                    //Update dynamic particles
+                    foreach (DynamicParticle p in particles)
+                    {
+                        p.Update(gametime);
+                        if (!p.Active)
+                        {
+                            garbageParticles.Add(p);
+                        }
+                    }
+
                     foreach (Enemy e in garbageEntities)
                         enemies.Remove(e);
 
                     foreach (Bullet e in garbageProjectiles)
                         projectiles.Remove(e);
+
+                    foreach (DynamicParticle p in garbageParticles)
+                        particles.Remove(p);
 
                     break;
                 case GameState.GameOver:
@@ -80,17 +98,37 @@ namespace The_Bond_of_Stone
                         }
                     }
 
+                    //Update dynamic particles
+                    foreach (DynamicParticle p in particles)
+                    {
+                        p.Update(gametime);
+                        if (!p.Active)
+                        {
+                            garbageParticles.Add(p);
+                        }
+                    }
+
                     foreach (Enemy e in garbageEntities)
                         enemies.Remove(e);
 
                     foreach (Bullet e in garbageProjectiles)
                         projectiles.Remove(e);
 
+                    foreach (DynamicParticle p in garbageParticles)
+                        particles.Remove(p);
+
                     break;
                 case GameState.Pause:
 
                     break;
             }
+        }
+
+        public void DrawParticles(SpriteBatch sb, GameState state)
+        {
+            //Draw particles
+            foreach (DynamicParticle p in particles)
+                p.Draw(sb, Color.White);
         }
 
         public void Draw(SpriteBatch sb, GameState state)
@@ -105,6 +143,7 @@ namespace The_Bond_of_Stone
                     //Draw projectiles
                     foreach (Bullet b in projectiles)
                         b.Draw(sb, Color.White);
+                    
                     break;
                 case GameState.GameOver:
                     //Draw enemies
@@ -114,6 +153,7 @@ namespace The_Bond_of_Stone
                     //Draw projectiles
                     foreach (Bullet b in projectiles)
                         b.Draw(sb, Color.White);
+                    
                     break;
                 case GameState.Pause:
                     //Draw enemies
@@ -123,6 +163,7 @@ namespace The_Bond_of_Stone
                     //Draw projectiles
                     foreach (Bullet b in projectiles)
                         b.Draw(sb, Color.White);
+                    
                     break;
             }
         }

@@ -15,7 +15,7 @@ namespace The_Bond_of_Stone {
     /// </summary>
     /// 
 
-    public enum MenuState { None, HighScore };
+    public enum MenuState { None, HighScore, Help };
     public class UI {
         public PlayerStats PlayerStats;
 
@@ -55,7 +55,37 @@ namespace The_Bond_of_Stone {
 		Button helpButton;
 		Button backButton;
 
-		public UI(PlayerStats playerStats, Viewport viewport, Game1 game1) {
+        //Help screen
+        string[] helpScreenString = {
+            " ",
+            " ",
+            "HELP",
+            "Long ago, the Titan Nemesis slew the Titan Tyche",
+            "in a great battle. The Tychans were cast out into",
+            "the sea, save a few who managed to escape on the",
+            "floating remains of Tyche which were scattered to",
+            "the heavens. Their last hope to reclaim their",
+            "homeland is to recover the magical Bonds of Tyche",
+            "hidden away in these scattered remains before they",
+            "can be destroyed by the Nemesians.",
+            " ",
+            " ",
+            "Use the left and right arrow or A and D keys to move.",
+            " ",
+            "Use the spacebar, the up arrow key, or the W key to jump.",
+            " ",
+            "Move against a wall while midair to wall jump.",
+            " ",
+            "Jump on the heads of the Nemesians to destroy them.",
+            " ",
+            "Collect coins to increase your score multiplier.",
+            "Miss a coin, and your multiplier goes away.",
+            " ",
+            "Collect Bonds of Tyche (Red gems) to restore some health."
+        };
+
+
+        public UI(PlayerStats playerStats, Viewport viewport, Game1 game1) {
             PlayerStats = playerStats;
             this.viewport = viewport;
 
@@ -65,9 +95,10 @@ namespace The_Bond_of_Stone {
 			restartButton = new Button(Graphics.MenuButtons[9], Graphics.MenuButtons[10], new Vector2(2 * Game1.PIXEL_SCALE, viewport.Height - ((2 + Graphics.MenuButtons[9].Height)* Game1.PIXEL_SCALE)), game1.toPlayState);
 			highscoreButton = new Button(Graphics.MenuButtons[2], Graphics.MenuButtons[3], new Vector2((viewport.Width / 2 - ((Graphics.MenuButtons[2].Width / 2) * Game1.PIXEL_SCALE) - ((2 + Graphics.MenuButtons[11].Width)) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[2].Height) * Game1.PIXEL_SCALE)), game1.toHSScreen);
 			playButton = new Button(Graphics.MenuButtons[11], Graphics.MenuButtons[12], new Vector2(viewport.Width/2 - ((Graphics.MenuButtons[11].Width/2) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[11].Height) * Game1.PIXEL_SCALE)), game1.toPlayState);
-			helpButton = new Button(Graphics.MenuButtons[4], Graphics.MenuButtons[5], new Vector2((viewport.Width / 2 - ((Graphics.MenuButtons[4].Width / 2) * Game1.PIXEL_SCALE) + ((2 + Graphics.MenuButtons[11].Width)) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[4].Height) * Game1.PIXEL_SCALE)), Ping);
+			helpButton = new Button(Graphics.MenuButtons[4], Graphics.MenuButtons[5], new Vector2((viewport.Width / 2 - ((Graphics.MenuButtons[4].Width / 2) * Game1.PIXEL_SCALE) + ((2 + Graphics.MenuButtons[11].Width)) * Game1.PIXEL_SCALE), viewport.Height - ((2 + Graphics.MenuButtons[4].Height) * Game1.PIXEL_SCALE)), game1.toHelpScreen);
 			backButton = new Button(Graphics.MenuButtons[6], Graphics.MenuButtons[7], new Vector2(viewport.Width - ((2 + Graphics.MenuButtons[0].Width) * Game1.PIXEL_SCALE), 0 + (2 * Game1.PIXEL_SCALE)), game1.toMainMenu);
-		}
+
+        }
 
         public void Update(GameTime gameTime, GameState state) {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -111,10 +142,11 @@ namespace The_Bond_of_Stone {
 						highscoreButton.Update();
 						playButton.Update();
 						helpButton.Update();
-					}
-					if (MainMenuState == MenuState.HighScore) {
+					} else if (MainMenuState == MenuState.HighScore) {
 						backButton.Update();
-					}
+					} else if(MainMenuState == MenuState.Help) {
+                        backButton.Update();
+                    }
 					break;
 				case GameState.Playing:
 					break;
@@ -162,6 +194,11 @@ namespace The_Bond_of_Stone {
 							backButton.Draw(spriteBatch);
 
 							break;
+
+                        case MenuState.Help:
+                            DrawHelpScreen(spriteBatch);
+                            backButton.Draw(spriteBatch);
+                            break;
                     }
                     
 
@@ -392,6 +429,31 @@ namespace The_Bond_of_Stone {
                     Color.White);
             }
 		}
+
+        public void DrawHelpScreen(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(
+                Graphics.HelpBackground,
+                new Rectangle(
+                    viewport.Width / 2 - Graphics.HelpBackground.Width * Game1.PIXEL_SCALE / 2,
+                    viewport.Height / 2 - Graphics.HelpBackground.Height * Game1.PIXEL_SCALE / 2,
+                    Graphics.HelpBackground.Width * Game1.PIXEL_SCALE,
+                    Graphics.HelpBackground.Height * Game1.PIXEL_SCALE),
+                Color.White);
+
+            for(int i = 0; i < helpScreenString.Length; i++)
+            {
+                Vector2 m = Graphics.Font_Small.MeasureString(helpScreenString[i]);
+
+                spriteBatch.DrawString(
+                    Graphics.Font_Small, 
+                    helpScreenString[i], 
+                    new Vector2(
+                        viewport.Width / 2 - m.X ,
+                        viewport.Height / 10 + i * (m.Y + 10)), 
+                    Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 0);
+            }
+        }
 
 		public void DrawHighScoreOverlay(SpriteBatch spriteBatch) {
 			firstScoreDraw = true;

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace The_Bond_of_Stone {
     /// <summary>
@@ -24,18 +25,16 @@ namespace The_Bond_of_Stone {
 
         float drag = .48f; //speed reduction (need this)
 
-        float goombaForce = -650;
-        float knockbackTimer = 0;
-        bool knockback = false;
-
-        bool jumpedThisFrame = false;
-        bool walljumpedThisFrame = false;
+        float goombaForce = -750;
 
         //Particle production
         float particleFrequency = 0.065f;
 		float particleLifetime = 4.5f;
         float particleTimer;
         List<Particle> particles = new List<Particle>();
+
+        float dynamicParticleFrequency = 0.2f;
+        float dynamicParticleTimer;
 
         //Projectile effects
         List<Bullet> stickies = new List<Bullet>();
@@ -66,10 +65,6 @@ namespace The_Bond_of_Stone {
         SoundEffectInstance wallSlideSound;
         SoundEffectInstance walkSound;
 
-        //Debuffs
-        public bool bounce = false;
-        float bounceDuration = 0;
-
         public bool Alive;
         public bool Grounded;
         public bool Walled;
@@ -92,6 +87,17 @@ namespace The_Bond_of_Stone {
                     Graphics.PlayerTextures[0].Width * Game1.PIXEL_SCALE,
                     Graphics.PlayerTextures[0].Height * Game1.PIXEL_SCALE
                     );
+            }
+        }
+
+        //Returns the center of the drawn sprite
+        public Vector2 Center
+        {
+            get
+            {
+                int x = (int)Math.Round(Position.X / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE;
+                int y = (int)Math.Round((Position.Y + Game1.PIXEL_SCALE) / Game1.PIXEL_SCALE) * Game1.PIXEL_SCALE;
+                return new Vector2(x + (Texture.Width * Game1.PIXEL_SCALE / 2), y + (Texture.Height * Game1.PIXEL_SCALE / 2));
             }
         }
 
@@ -149,6 +155,7 @@ namespace The_Bond_of_Stone {
 
             if (canStartJump && Grounded) {
                 Sound.PlayerJump.Play();
+                MakeJumpParticles(new Vector2(0, 1));
             } else if (canStartJump && Walled) {
                 Sound.PlayerWallJump.Play();
             }
@@ -168,9 +175,15 @@ namespace The_Bond_of_Stone {
                 airTime = 0;
 
                 if (velocity.Y > 1000)
+                {
+                    MakeJumpParticles(new Vector2(0, 2), 10);
                     Sound.PlayerLandHard.Play();
+                }
                 else
+                {
+                    MakeJumpParticles(new Vector2(0, 1), 2);
                     Sound.PlayerLandSoft.Play();
+                }
             } else if (Grounded && !Walled)
                 airTime = 0;
             else
@@ -183,19 +196,22 @@ namespace The_Bond_of_Stone {
             {
                 airTime = 0;
             }
-            
-            //Apply the physics
-            ApplyPhysics(gameTime, keyboardState);
-
-            //Clear the jumping state
-            isJumping = false;
 
             if (Walled && !wallJumped)
                 maxFallSpeed = 125;
             else
                 maxFallSpeed = 1500;
 
+            //Apply the physics
+            ApplyPhysics(gameTime, keyboardState);
+
+            //Clear the jumping state
+            isJumping = false;
+
             //Create particles if necessary, also do some sound stuff
+            dynamicParticleTimer += elapsed;
+            
+
             particleTimer += elapsed;
             if (particleTimer >= particleFrequency) {
                 bool canSpawnBottom = 
@@ -223,23 +239,41 @@ namespace The_Bond_of_Stone {
                 } else
                     walkSound.Stop();
 
-            if (Grounded && canSpawnBottom && velocity.X != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 7), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
+                if (Grounded && canSpawnBottom && velocity.X != 0)
+                {
+                    if (!IsTouchingTile(18))
+                        particles.Add(new Particle(Graphics.Effect_PlayerParticlesBottom[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesBottom.Length)], new Vector2(Position.X, Position.Y + Game1.PIXEL_SCALE * 7), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
+
+                    if (dynamicParticleTimer >= dynamicParticleFrequency)
+                        MakeJumpParticles(new Vector2(0, 1), 2);
+                }
                 else if (walledLeft && canSpawnLeft && velocity.Y != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
+                {
+                    if (!IsTouchingTile(18))
+                        particles.Add(new Particle(Graphics.Effect_PlayerParticlesLeft[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesLeft.Length)], new Vector2(Position.X - Game1.PIXEL_SCALE * 2, Position.Y), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
+
+                    if (dynamicParticleTimer >= dynamicParticleFrequency)
+                        MakeJumpParticles(new Vector2(1, 0), 2);
+                }
                 else if (walledRight && canSpawnRight && velocity.Y != 0)
-                    particles.Add(new Particle(Graphics.Effect_PlayerParticlesRight[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesRight.Length)], new Vector2(Position.X + Game1.PIXEL_SCALE * 4, Position.Y), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
+                {
+                    if(!IsTouchingTile(18))
+                        particles.Add(new Particle(Graphics.Effect_PlayerParticlesRight[Game1.RandomObject.Next(0, Graphics.Effect_PlayerParticlesRight.Length)], new Vector2(Position.X + Game1.PIXEL_SCALE * 4, Position.Y), particleLifetime + (float)Game1.RandomObject.NextDouble() * particleLifetime));
+
+                    if (dynamicParticleTimer >= dynamicParticleFrequency)
+                        MakeJumpParticles(new Vector2(-1, 0), 2);
+                }
                 particleTimer = 0;
             }
             
             //Update positions of sticky projectiles
             foreach(Bullet b in stickies)
             {
-                b.Position = (Position + b.relativePosition + new Vector2(10, 5));
                 if(prevFacing != facing)
                 {
                     b.Flip();
                 }
+                b.Position = (Center + b.relativePosition) + new Vector2((b.Position.X - b.Origin.X), 0);
             }
 
 
@@ -288,7 +322,7 @@ namespace The_Bond_of_Stone {
                         Spike s = (Spike)e;
 
                         //If the player is touching this spike...
-                        if (s != null && Rect.Intersects(s.Rect))
+                        if (s != null && Rect.Intersects(s.HitRectangle))
                         {
                             //Take damage 
                             Game1.PlayerStats.TakeDamage(1, s);
@@ -298,6 +332,37 @@ namespace The_Bond_of_Stone {
             }
 
             ResolveDynamicEntityCollisions();
+        }
+
+        public void MakeJumpParticles(Vector2 dir, int maxNum = 4)
+        {
+            int particlesToMake = Game1.RandomObject.Next(1, maxNum);
+            Vector2 position, direction;
+
+            if (dir.X < 0)
+                position = new Vector2(Rect.Right, Rect.Center.Y);
+            else if (dir.X > 0)
+                position = new Vector2(Rect.Left, Rect.Center.Y);
+            else
+                position = new Vector2(Rect.Center.X, Rect.Bottom - 5 * Game1.PIXEL_SCALE);
+
+            for (int i = 0; i < particlesToMake; i++)
+            {
+                if (dir.Y != 0)
+                    direction = new Vector2(25, Game1.RandomObject.Next(0, 50));
+                else if (dir.Y == 1)
+                    direction = new Vector2(50, Game1.RandomObject.Next(0, 50));
+                else
+                    direction = new Vector2(50, Game1.RandomObject.Next(0, 75));
+
+                Game1.Entities.particles.Add(
+                        new DynamicParticle(
+                            Graphics.PlayerJumpParticles[0],
+                            Graphics.PlayerJumpParticles,
+                            position,
+                            0.75f,
+                            direction, -50, true));
+            }
         }
 
         public void ResolveDynamicEntityCollisions()
@@ -331,8 +396,7 @@ namespace The_Bond_of_Stone {
                             //Save rotation and relative position for stuck projectiles
                             b.sticky = true;
                             b.stuck = true;
-                            b.relativePosition = b.Position - Position;
-                            b.relativePosition.X = MathHelper.Clamp(b.relativePosition.X, -3, 3);
+                            b.relativePosition = (b.Position - new Vector2(b.Rect.X, b.Rect.Y));
                             b.stuckRotation = b.rotation;
                             stickies.Add(b);
                         }
@@ -401,6 +465,35 @@ namespace The_Bond_of_Stone {
             //set the grounded-walled state
             if (Grounded || !Walled)
                 wallJumped = false;
+        }
+
+        public bool IsTouchingTile(int ID)
+        {
+            if (Grounded)
+            {
+                Rectangle floorRect = Rect;
+
+                floorRect.Offset(new Point(0, Rect.Height + 6));
+
+                if (CollisionHelper.TileIDAtPosition(CurrentChunk, floorRect) == ID)
+                    return true;
+
+            }
+            else if (Walled)
+            {
+                Rectangle wallRectLeft = Rect;
+                Rectangle wallRectRight = Rect;
+
+                wallRectRight.Offset(new Point(Rect.Width + 6, 0));
+                wallRectLeft.Offset(new Point(-(Rect.Width) + 6, 0));
+
+                if (walledLeft && CollisionHelper.TileIDAtPosition(CurrentChunk, wallRectLeft) == ID)
+                    return true;
+                else if(walledRight && CollisionHelper.TileIDAtPosition(CurrentChunk, wallRectRight) == ID)
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -552,8 +645,8 @@ namespace The_Bond_of_Stone {
 
         public void KnockBack(Vector2 boom)
         {
-            velocity.X = boom.X;
-            velocity.Y = boom.Y;
+            velocity.X = 2 * boom.X;
+            velocity.Y = MathHelper.Clamp(boom.Y, -700, 700);
             Game1.Camera.ScreenShake(4f, 0.3f);
         }
     }

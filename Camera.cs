@@ -15,8 +15,10 @@ namespace The_Bond_of_Stone {
 
         float XSpeedUpBound = Game1.TILE_SIZE * 4;
 
+        float smoothingTimer = 0f;
+
         //Game-specific memebers
-        float initialSpeed;
+        public float initialSpeed;
         public float Speed { get; set; }
         public Entity Target { get; set; }
         float smoothing = 0.3f;
@@ -61,6 +63,8 @@ namespace The_Bond_of_Stone {
             nextChunk = Game1.Generator.GetEntityChunkID(gameOverPath);
             gameOverPath = new Vector2(gameOverPath.X + Speed, gameOverPath.Y);
 
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             //Player follow code.
             if (Target != null)
             {
@@ -70,7 +74,7 @@ namespace The_Bond_of_Stone {
             //Game over pathfinding code
             else
             {
-                gameOverPath += Move(gameOverPath, new Vector2(gameOverPath.X, nextChunk.Rect.Top + nextChunk.Rect.Height / 2), Speed);
+                gameOverPath += Move(gameOverPath, new Vector2(gameOverPath.X, nextChunk.Rect.Top + nextChunk.Rect.Height / 4), Speed);
                 Origin = new Vector2(Origin.X + Speed, MathHelper.Lerp(Origin.Y, gameOverPath.Y, (float)gameTime.ElapsedGameTime.TotalSeconds / 0.5f));
             }
 
@@ -78,8 +82,8 @@ namespace The_Bond_of_Stone {
 
             LookAt(Origin);
 
-            if(Target != null && Target.Rect.X + Target.Rect.Width > Rect.Right - XSpeedUpBound)
-                Speed = initialSpeed * 2f;
+            if (Target != null && Target.Rect.X + Target.Rect.Width > Rect.Right - XSpeedUpBound)
+                Speed = 3f;
             else
                 Speed = initialSpeed;
 

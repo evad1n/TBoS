@@ -13,10 +13,10 @@ namespace The_Bond_of_Stone
     /// 
     /// By Dom Liotti
     /// </summary>
-    class Particle : Entity {
+    public class Particle : Entity {
 
-        float timer;
-        float lifespan;
+        public float timer;
+        public float lifespan;
 
         public Particle(Texture2D texture, Vector2 position, float lifespan, bool lockToPixelGrid = true, bool active = true) : base(texture, position, lockToPixelGrid, active)
         {

@@ -216,42 +216,42 @@ namespace The_Bond_of_Stone {
                     }
                     else if (atlas[y, x] == 22)
                     {
-                        tileToAdd.ID = atlas[y, x] = 3;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, -1)));
                     }
                     else if (atlas[y, x] == 23)
                     {
-                        tileToAdd.ID = atlas[y, x] = 3;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 24)
                     {
-                        tileToAdd.ID = atlas[y, x] = 3;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(0, 1)));
                     }
                     else if (atlas[y, x] == 25)
                     {
-                        tileToAdd.ID = atlas[y, x] = 3;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Arrow, new Vector2(-1, 0)));
                     }
                     else if (atlas[y, x] == 26)
                     {
-                        tileToAdd.ID = atlas[y, x] = 3;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, -1)));
                     }
                     else if (atlas[y, x] == 27)
                     {
-                        tileToAdd.ID = atlas[y, x] = 3;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 28)
                     {
-                        tileToAdd.ID = atlas[y, x] = 3;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(0, 1)));
                     }
                     else if (atlas[y, x] == 29)
                     {
-                        tileToAdd.ID = atlas[y, x] = 3;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new SpearTrap(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), new Vector2(-1, 0)));
                     }             
                     else if (atlas[y, x] == 30)
@@ -276,12 +276,12 @@ namespace The_Bond_of_Stone {
                     }
                     else if (atlas[y, x] == 34)
                     {
-                        tileToAdd.ID = atlas[y, x] = 2;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(-1, 0)));
                     }
                     else if (atlas[y, x] == 35)
                     {
-                        tileToAdd.ID = atlas[y, x] = 2;
+                        tileToAdd.ID = atlas[y, x] = 6;
                         Traps.Add(new TurretEnemy(new Vector2(origin.X + (x * size + size / 2), origin.Y + (y * size - size / 2) - (yoffset * size)), Projectile.Sawblade, new Vector2(1, 0)));
                     }
                     else if (atlas[y, x] == 10 || atlas[y, x] == 12)
@@ -328,6 +328,7 @@ namespace The_Bond_of_Stone {
             for (int x = 0; x < atlas.GetLength(1); x++) { //Execute for each tile
                 for (int y = 0; y < atlas.GetLength(0); y++) {
                     int thisID = Tiles[i].ID; //Current tile ID
+                    Tile t = Tiles[i];//Current tile
 
                     //if this isn't an air tile (which we don't stitch)
                     if (thisID != 0) {
@@ -341,9 +342,47 @@ namespace The_Bond_of_Stone {
 
                         //Construct the Adjacents array for this tile
                         //(i.e. add the cardinal tile IDs to this tile's Adjacents array in the order North West East South
+
+                        /*
+                       for (int tX = -1; tX <= 1; tX++) {
+                           for (int tY = -1; tY <= 1; tY++) {
+                               if ((y != 0 && x != 0) || (y == 0 && x == 0))
+                                   continue;
+
+                               //If this adjacent tile is in the tile atlas...
+                               if (y + tY >= 0 && x + tX >= 0 && y + tY < atlas.GetLength(0) && x + tX < atlas.GetLength(1))
+                               {
+                                   //save the ID of this adjacent tile
+                                   int index = atlas[y + tY, x + tX];
+
+                                   if (index == thisID || (!stitchOnlySameID && index != 0) || CollisionHelper.IsSolidTile(thisID) && CollisionHelper.IsSolidTile(index)) {
+                                       int adjIndex = 0;
+
+                                       if (tY > 0)
+                                           adjIndex = 3;
+                                       else if (tY < 0)
+                                           adjIndex = 0;
+                                       else if (tX < 0)
+                                           adjIndex = 1;
+                                       else if (tX > 0)
+                                           adjIndex = 2;
+
+                                       Tiles[i].Adjacents[adjIndex] = true;
+                                   }
+
+                                   if (index == 2)
+                                   {
+                                       bkdCount++;
+                                       adjCount++;
+                                   }
+                               }
+                           }
+                       }
+                       */
+
                         if (y - 1 >= 0 && (atlas[y - 1, x] == thisID ||
                             (!stitchOnlySameID && atlas[y - 1, x] != 0) ||
-                            (thisID == 1 || thisID == 3 || thisID == 4 || thisID == 5) && (atlas[y - 1, x] == 1 || atlas[y - 1, x] == 3 || atlas[y - 1, x] == 4 || atlas[y - 1, x] == 5)))
+                            (thisID == 1 || thisID == 3 || thisID == 4 || thisID == 5 || thisID == 6) && (atlas[y - 1, x] == 1 || atlas[y - 1, x] == 3 || atlas[y - 1, x] == 4 || atlas[y - 1, x] == 5 || atlas[y - 1, x] == 6)))
                             Tiles[i].Adjacents[0] = true;
                         else if (y - 1 >= 0 && atlas[y - 1, x] == 2) { //If this cardinal has a background tile...
                             bkdCount++; //increment the count of adjacent background tiles
@@ -352,7 +391,7 @@ namespace The_Bond_of_Stone {
 
                         if (x - 1 >= 0 && (atlas[y, x - 1] == thisID ||
                             (!stitchOnlySameID && atlas[y, x - 1] != 0) ||
-                            (thisID == 1 || thisID == 3 || thisID == 4 || thisID == 5) && (atlas[y, x - 1] == 1 || atlas[y, x - 1] == 3 || atlas[y, x - 1] == 4 || atlas[y, x - 1] == 5)))
+                            (thisID == 1 || thisID == 3 || thisID == 4 || thisID == 5 || thisID == 6) && (atlas[y, x - 1] == 1 || atlas[y, x - 1] == 3 || atlas[y, x - 1] == 4 || atlas[y, x - 1] == 5 || atlas[y, x - 1] == 6)))
                             Tiles[i].Adjacents[1] = true;
                         else if (x - 1 >= 0 && (atlas[y, x - 1] == 2)) {
                             bkdCount++;
@@ -361,7 +400,7 @@ namespace The_Bond_of_Stone {
 
                         if (x + 1 < atlas.GetLength(1) && (atlas[y, x + 1] == thisID ||
                             (!stitchOnlySameID && atlas[y, x + 1] != 0) ||
-                            (thisID == 1 || thisID == 3 || thisID == 4 || thisID == 5) && (atlas[y, x + 1] == 1 || atlas[y, x + 1] == 3 || atlas[y, x + 1] == 4 || atlas[y, x + 1] == 5)))
+                            (thisID == 1 || thisID == 3 || thisID == 4 || thisID == 5 || thisID == 6) && (atlas[y, x + 1] == 1 || atlas[y, x + 1] == 3 || atlas[y, x + 1] == 4 || atlas[y, x + 1] == 5 || atlas[y, x + 1] == 6)))
                             Tiles[i].Adjacents[2] = true;
                         else if (x + 1 < atlas.GetLength(1) && (atlas[y, x + 1] == 2)) {
                             bkdCount++;
@@ -370,7 +409,7 @@ namespace The_Bond_of_Stone {
 
                         if (y + 1 < atlas.GetLength(0) && (atlas[y + 1, x] == thisID ||
                             (!stitchOnlySameID && atlas[y + 1, x] != 0) ||
-                            (thisID == 1 || thisID == 3 || thisID == 4 || thisID == 5) && (atlas[y + 1, x] == 1 || atlas[y + 1, x] == 3 || atlas[y + 1, x] == 4 || atlas[y + 1, x] == 5)))
+                            (thisID == 1 || thisID == 3 || thisID == 4 || thisID == 5 || thisID == 6) && (atlas[y + 1, x] == 1 || atlas[y + 1, x] == 3 || atlas[y + 1, x] == 4 || atlas[y + 1, x] == 5 || atlas[y + 1, x] == 6)))
                             Tiles[i].Adjacents[3] = true;
                         else if (y + 1 < atlas.GetLength(0) && (atlas[y + 1, x] == 2)) {
                             bkdCount++;
@@ -380,6 +419,33 @@ namespace The_Bond_of_Stone {
                         //If more than 1 background tile borders this foreground tile...
                         if (bkdCount > 1 && adjCount > 0)
                             Tiles.Add(Tiles[i].AddBackgroundTile()); //...add another background tile behind it to fill gaps  
+                    }
+
+                    //Set tile ID to be similar to surrounding tiles
+                    if (thisID == 6)
+                    {
+                        for (int a = 0; a < 4; a++)
+                        {
+                            if (Tiles[i].Adjacents[a])
+                            {
+                                switch (a)
+                                {
+                                    case 0:
+                                        Tiles[i].ID = atlas[y, x] = atlas[y - 1, x];
+                                        break;
+                                    case 1:
+                                        Tiles[i].ID = atlas[y, x] = atlas[y, x - 1];
+                                        break;
+                                    case 2:
+                                        Tiles[i].ID = atlas[y, x] = atlas[y, x + 1];
+                                        break;
+                                    default:
+                                        Tiles[i].ID = atlas[y, x] = atlas[y + 1, x];
+                                        break;
+                                }
+                                break;
+                            }
+                        }
                     }
 
                     i++; //Advance the tile list
@@ -470,7 +536,8 @@ namespace The_Bond_of_Stone {
 
             foreach(Entity e in Traps)
             {
-                e.Draw(sb, color);
+                if (!(e is SpearTrap))
+                    e.Draw(sb, color);
             }
         }
 

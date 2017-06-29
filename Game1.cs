@@ -33,13 +33,13 @@ namespace The_Bond_of_Stone {
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
-        public static int TITAN_SPAWN_RATE = 25;
+        public static int TITAN_SPAWN_RATE = 20;
 
         public static Rectangle hitBox = new Rectangle(0, 0, 10, 10);
 
         Vector2 playerStartPos;
         Rectangle chunkStartPos;
-        public float cameraSpeed = 1.5f;
+        public const float CAMERA_SPEED = 1.15f;
 
         public static int ScreenWidth { get; set; }
         public static int ScreenHeight { get; set; }
@@ -80,7 +80,7 @@ namespace The_Bond_of_Stone {
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
         /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// and initialize them as well.z
         /// </summary>
         protected override void Initialize() {
             State = GameState.SplashScreen;
@@ -125,7 +125,7 @@ namespace The_Bond_of_Stone {
             Player = new Player(Graphics.PlayerTextures[0], playerStartPos);
             PlayerStats = new PlayerStats(Player, 6);
             Interface = new UI(PlayerStats, GraphicsDevice.Viewport, this);
-            Camera = new Camera(GraphicsDevice, Player, cameraSpeed);
+            Camera = new Camera(GraphicsDevice, Player, CAMERA_SPEED);
             Generator = new LevelGenerator(graphics, chunkStartPos);
             Score = new ScoreManager();
             Entities = new EntityManager(Camera);
@@ -136,8 +136,8 @@ namespace The_Bond_of_Stone {
 
 			parallaxLayers[0] = new ParallaxLayer(Graphics.ParallaxLayers[0], Player, new Vector2(0.5f, 0f), GraphicsDevice.Viewport);
             parallaxLayers[1] = new ParallaxLayer(Graphics.ParallaxLayers[1], Player, new Vector2(1.125f, 0f), GraphicsDevice.Viewport);
-            parallaxLayers[2] = new ParallaxLayer(Graphics.ParallaxLayers[2], Player, new Vector2(0.1f, 0f), GraphicsDevice.Viewport);
-            parallaxLayers[3] = new ParallaxLayer(Graphics.ParallaxLayers[3], Player, new Vector2(0.123f, 0f), GraphicsDevice.Viewport);
+            parallaxLayers[2] = new ParallaxLayer(Graphics.ParallaxLayers[2], Player, new Vector2(0.025f, 0f), GraphicsDevice.Viewport);
+            parallaxLayers[3] = new ParallaxLayer(Graphics.ParallaxLayers[3], Player, new Vector2(0.075f, 0f), GraphicsDevice.Viewport);
 
             bgm = Sound.MusicTrack;
             MediaPlayer.Volume = 0.25f;
@@ -227,6 +227,9 @@ namespace The_Bond_of_Stone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdatePlaying(GameTime gameTime)
         {
+            if (KeyPressed(Keys.R))
+                ResetGame();
+
             Player.Update(gameTime, keyboardState, prevKeyboardState);
             PlayerStats.Update(gameTime);
 
@@ -248,43 +251,12 @@ namespace The_Bond_of_Stone {
                 MediaPlayer.Volume = 0.05f;
             }
 
-            if (keyboardState.IsKeyDown(Keys.B) && prevKeyboardState.IsKeyUp(Keys.B))
+            if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P))
             {
-                Player.bounce = true;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.T) && prevKeyboardState.IsKeyUp(Keys.T))
-            {
-                Entities.enemies.Add(new TurretEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), Projectile.Sawblade, new Vector2(-1, 0)));
-            }
-
-            //Testing things
-			if (keyboardState.IsKeyDown(Keys.P) && prevKeyboardState.IsKeyUp(Keys.P)) {
-				PlayerStats.TickScore();
-            }
-
-            if (keyboardState.IsKeyDown(Keys.G) && prevKeyboardState.IsKeyUp(Keys.G))
-            {
-                Entities.enemies.Add(new GroundEnemy(new Vector2(Player.Position.X + 20, Player.Position.Y)));
-            }
-
-            if (keyboardState.IsKeyDown(Keys.J) && prevKeyboardState.IsKeyUp(Keys.J))
-            {
-                Entities.enemies.Add(new JumpingEnemy(new Vector2(Player.Position.X + 20, Player.Position.Y)));
-            }
-
-            if (keyboardState.IsKeyDown(Keys.F) && prevKeyboardState.IsKeyUp(Keys.F))
-            {
-                Entities.enemies.Add(new FlyingEnemy(new Vector2(mouseState.Position.X, mouseState.Position.Y), true));
-            }
-
-            if (keyboardState.IsKeyDown(Keys.I) && prevKeyboardState.IsKeyUp(Keys.I))
-            {
-                Player.CurrentChunk.Traps.Add(new SpearTrap(new Vector2(mouseState.Position.X, mouseState.Position.Y), new Vector2(-1, 0)));
-            }
-
-            if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R)) {
-                Camera.ScreenShake(3, 0.25f);
+                if (Camera.initialSpeed == CAMERA_SPEED)
+                    Camera.initialSpeed = 0;
+                else
+                    Camera.initialSpeed = CAMERA_SPEED;
             }
 
             Entities.Update(gameTime, State);
@@ -315,10 +287,8 @@ namespace The_Bond_of_Stone {
                 State = GameState.MainMenu;
             }
 
-            if (keyboardState.IsKeyDown(Keys.R) && prevKeyboardState.IsKeyUp(Keys.R))
-            {
+            if (KeyPressed(Keys.R))
                 ResetGame();
-            }
         }
 
         /// <summary>
@@ -326,7 +296,6 @@ namespace The_Bond_of_Stone {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void UpdateGameOver(GameTime gameTime) {
-            //TODO: IMPLEMENT GAME OVER SCREEN UPDATES
             Player.Update(gameTime, keyboardState, prevKeyboardState);
             Camera.Update(gameTime);
 
@@ -339,8 +308,7 @@ namespace The_Bond_of_Stone {
 
             Entities.Update(gameTime, State);
 
-            //Reset on an ESC key press.
-            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape))
+            if (KeyPressed(Keys.Escape) || KeyPressed(Keys.R))
                 ResetGame();
         }
 
@@ -350,6 +318,11 @@ namespace The_Bond_of_Stone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            //Draw the sky
+            spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
+            spriteBatch.Draw(Graphics.SkyTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+            spriteBatch.End();
 
             //Organizational: Draw according to the current game state
             switch (State) {
@@ -396,7 +369,7 @@ namespace The_Bond_of_Stone {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         void DrawPlaying(GameTime gameTime, Color color) {
 
-            //Draw the suns
+            //Draw the parallax layers in the background.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             parallaxLayers[2].Draw(spriteBatch);
             parallaxLayers[3].Draw(spriteBatch);
@@ -410,7 +383,7 @@ namespace The_Bond_of_Stone {
                 spriteBatch.End();
             }
 
-            //Draw the parallax layers in the background.
+            //Draw the parallax layers in the midground.
             spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState: SamplerState.PointWrap);
             parallaxLayers[0].Draw(spriteBatch);
             parallaxLayers[1].Draw(spriteBatch);
@@ -432,6 +405,8 @@ namespace The_Bond_of_Stone {
             //Draw foreground tiles
             foreach (Chunk map in Generator.Chunks)
                 map.DrawForeground(spriteBatch, color);
+
+            Entities.DrawParticles(spriteBatch, State);
 
             Player.Draw(spriteBatch, PlayerStats.invulnColor);
 
@@ -507,6 +482,13 @@ namespace The_Bond_of_Stone {
             Interface.ChangeMenuState(MenuState.HighScore);
 		}
 
-		#endregion
-	}
+        public void toHelpScreen()
+        {
+            State = GameState.MainMenu;
+            Sound.ButtonClick.Play();
+            Interface.ChangeMenuState(MenuState.Help);
+        }
+
+        #endregion
+    }
 }

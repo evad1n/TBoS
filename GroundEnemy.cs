@@ -20,12 +20,13 @@ namespace The_Bond_of_Stone
 
         Chunk nextChunk;
         Rectangle gapRect;
+        Rectangle wallRect;
         int yOffset = (Game1.TILE_PIXEL_SIZE - Graphics.EnemySlugTextures[0].Height) * Game1.PIXEL_SCALE;
 
         //Animation?
         SpriteEffects facing = SpriteEffects.None;
         float walkingTimer = 0;
-        float walkFrameSpeed = 0.05f;
+        float walkFrameSpeed = 0.075f;
         int walkFrame = 0;
         int walkFramesTotal = 5;
 
@@ -60,13 +61,11 @@ namespace The_Bond_of_Stone
         {
             //Update pathfinding colliders
             gapRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction), Rect.Y - (yOffset) + Game1.TILE_SIZE, Game1.TILE_SIZE, Game1.TILE_SIZE);
+            wallRect = new Rectangle(Rect.X + (Game1.TILE_SIZE * direction / 5), Rect.Y - yOffset, Game1.TILE_SIZE, Game1.TILE_SIZE);
             nextChunk = Game1.Generator.GetEntityChunkID(gapRect);
 
-            //Check collision directions
-            Grounded = CheckCardinalCollision(new Vector2(0, 3));
-
             //Check for pathfinding (gaps and walls)
-            if ((!CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) || CollisionHelper.IsCollidingWithChunk(nextChunk, Rect)) && Grounded)
+            if ((!CollisionHelper.IsCollidingWithChunk(nextChunk, gapRect) || CollisionHelper.IsCollidingWithChunk(nextChunk, wallRect)))
             {
                 direction *= -1;
             }
@@ -129,8 +128,8 @@ namespace The_Bond_of_Stone
         public override void Draw(SpriteBatch spriteBatch, Color color, int depth = 0)
         {
             //debug
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.White);
-            //spriteBatch.Draw(Graphics.Tiles_gold[0], wallRect, Color.White);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], gapRect, Color.Red);
+            //spriteBatch.Draw(Graphics.Tiles_gold[0], wallRect, Color.DarkRed);
 
             if (Active)
             {

@@ -16,6 +16,7 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] Tiles_ground;
         public static Texture2D[] Tiles_gold;
         public static Texture2D[] Tiles_background;
+        public static Texture2D[] Tiles_Bond;
 
         public static Texture2D[] Deco_groundTop;
         public static Texture2D[] Deco_groundBottom;
@@ -38,6 +39,10 @@ namespace The_Bond_of_Stone {
         public static Texture2D[] EnemyFlyerTextures;
         public static Texture2D[] EnemyJumperTextures;
         public static Texture2D[] EnemyThrowerTextures;
+
+        public static Texture2D[] EnemyParticles;
+        public static Texture2D[] PlayerHitParticles;
+        public static Texture2D[] PlayerJumpParticles;
 
         public static Texture2D[] Spike_Up;
         public static Texture2D[] Spike_Down;
@@ -65,13 +70,14 @@ namespace The_Bond_of_Stone {
         public static Texture2D Logo;
         public static Texture2D[] SplashScreenGraphics;
         public static Texture2D Title;
-        public static Texture2D[] MainMenuGraphics;
         public static Texture2D MenuBackground;
         public static Texture2D[] Icons;
 
         public static Texture2D[] HighScoreTextures;
 
 		public static Texture2D[] MenuButtons;
+
+        public static Texture2D HelpBackground;
 
 		public static SpriteFont Font_Main;
         public static SpriteFont Font_Small;
@@ -82,6 +88,7 @@ namespace The_Bond_of_Stone {
         public static Texture2D BlackTexture;
         public static Texture2D DebugTexture;
         public static Texture2D[] ParallaxLayers;
+        public static Texture2D SkyTexture;
         public static Texture2D Overlay;
 
         /// <summary>
@@ -94,6 +101,7 @@ namespace The_Bond_of_Stone {
             Tiles_ground = PopulateTextureArray("tile_1", 16, @"graphics\tile\");
             Tiles_gold = PopulateTextureArray("tile_5", 16, @"graphics\tile\");
             Tiles_background = PopulateTextureArray("tile_2", 16, @"graphics\tile\");
+            Tiles_Bond = PopulateTextureArray("tile_3", 16, @"graphics\tile\");
 
             Deco_groundTop = PopulateTextureArray("deco_0", 12, @"graphics\deco\");
             Deco_groundBottom = PopulateTextureArray("deco_1", 3, @"graphics\deco\");
@@ -103,6 +111,7 @@ namespace The_Bond_of_Stone {
             Deco_backgroundBottom = PopulateTextureArray("deco_3", 3, @"graphics\deco\");
 
             ParallaxLayers = PopulateTextureArray("parallax", 4, @"graphics\misc\");
+            SkyTexture = Content.Load<Texture2D>(@"graphics\misc\sky");
 
             PlayerTextures = PopulateTextureArray("player", 7, @"graphics\entities\");
             PlayerWalkTextures = PopulateTextureArray("playerWalk", 4, @"graphics\entities\");
@@ -111,6 +120,10 @@ namespace The_Bond_of_Stone {
             EnemyFlyerTextures = PopulateTextureArray("enemyFlyer", 8, @"graphics\entities\");
             EnemyJumperTextures = PopulateTextureArray("enemyJumper", 2, @"graphics\entities\");
             EnemyThrowerTextures = PopulateTextureArray("enemyThrower", 8, @"graphics\entities\");
+
+            EnemyParticles = PopulateTextureArray("enemyParticles", 4, @"graphics\entities\");
+            PlayerHitParticles = PopulateTextureArray("playerHitParticles", 4, @"graphics\entities\");
+            PlayerJumpParticles = PopulateTextureArray("playerJumpParticles", 3, @"graphics\entities\");
 
             Spike_Up = PopulateTextureArray("spike_0", 3, @"graphics\entities\");
             Spike_Down = PopulateTextureArray("spike_2", 3, @"graphics\entities\");
@@ -147,6 +160,8 @@ namespace The_Bond_of_Stone {
             Icons = PopulateTextureArray("icons", 2, @"graphics\ui\");
 
 			MenuButtons = PopulateTextureArray("menuButton", 13, @"graphics\ui\");
+
+            HelpBackground = Content.Load<Texture2D>(@"graphics\ui\helpBackground");
 
 			Font_Main = Content.Load<SpriteFont>(@"graphics\ui\font");
             Font_Small = Content.Load<SpriteFont>(@"graphics\ui\font_small");
