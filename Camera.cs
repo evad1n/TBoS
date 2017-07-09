@@ -4,7 +4,7 @@ using MonoGame.Extended;
 
 namespace The_Bond_of_Stone {
     /// <summary>
-    /// Extension of monogame2D's Camera2D. Has extra functionality for following the player and other goodies.
+    /// Extension of Monogame.Extended's Camera2D. Has extra functionality for following the player and other goodies.
     /// 
     /// By Will Dickinson
     /// </summary>
