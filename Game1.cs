@@ -33,7 +33,7 @@ namespace The_Bond_of_Stone {
         public static int CHUNK_LOWER_BOUND { get { return 10 * TILE_SIZE; } }
         public static string[] DEVELOPER_NAMES = { "Dom Liotti", "Will Dickinson", "Chip Butler", "Noah Bock" };
 
-        public static int TITAN_SPAWN_RATE = 20;
+        public static int TITAN_SPAWN_RATE = 15;
 
         public static Rectangle hitBox = new Rectangle(0, 0, 10, 10);
 
@@ -69,7 +69,7 @@ namespace The_Bond_of_Stone {
         List<Entity> GlobalEntities = new List<Entity>();
 
         //Splash screen stuff
-        public const bool SHOW_SPLASH_SCREEN = true;
+        public const bool SHOW_SPLASH_SCREEN = false;
 
 		public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -84,6 +84,8 @@ namespace The_Bond_of_Stone {
         /// </summary>
         protected override void Initialize() {
             State = GameState.SplashScreen;
+
+            Window.IsBorderless = true;
 
             parallaxLayers = new ParallaxLayer[4];
 
@@ -202,7 +204,7 @@ namespace The_Bond_of_Stone {
         }
 
         private void UpdateSplashScreen(GameTime gameTime) {
-            if (Interface.DoneWithSplashScreen)
+            //if (Interface.DoneWithSplashScreen)
                 State = GameState.MainMenu;
         }
 
@@ -263,7 +265,7 @@ namespace The_Bond_of_Stone {
 
             Titans.Update(gameTime);
 
-            //TODO: MULTITHREAD THIS LINE OPERATION WITH TASKS (?)
+            //TODO: MULTITHREAD THIS OPERATION WITH TASKS (?)
             Generator.UpdateChunkGeneration();
 
             foreach (Chunk map in Generator.Chunks)

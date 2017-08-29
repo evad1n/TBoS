@@ -21,7 +21,7 @@ namespace The_Bond_of_Stone {
         /// <returns>A 2D array of tile IDs.</returns>
         public static int[,] ReadImage(string imagePath) {
             string path = Directory.GetCurrentDirectory();
-            string newPath = Path.GetFullPath(Path.Combine(path, @"..\..\..\..\Content\maps\" + imagePath));
+            string newPath = Path.GetFullPath(Path.Combine(path, @"maps\" + imagePath));
             Console.WriteLine(newPath);
             Bitmap img = new Bitmap(newPath); //Get and convert the file to a readable bitmap.
 

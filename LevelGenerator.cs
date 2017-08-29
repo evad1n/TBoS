@@ -28,7 +28,7 @@ namespace The_Bond_of_Stone {
             Chunks = new List<Chunk>();
 
             //Get the count of maps in the maps folder
-            DirectoryInfo mapDir = new DirectoryInfo(@"..\..\..\..\Content\maps");
+            DirectoryInfo mapDir = new DirectoryInfo(@"maps\");
             mapFiles = mapDir.GetFiles().Where(name => !name.Name.Contains("starter")).ToArray();
         }
 

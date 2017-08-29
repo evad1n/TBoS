@@ -357,7 +357,7 @@ namespace The_Bond_of_Stone {
         private void DrawSplashScreen(SpriteBatch spriteBatch, GameTime gameTime, Color white)
         {
 
-            if (ssTimer < splashScreenDuration / 2)
+            /*if (ssTimer < splashScreenDuration / 2)
             { //draw powered by monogame
                 spriteBatch.DrawString(
                     Graphics.Font_Small,
@@ -375,8 +375,8 @@ namespace The_Bond_of_Stone {
                         Graphics.SplashScreenGraphics[0].Width * 2,
                         Graphics.SplashScreenGraphics[0].Height * 2),
                     Color.White);
-            }
-            else
+            }*/
+            if(ssTimer > 0)
             { //draw names/logo
                 spriteBatch.Draw(
                     Graphics.Logo,
