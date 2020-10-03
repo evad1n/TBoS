@@ -179,7 +179,6 @@ namespace The_Bond_of_Stone
                 if (Grounded && velocity.Y > 0)
                 {
                     velocity = new Vector2(velocity.X, -velocity.Y * .95f);
-                    Game1.Camera.ScreenShake(velocity.Y * 3, velocity.Y);
                     airTime = 0;
                 }
                 if (Ceiling && velocity.Y < 0)
@@ -263,6 +262,8 @@ namespace The_Bond_of_Stone
                 {
                     stuck = true;
                     Position += velocity * elapsed;
+                    if (!CollisionHelper.IsCollidingWithChunk(CurrentChunk, Rect))
+                        Position -= velocity * elapsed;
                     velocity = Vector2.Zero;
                 }
             }

@@ -25,7 +25,7 @@ namespace The_Bond_of_Stone {
 
         float drag = .48f; //speed reduction (need this)
 
-        float goombaForce = -750;
+        float goombaForce = -1000;
 
         //Particle production
         float particleFrequency = 0.065f;
